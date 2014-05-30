@@ -62,8 +62,3 @@ $ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` \
   from `$HOME/.ssh/known_hosts` to avoid getting an error when you run
   ansible-playbook again.  Look for the hostname in addition to its IP address.
 
-
-##To do:
-
-* Add user accounts w. ssh public keys.
-* Add firewall configuration.

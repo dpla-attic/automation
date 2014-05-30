@@ -1,0 +1,45 @@
+---
+
+- name: Add cloudant package list
+  template: src=cloudant.list.j2 dest=/etc/apt/sources.list.d/cloudant.list
+
+- name: Update apt package index for bigcouch
+  apt: update_cache=yes
+
+- name: Install packages
+  apt: pkg={{ item }} state=present force=yes
+  with_items:
+    - bigcouch
+  tags:
+    - packages
+    - database
+
+- name: Update bigcouch local.ini file
+  template: src=local.ini.j2 dest=/opt/bigcouch/etc/local.ini
+  notify:
+    - restart bigcouch
+  tags:
+   - database
+
+- name: Update bigcouch VM args file
+  template: src=vm.args.erb.j2 dest=/opt/bigcouch/etc/vm.args
+  notify:
+    - restart bigcouch
+  tags:
+   - database
+
+- meta: flush_handlers
+
+- name: Add nodes to cluster
+  # Can't get the "uri" module to accept either HTTP status 201 or 409.
+  # The documentation says to pass status_code as a comma-separated list, but
+  # that doesn't work (returns error about it not being an integer).
+  uri: url="http://{{ hostname }}:5986/nodes/{{ dbnode_id_name }}@{{ item }}"
+       method=PUT body="{}" status_code=201
+  with_items: groups['dbnodes']
+  ignore_errors: yes
+  tags:
+    - database
+
+- name: Add logrotate task for bigcouch
+  copy: src=etc_logrotate_d_bigcouch dest=/etc/logrotate.d/bigcouch owner=root group=root mode=0644

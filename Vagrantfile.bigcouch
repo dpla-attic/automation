@@ -1,0 +1,23 @@
+
+VAGRANTFILE_API_VERSION = "2"
+
+dbnodes = {
+	'dbnode1' => '192.168.50.4',
+	'dbnode2' => '192.168.50.5'
+}
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    dbnodes.keys.each do |hostname|
+	    config.vm.define hostname do |dbnode|
+	        dbnode.vm.box = "hashicorp/precise64"
+	        dbnode.vm.network :private_network, ip: dbnodes[hostname]
+	    end
+    end
+
+    config.vm.define :dbproxy1 do |dbpnode|
+        dbpnode.vm.box = "hashicorp/precise64"
+        dbpnode.vm.network :private_network, ip: "192.168.50.2"
+    end
+
+end

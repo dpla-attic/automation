@@ -1,0 +1,33 @@
+
+global
+	daemon
+	maxconn 1000
+
+defaults
+	mode http
+	log global
+	option httplog
+	option dontlognull
+	option redispatch
+	option forwardfor
+	retries 3
+	balance roundrobin
+	timeout connect 5s
+	timeout client 50s
+	timeout server 5m
+
+frontend bigcouch-chttpd-in
+	bind *:5984
+	default_backend bigcouch-chttpd
+
+frontend bigcouch-httpd-in
+	bind *:5986
+	default_backend bigcouch-httpd
+
+backend bigcouch-chttpd
+	server dbnode1 192.168.50.4:5984 maxconn 500
+	server dbnode2 192.168.50.5:5984 maxconn 500
+
+backend bigcouch-httpd
+	server dbnode1 192.168.50.4:5986 maxconn 500
+	server dbnode2 192.168.50.5:5986 maxconn 500

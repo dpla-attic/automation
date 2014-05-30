@@ -1,0 +1,7 @@
+---
+
+- name: restart rsyslogd
+  service: name=rsyslog state=restarted
+
+- name: restart sysstat
+  service: name=sysstat state=restarted

@@ -1,0 +1,4 @@
+---
+
+- name: restart bigcouch
+  shell: sleep 5; sv restart bigcouch && sleep 5

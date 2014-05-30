@@ -1,0 +1,23 @@
+---
+
+- name: Common
+  hosts: all
+  remote_user: vagrant
+  sudo: yes
+  roles:
+    - common
+
+- name: Database nodes
+  hosts: dbnodes
+  serial: 1
+  remote_user: vagrant
+  sudo: yes
+  roles:
+    - dbnode
+
+- name: Database proxy
+  hosts: dbproxy
+  remote_user: vagrant
+  sudo: yes
+  roles:
+    - dbproxy

@@ -50,7 +50,7 @@
     - users
 
 - name: Assign SSH authorized keys
-authorized_key: user="{{ item.username }}" key="{{ item.ssh_authorized_key }}"
+  authorized_key: user="{{ item.username }}" key="{{ item.ssh_authorized_key }}"
   with_items: adminusers
   tags:
     - authorized_keys

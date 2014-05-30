@@ -20,7 +20,7 @@ TODO: dependencies:  VirtualBox, Vagrant, Ansible
   * ansible/group_vars/all.dist
     * Note that user shell accounts are configured in ansible/group_vars/all,
       and that they require SSH public keys in their ssh_authorized_keys fields.
-* Copy or symlink the appropriate Vagrantfile.<name> to Vagrantfile.
+* Copy or symlink the appropriate Vagrantfile.&lt;name&gt; to Vagrantfile.
   At the moment, this means symlink Vagrantfile.bigcouch to Vagrantfile.
   In the future, there will be more hosts in our configuration than you'll want
   to have running simultaneously as VMs.
@@ -36,7 +36,7 @@ $ ansible-playbook -i ansible/development -u vagrant \
 ## Known issues:
 
 * If you get errors about the vboxfs file system not being available, ssh into
-  the virtual machine with "vagrant ssh <host>" and run these commands:
+  the virtual machine with "vagrant ssh &lt;host&gt;" and run these commands:
 ```
 $ sudo /etc/init.d/vboxadd setup
 $ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`getent group vagrant | \

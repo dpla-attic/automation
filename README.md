@@ -18,8 +18,10 @@ TODO: dependencies:  VirtualBox, Vagrant, Ansible
   * ansible/roles/dbnode/vars/main.yml.dist
   * ansible/group_vars/dbnodes.dist
   * ansible/group_vars/all.dist
-    * Note that user shell accounts are configured in ansible/group_vars/all,
+    * Note that user shell accounts are configured in `ansible/group_vars/all`,
       and that they require SSH public keys in their ssh_authorized_keys fields.
+      The `adminusers` variable is for administrative users who will run
+      ansible-playbook.
 * Copy or symlink the appropriate Vagrantfile.&lt;name&gt; to Vagrantfile.
   At the moment, this means symlink Vagrantfile.bigcouch to Vagrantfile.
   In the future, there will be more hosts in our configuration than you'll want
@@ -32,11 +34,29 @@ $ ansible-playbook -i ansible/development -u vagrant \
   --private-key=$HOME/.vagrant.d/insecure_private_key ansible/all.yml
 ```
 
+## Subsequent Usage
+
+After the hosts are spooled up (as VMs or cloud servers), subsequent commands
+with ansible-playbook can be run with one of the administrative user accounts
+defined in the file `ansible/group_vars/all`, mentioned above.  If you're using
+a VM, the "vagrant" user is necessary for initially provisioning your server,
+but once the server is provisioned, and user accounts have been created, you
+should use one of those sysadmin accounts for consistency with usage in
+production.
+
+For example, say I created an account named "alice" on each server (via
+"adminusers" in `ansible/group_vars/all`), I could run this command to execute all
+of the user-management plays in the "all.yml" playbook:
+```
+$ ansible-playbook -u alice -i ansible/<inventory>; ansible/all.yml -t users
+```
+... where `<inventory>` is the inventory file, e.g. "development" or
+"production"
 
 ## Known issues:
 
 * If you get errors about the vboxfs file system not being available, ssh into
-  the virtual machine with "vagrant ssh &lt;host&gt;" and run these commands:
+  the virtual machine with `vagrant ssh <host>` and run these commands:
 ```
 $ sudo /etc/init.d/vboxadd setup
 $ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`getent group vagrant | \

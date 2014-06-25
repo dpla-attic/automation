@@ -1,5 +1,5 @@
 ---
 
-dbnode_id_name:  bigcouch  # e.g. name@hostname
+dbnode_id_name:  bigcouch
 erlang_asynchronous_io_threads: 16
-couch_httpd_auth_secret: d168969089a5fe1be441a4ff58dbe268  # change this in production
+couch_httpd_auth_secret: d168969089a5fe1be441a4ff58dbe268

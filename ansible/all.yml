@@ -6,15 +6,6 @@
   roles:
     - common
 
-- name: Database nodes
-  hosts: dbnodes
-  serial: 1
-  sudo: yes
-  roles:
-    - dbnode
+- include: dbnodes.yml
 
-- name: Database proxy
-  hosts: dbproxy
-  sudo: yes
-  roles:
-    - dbproxy
+- include: dbproxy.yml

@@ -1,0 +1,8 @@
+---
+
+- name: Database nodes
+  hosts: dbnodes
+  serial: 1
+  sudo: yes
+  roles:
+    - dbnode

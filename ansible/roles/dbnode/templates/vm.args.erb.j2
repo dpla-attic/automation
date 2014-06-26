@@ -18,5 +18,9 @@
 # Start a pool of asynchronous IO threads
 +A {{ erlang_asynchronous_io_threads }}
 
+# Stack size in kilowords.  Default is 16 kilowords, i.e. 128KB on 64-bit
+# architectures.
++a 32
+
 # Comment this line out to enable the interactive Erlang shell on startup
 +Bd -noinput

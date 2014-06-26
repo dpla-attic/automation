@@ -34,6 +34,11 @@ Please install the following tools as documented on their websites:
   At the moment, this means symlink Vagrantfile.bigcouch to Vagrantfile.
   In the future, there will be more hosts in our configuration than you'll want
   to have running simultaneously as VMs.
+* Make sure that Vagrant has downloaded the base server image that we'll need
+  for our VMs:
+```
+$ vagrant box add hashicorp/precise64
+```
 * Bring up the VMs in a shell:
 ```
 $ cd /dir/with/Vagrantfile

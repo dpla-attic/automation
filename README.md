@@ -11,8 +11,16 @@ idea is that, in the future, it should be used for cloud servers, too.
 
 ## Installation, VM setup:
 
-TODO: dependencies:  VirtualBox, Vagrant, Ansible
+### Dependencies
 
+Please install the following tools as documented on their websites:
+
+* [VirtualBox](https://www.virtualbox.org/) (Version 4.3.x is known-good.)
+* [Vagrant](http://www.vagrantup.com/) (Version 1.5.x is known-good; 1.6 is
+  probably OK but we have not tested it yet.)
+* [Ansible](http://www.ansible.com/) (Python package.  Install with `pip install ansible`.  [Installation instructions](http://docs.ansible.com/intro_installation.html))
+
+### Steps
 * Copy the following files to their "live" equivalents (removing ".dist") and
   edit them with values specific to your installation:
   * ansible/roles/dbnode/vars/main.yml.dist
@@ -33,6 +41,13 @@ $ vagrant up
 $ ansible-playbook -i ansible/development -u vagrant \
   --private-key=$HOME/.vagrant.d/insecure_private_key ansible/all.yml
 ```
+* Add the following entries to your /etc/hosts file or the equivalent for your
+  operating system:
+```
+192.168.50.4    dbnode1
+192.168.50.5    dbnode2
+192.168.50.2    dbproxy1
+```
 
 ## Subsequent Usage
 
@@ -48,7 +63,7 @@ For example, say I created an account named "alice" on each server (via
 "adminusers" in `ansible/group_vars/all`), I could run this command to execute all
 of the user-management plays in the "all.yml" playbook:
 ```
-$ ansible-playbook -u alice -i ansible/<inventory>; ansible/all.yml -t users
+$ ansible-playbook -u alice -i ansible/<inventory> ansible/all.yml -t users
 ```
 ... where `<inventory>` is the inventory file, e.g. "development" or
 "production"

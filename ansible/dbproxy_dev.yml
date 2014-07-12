@@ -4,4 +4,4 @@
   hosts: dbproxy
   sudo: yes
   roles:
-    - dbproxy
+    - dbproxy_dev

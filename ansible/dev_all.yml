@@ -6,6 +6,6 @@
   roles:
     - common
 
-- include: dbnodes.yml
+- include: playbooks/dbnodes.yml
 
-- include: dbproxy_dev.yml
+- include: playbooks/dbproxy_dev.yml

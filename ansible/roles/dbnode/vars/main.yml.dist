@@ -1,5 +1,6 @@
 ---
 
 dbnode_id_name:  bigcouch
+erlang_magic_cookie: ERHWFJOSSDVOJSDIUX  # change in production
 erlang_asynchronous_io_threads: 16
 couch_httpd_auth_secret: d168969089a5fe1be441a4ff58dbe268

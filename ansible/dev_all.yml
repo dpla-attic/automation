@@ -8,4 +8,4 @@
 
 - include: dbnodes.yml
 
-- include: dbproxy.yml
+- include: dbproxy_dev.yml

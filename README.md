@@ -65,12 +65,12 @@ production.
 
 For example, say I created an account named "alice" on each server (via
 "adminusers" in `ansible/group_vars/all`), I could run this command to execute all
-of the user-management plays in the "all.yml" playbook:
+of the user-management plays in the `dev_all.yml` playbook, with the `development`
+inventory file:
 ```
-$ ansible-playbook -u alice -i ansible/<inventory> ansible/all.yml -t users
+$ ansible-playbook -u alice -i ansible/development ansible/dev-all.yml -t users
 ```
-... where `<inventory>` is the inventory file, e.g. "development" or
-"production"
+
 
 ## Known issues:
 

@@ -68,7 +68,7 @@ For example, say I created an account named "alice" on each server (via
 of the user-management plays in the `dev_all.yml` playbook, with the `development`
 inventory file:
 ```
-$ ansible-playbook -u alice -i ansible/development ansible/dev-all.yml -t users
+$ ansible-playbook -u alice -i ansible/development ansible/dev_all.yml -t users
 ```
 
 

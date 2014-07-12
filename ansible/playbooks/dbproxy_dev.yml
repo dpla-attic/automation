@@ -1,7 +1,0 @@
----
-
-- name: Database proxy
-  hosts: dbproxy
-  sudo: yes
-  roles:
-    - dbproxy_dev

@@ -8,4 +8,4 @@
 
 - include: playbooks/dbnodes.yml
 
-- include: playbooks/dbproxy_dev.yml
+- include: playbooks/dev_loadbalancer.yml

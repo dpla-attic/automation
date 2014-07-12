@@ -1,0 +1,7 @@
+---
+
+- name: Development loadbalancer
+  hosts: loadbalancer
+  sudo: yes
+  roles:
+    - dev_loadbalancer

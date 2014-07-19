@@ -8,6 +8,8 @@ dbnodes = {
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+	# All boxes are hashicorp/precise64, which is Ubuntu 12.04 LTS
+
     dbnodes.keys.each do |hostname|
 	    config.vm.define hostname do |dbnode|
 	        dbnode.vm.box = "hashicorp/precise64"
@@ -18,11 +20,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	    end
     end
 
-    config.vm.define :dbproxy1 do |dbpnode|
-        dbpnode.vm.box = "hashicorp/precise64"
-        dbpnode.vm.network :private_network, ip: "192.168.50.2"
-        dbpnode.vm.provider "virtualbox" do |vb|
+    config.vm.define :loadbal do |loadbal|
+        loadbal.vm.box = "hashicorp/precise64"
+        loadbal.vm.network :private_network, ip: "192.168.50.2"
+        loadbal.vm.provider "virtualbox" do |vb|
             vb.memory = 256
+        end
+    end
+
+    config.vm.define :webapp1 do |webapp|
+        webapp.vm.box = "hashicorp/precise64"
+        webapp.vm.network :private_network, ip: "192.168.50.6"
+        webapp.vm.provider "virtualbox" do |vb|
+            vb.memory = 500
         end
     end
 

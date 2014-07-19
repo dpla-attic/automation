@@ -1,15 +1,22 @@
 ---
 
 - name: Install packages
-  apt: pkg={{ item }} state=present
+  apt: >
+      pkg="{{ item }}" state=present
   with_items:
     - haproxy
     - hatop
+  tags:
+    - loadbalancer
 
 - name: Copy haproxy init defaults file
   copy: src=etc_default_haproxy dest=/etc/default/haproxy owner=root group=root mode=0644
   notify: restart haproxy
+  tags:
+    - loadbalancer
 
 - name: Update haproxy config file
   template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
   notify: restart haproxy
+  tags:
+    - loadbalancer

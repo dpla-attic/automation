@@ -26,6 +26,13 @@
   tags:
     - packages
 
+- name: Ensure correct time zone
+  # Do this after upgrading packages, in case /etc/localtime gets overwritten.
+  copy: src=/usr/share/zoneinfo/{{ iana_timezone }} dest=/etc/localtime
+        owner=root group=root
+  tags:
+    - time
+
 - name: Install packages
   apt: pkg={{ item }} state=present
   with_items:
@@ -55,3 +62,8 @@
   tags:
     - authorized_keys
     - users
+
+- name: Update SSH client configuration
+  copy: src=ssh_config dest=/etc/ssh/ssh_config owner=root group=root mode=0644
+  tags:
+    - packages

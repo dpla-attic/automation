@@ -1,0 +1,31 @@
+---
+
+- name: Ensure existence of PHP
+  apt: >
+      pkg="{{ item }}" state=present force=yes
+  with_items:
+    - php5-fpm
+    - php5-imagick
+    - php5-mcrypt
+    - php5-memcache
+    - php5-mysql
+    - php-apc
+  tags:
+    - web
+    - php
+
+- name: Update PHP configuration (php.ini)
+  template: >
+      src=php.ini.j2 dest=/etc/php5/fpm/php.ini
+      owner=root group=root mode=0644
+  tags:
+    - web
+    - php
+
+- name: Update PHP configuration (php-fpm.conf)
+  template: >
+      src="php-fpm.conf.j2" dest="/etc/php5/fpm/php-fpm.conf"
+      owner=root group=root mode=0644
+  tags:
+    - web
+    - php

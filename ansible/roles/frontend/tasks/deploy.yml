@@ -1,0 +1,96 @@
+---
+
+- name: Check out frontend app
+  git: >
+      repo=https://github.com/dpla/frontend.git
+      dest=/home/dpla/frontend
+      version={{ frontend_branch_or_tag | default("master") }}
+  sudo_user: dpla
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+- name: Update frontend app database configuration
+  template: >
+      src=database.yml.j2 dest=/home/dpla/frontend/config/database.yml
+      owner=dpla group=webapp mode=0640
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+- name: Update frontend app settings
+  template: >
+      src=settings.local.yml.j2 dest=/home/dpla/frontend/config/settings.local.yml
+      owner=dpla group=webapp mode=0640
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+- name: Update frontend unicorn.rb
+  template: >
+      src=unicorn.rb.j2 dest=/home/dpla/frontend/config/unicorn.rb
+      owner=dpla group=dpla mode=0644
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+- name: Make sure rbenv and bundler are current
+  script: >
+      install_ruby_tools.sh {{ ruby_rbenv_version }}
+  sudo_user: dpla
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+- name: Ensure existence of live app directory
+  file: path=/srv/www/frontend state=directory owner=dpla group=dpla mode=0755
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+# Krazy hijinx ensue to get around having a private GitHub repo for the frontend
+# assets gem...
+
+- name: Temporarily copy private key for GitHub
+  # This will be used by build_frontend.sh
+  copy: >
+      src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
+      dest=/home/dpla/git_private_key
+      owner=dpla group=dpla mode=0600
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+- name: Build frontend app
+  script: >
+      build_frontend.sh {{ ruby_rbenv_version }}
+  sudo_user: dpla
+  notify: restart unicorn
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+- name: Remove temporary private key for GitHub
+  file: path=/root/git_private_key state=absent
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+

@@ -1,0 +1,69 @@
+
+server {
+
+    listen {{ exhibitions_app_port }};
+    server_name default;
+
+    # It's unclear if client_max_body_size is necessary.  It was in the
+    # configuration from which this one has been transferred (albeit in
+    # nginx.conf, not this equivalent file).  --MB
+    client_max_body_size 25m;
+
+    location /exhibitions {
+
+        root /srv/www;
+        index index.html index.htm index.php;
+        try_files $uri /exhibitions/index.php?$args;
+
+        location /exhibitions/admin {
+            try_files $uri /exhibitions/admin/index.php?$args;
+        }
+
+        location /exhibitions/install {
+            try_files $uri /exhibitions/install/install.php?$args;
+        }
+
+        # This is an odd way to check that rewrites work...
+        location ~* /exhibitions/install/check-mod-rewrite([^/]*)\.html$ {
+            rewrite ^ /exhibitions/install/mod-rewrite.php?enabled=true;
+        }
+
+        location ~  ^/exhibitions/(.+\.php)$ {
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            # NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param SCRIPT_NAME     $fastcgi_script_name;
+            fastcgi_index index.php;
+            fastcgi_pass unix:/tmp/omeka_php.sock;
+        }
+
+        location = /exhibitions/favicon.ico {
+            alias /srv/www/exhibitions/favicon.ico;
+        }
+
+        location = /exhibitions/robots.txt {
+            alias /srv/www/exhibitions/robots.txt;
+            allow all;
+        }
+
+        location ~ \..*/.*\.php$ {
+            return 403;
+         }
+
+        location ~* ^/exhibitions/(.+)\.(css|doc|docx|flv|gif|htm|ico|jpeg|jpg|js|m4v|mov|mp3|mp4|pdf|png|ppt|pptx|swf|svg|svgz|tif|ttf|wav|xls|xlsx)$ {
+            alias /srv/www/exhibitions;
+            try_files /$1.$2 =404;
+            expires max;
+        }
+
+    }
+
+    location /nginx_status {
+        stub_status on;
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
+
+}

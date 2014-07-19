@@ -1,0 +1,3 @@
+
+unicorn_worker_processes: 2
+rails_env: development

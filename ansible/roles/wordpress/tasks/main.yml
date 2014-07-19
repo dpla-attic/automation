@@ -1,0 +1,34 @@
+---
+
+- name: Update php-fpm pool for Wordpress
+  template: >
+      src=etc_php5_fpm_pool.d_wp.conf.j2
+      dest=/etc/php5/fpm/pool.d/wp.conf
+      owner=root group=root mode=0644
+  notify: restart php5-fpm
+  tags:
+    - wordpress
+    - php
+    - web
+
+- name: Update webserver virtual host for Wordpress
+  template: >
+      src=etc_nginx_sites_available_wordpress.j2
+      dest="/etc/nginx/sites-available/wordpress"
+      owner=root group=root mode=0644
+  notify: restart nginx
+  tags:
+    - wordpress
+    - nginx
+    - web
+
+- name: Symlink webserver virtual host for Wordpress
+  file: >
+      src="/etc/nginx/sites-available/wordpress"
+      dest="/etc/nginx/sites-enabled/wordpress"
+      state=link owner=root group=root
+  notify: restart nginx
+  tags:
+    - wordpress
+    - nginx
+    - web

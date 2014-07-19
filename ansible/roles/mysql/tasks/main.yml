@@ -1,0 +1,68 @@
+---
+
+- name: Ensure that MySQL server is installed
+  apt: pkg={{ item }} state=present force=yes
+  with_items:
+    - mysql-server-5.5
+    - mysql-client-5.5
+    # python-mysqldb is for Ansible.
+    - python-mysqldb
+  tags:
+    - mysql
+    - packages
+
+- name: Update MySQL configuration
+  # This could be a template, but it's not necessary yet due to the small
+  # size and lack of complexity of our MySQL database.
+  copy: src=etc_mysql_my.cnf dest=/etc/mysql/my.cnf
+  notify:
+    - restart mysql
+  tags:
+    - mysql
+
+- name: Update root password
+  mysql_user: name=root
+              password="{{ mysql_root_password }}"
+  tags:
+    - mysql
+
+- name: Update .my.cnf files for admins
+  template: src=home_my.cnf.j2
+            dest="/home/{{ item['username'] }}/.my.cnf"
+  with_items: adminusers
+  tags:
+    - mysql
+
+- name: Update .my.cnf file for Ansible use
+  template: src=home_my.cnf.j2 dest=/root/.my.cnf
+  tags:
+    - mysql
+
+- name: Ensure existence of MySQL databases
+  mysql_db: name={{ item }} state=present
+  with_items:
+    - dpla_omeka
+    - dpla_wp
+  tags:
+    - mysql
+
+- name: Ensure existence of MySQL user accounts
+  mysql_user: name={{ item['name']}}
+              password={{ item['password']}}
+              state=present
+  with_items:  mysql_users
+  tags:
+    - mysql
+    - mysql_user
+
+- name: Ensure privileges for Omeka database user
+  mysql_user: name=dpla_omeka priv=dpla_omeka.*:ALL
+  tags:
+    - mysql
+    - mysql_user
+
+- name: Ensure privileges for Wordpress database user
+  mysql_user: name=dpla_wordpress priv=dpla_wp.*:ALL
+  tags:
+    - mysql
+    - mysql_user

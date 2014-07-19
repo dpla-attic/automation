@@ -1,0 +1,6 @@
+---
+
+- name: Ensure memcached is present
+  apt: name=memcached state=present
+  tags:
+    - memcached

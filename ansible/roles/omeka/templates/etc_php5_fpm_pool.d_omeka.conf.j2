@@ -1,0 +1,23 @@
+[omeka]
+
+listen = /tmp/omeka_php.sock
+listen.backlog = -1
+listen.allowed_clients = 127.0.0.1
+listen.owner = www-data
+listen.group = www-data
+listen.mode = 0666
+user = www-data
+group = www-data
+pm = dynamic
+pm.max_children = 50
+pm.start_servers = 5
+pm.min_spare_servers = 5
+pm.max_spare_servers = 35
+pm.max_requests = 0
+ping.response = pong
+request_terminate_timeout = 0
+request_slowlog_timeout = 0
+slowlog = /var/log/php-fpm/omeka-slow.log
+catch_workers_output = no
+php_admin_value[error_log] = /var/log/omeka-error.log
+php_admin_flag[log_errors] = on

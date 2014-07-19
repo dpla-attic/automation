@@ -6,3 +6,11 @@ adminusers:
 	- username: bob
 	  gecos: "Bob Mock"
 	  ssh_authorized_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC0HAqZfBitZANvEkewhnXG5cmg1bWCE1PdCw+bghw70rV8NG30pTUk0d3TmRUXjPlYMzYbLFEIaNfOH77f7i0SKzG6nlZcv5pnXRCfT3FsWpLYYTiJL9FsjXNrLsRJb+Q/7Vc0A3+f6DIfl8iyICR5ARq7fGotsddicRAz0/3wawj0+qwjziYuSZggqMFbknIGjA6tQfi5idFpunIBqEyccKIT7hCtUX/oZLUOKSP4RFHIIOh8CABeDssIqtd8Cs9c6j+VuWb74K1TxV9wqA2nRVsmCV4Vbxxo3QeEuBAKtEqyblon9rhkHWTD/RiBcd6ClHaCa+MM8rmd2vjrVPTf4D5yNCXug/qCUjuhJ9nTnqIstG7wQXbdC73dwSb7z7BANdzaoxsPP/Bs3s5K3lO+oCS4rHEm2DY36suQqnCf9ePe01A9jxM2U7xi7ZCK66f/5avcsCcMlkXc0q6O64+F75PCtsb4+HinV4+qtqz3n/46yoMWn1ltB+YWShINiBHFUKQeih2F0Ur7W58V0r4WlGtlgIIC9yrZnoFwHdnjw9UYCZkuO6NMyFEAy7o9WIcmEB5+9Z/th90QH0O+30EG31i5s/tLRg1a5pN7YpzTvKQGddeL9cIBT3bj66L47QZL7II0rmj67Y1PeInW2Ce5wrAcNilqXOHmcLyp22dRpQ== bob@example.org"
+
+# timezone corresponds to a file in Ubuntu's IANA zoneinfo database
+# see http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+iana_timezone: US/Eastern
+
+# Path to the private key file (your private key file), which is associated
+# with a GitHub account that has access to private repositories.
+github_private_key_path: ~/.ssh/id_rsa

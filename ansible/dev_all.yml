@@ -9,3 +9,5 @@
 - include: playbooks/dbnodes.yml
 
 - include: playbooks/dev_loadbalancer.yml
+
+- include: playbooks/dev_webapps.yml

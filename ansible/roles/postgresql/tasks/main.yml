@@ -1,0 +1,65 @@
+---
+
+- name: Ensure that PostgreSQL and Ansible dependencies are installed
+  apt: >
+      pkg="{{ item }}" state=present
+  with_items:
+    - postgresql
+    - libpq-dev
+    - python-psycopg2
+  tags:
+    - postgresql
+    - packages
+
+- name: Ensure state of main PostgreSQL config file (postgresql.conf)
+  template: src=postgresql.conf.j2 dest=/etc/postgresql/9.1/main/postgresql.conf
+  notify:
+    - restart postgresql
+  tags:
+    - postgresql
+
+- name: Ensure state of PostgreSQL networking config file (pg_hba.conf)
+  template: src=pg_hba.conf.j2 dest=/etc/postgresql/9.1/main/pg_hba.conf
+  notify:
+    - restart postgresql
+  tags:
+    - postgresql
+
+- name: Ensure credentials of application PostgreSQL user
+  postgresql_user: >
+      name="{{ postgresql_user.name }}" password="{{ postgresql_user.password }}"
+  sudo_user: postgres
+  tags:
+    - postgresql
+
+- name: Make sure our databases exist
+  postgresql_db: >
+      name={{ item }} encoding=LATIN1 state=present template=template0
+  sudo_user: postgres
+  with_items:
+    - dpla_portal
+    - api
+  tags:
+    - postgresql
+
+- name: Ensure privileges on dpla_portal database
+  postgresql_privs: >
+      database=dpla_portal
+      roles={{ postgresql_user.name }}
+      state=present
+      type=database
+      privs=ALL
+  sudo_user: postgres
+  tags:
+    - postgresql
+
+- name: Ensure privileges on api database
+  postgresql_privs: >
+      database=api
+      roles={{ postgresql_user.name }}
+      state=present
+      type=database
+      privs=ALL
+  sudo_user: postgres
+  tags:
+    - postgresql

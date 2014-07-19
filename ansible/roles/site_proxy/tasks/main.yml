@@ -1,0 +1,45 @@
+---
+
+- name: Ensure existence of cache directory
+  file: >
+      path=/var/cache/nginx state=directory
+      owner=root group=www-data mode=0755
+  notify: restart nginx
+  tags:
+    - web
+    - site_proxy
+
+- name: Ensure existence of proxy temp directory
+  file: >
+      path=/var/spool/nginx state=directory
+      owner=root group=www-data mode=0755
+  notify: restart nginx
+  tags:
+    - web
+    - site_proxy
+
+- name: Ensure state of Nginx site config file
+  template: >
+      src="etc_nginx_sites_available_site-proxy.j2"
+      dest="/etc/nginx/sites-available/site-proxy"
+      owner=root group=root mode=0644
+  notify: restart nginx
+  tags:
+    - web
+    - site_proxy
+
+- name: Symlink Nginx site config file
+  file: >
+      src="/etc/nginx/sites-available/site-proxy"
+      dest="/etc/nginx/sites-enabled/site-proxy"
+      state=link owner=root group=root
+  notify: restart nginx
+  tags:
+    - web
+    - site_proxy
+
+- name: Ensure state of robots.txt
+  copy: src=robots.txt dest=/srv/www/robots.txt owner=root group=root mode=0644
+  tags:
+    - web
+    - site_proxy

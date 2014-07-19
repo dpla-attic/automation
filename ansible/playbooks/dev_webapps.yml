@@ -1,0 +1,17 @@
+---
+
+- name: All web application services on one host
+  hosts: webapps
+  sudo: yes
+  roles:
+    - common_web
+    - common_php
+    - common_sitenode
+    - mysql
+    - postgresql
+    - memcached
+    - api
+    - omeka
+    - wordpress
+    - frontend
+    - site_proxy

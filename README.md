@@ -22,15 +22,19 @@ Please install the following tools as documented on their websites:
 ### Steps
 * Copy the following files to their "live" equivalents (removing ".dist") and
   edit them with values specific to your installation:
-  * ansible/roles/dbnode/vars/main.yml.dist
-  * ansible/group_vars/dbnodes.dist
   * ansible/group_vars/all.dist
     * Note that user shell accounts are configured in `ansible/group_vars/all`,
       and that they require SSH public keys in their ssh_authorized_keys fields.
       The `adminusers` variable is for administrative users who will run
       ansible-playbook.
+  * ansible/group_vars/development_all.dist
+  * ansible/group_vars/frontend_dev.dist
+  * ansible/group_vars/frontend_dbs_dev.dist
+  * ansible/roles/common/vars/main.yml.dist
+  * ansible/roles/dbnode/vars/main.yml.dist
+  * ansible/roles/mysql/vars/main.yml.dist
 * Copy or symlink the appropriate Vagrantfile.&lt;name&gt; to Vagrantfile.
-  At the moment, this means symlink Vagrantfile.bigcouch to Vagrantfile.
+  At the moment, this means symlink Vagrantfile.ingestion to Vagrantfile.
   In the future, there will be more hosts in our configuration than you'll want
   to have running simultaneously as VMs.
 * Make sure that Vagrant has downloaded the base server image that we'll need
@@ -38,19 +42,30 @@ Please install the following tools as documented on their websites:
 ```
 $ vagrant box add hashicorp/precise64
 ```
+* Add the following entries to your /etc/hosts file or the equivalent for your
+  operating system:
+```
+192.168.50.2    loadbal local.dp.la
+192.168.50.4    dbnode1
+192.168.50.5    dbnode2
+192.168.50.6    webapp1
+```
 * Bring up the VMs in a shell:
 ```
 $ cd /dir/with/Vagrantfile
 $ vagrant up
-$ ansible-playbook -i ansible/development -u vagrant \
-  --private-key=$HOME/.vagrant.d/insecure_private_key ansible/all.yml
+$ cd ansible
 ```
-* Add the following entries to your /etc/hosts file or the equivalent for your
-  operating system:
+An initial run to add your admin shell account to the VMs:
 ```
-192.168.50.4    dbnode1
-192.168.50.5    dbnode2
-192.168.50.2    dbproxy1
+$ ansible-playbook -i development -u vagrant \
+  --private-key=$HOME/.vagrant.d/insecure_private_key dev_all.yml \
+  -t users
+```
+A second run to configure everything:
+```
+$ ansible-playbook -i development -u <your username in group_vars/all> \
+  dev_all.yml
 ```
 
 ## Subsequent Usage
@@ -68,12 +83,21 @@ For example, say I created an account named "alice" on each server (via
 of the user-management plays in the `dev_all.yml` playbook, with the `development`
 inventory file:
 ```
-$ ansible-playbook -u alice -i ansible/development ansible/dev_all.yml -t users
+$ cd /path/to/automation/ansible  # contains "ansible.cfg"
+$ ansible-playbook -u alice -i development dev_all.yml -t users
 ```
 
+Please note that `ansible.cfg` needs to be in the working directory of the
+`ansible-playbook` command in order for it to read the path to the `roles`
+directory, for that to be available to all of the playbooks in `playbooks`.
 
-## Known issues:
 
+## Known issues
+
+* **There are bound to be _unknown_ issues, since this project is in a state
+  of rapid change.  Note that we have not tagged a release version yet. :-)**
+* The unicorn (Rails web application server) init scripts don't do restarts
+  properly.  They start a new master process and don't kill the old one.
 * If you get errors about the vboxfs file system not being available, ssh into
   the virtual machine with `vagrant ssh <host>` and run these commands:
 ```
@@ -88,7 +112,7 @@ $ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` \
   packages.
 
 
-## Tips:
+## Tips
 
 * The first time you create a VM, it has to do an extensive package upgrade
   of the the software in the base image, after which you should restart the VM

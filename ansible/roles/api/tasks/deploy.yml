@@ -1,0 +1,74 @@
+---
+
+- name: Check out api (platform) app
+  git: >
+      repo=https://github.com/dpla/platform.git
+      dest=/home/dpla/api
+      version={{ api_branch_or_tag | default("master") }}
+  sudo_user: dpla
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+
+- name: Update api app database configuration
+  template: >
+      src=database.yml.j2 dest=/home/dpla/api/config/database.yml
+      owner=dpla group=webapp mode=0640
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+
+- name: Update api app settings in v1
+  template: >
+      src=dpla.yml.j2 dest=/home/dpla/api/v1/config/dpla.yml
+      owner=dpla group=webapp mode=0640
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+
+- name: Update api unicorn.rb
+  template: >
+      src=unicorn.rb.j2 dest=/home/dpla/api/config/unicorn.rb
+      owner=dpla group=dpla mode=0644
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+
+- name: Make sure rbenv and bundler are current
+  script: >
+      install_ruby_tools.sh {{ ruby_rbenv_version }}
+  sudo_user: dpla
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+
+- name: Ensure existence of live app directory
+  file: path=/srv/www/api state=directory owner=dpla group=dpla mode=0755
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+
+
+- name: Build api app
+  script: >
+      build_api.sh {{ ruby_rbenv_version }}
+  sudo_user: dpla
+  notify: restart unicorn
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+

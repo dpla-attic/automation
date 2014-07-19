@@ -1,0 +1,43 @@
+---
+
+- name: Ensure full installation of Imagemagick
+  apt: pkg=imagemagick state=present
+  tags:
+    - omeka
+    - php
+    - web
+
+- name: Update php-fpm pool for Omeka
+  template: >
+      src=etc_php5_fpm_pool.d_omeka.conf.j2
+      dest=/etc/php5/fpm/pool.d/omeka.conf
+      owner=root group=root mode=0644
+  notify: restart php5-fpm
+  tags:
+    - omeka
+    - php
+    - web
+
+- name: Update webserver virtual host for Omeka
+  template: >
+      src=etc_nginx_sites_available_omeka.j2
+      dest="/etc/nginx/sites-available/omeka"
+      owner=root group=root mode=0644
+  notify: restart nginx
+  tags:
+    - omeka
+    - nginx
+    - web
+
+- name: Symlink webserver virtual host for Omeka
+  file: >
+      src="/etc/nginx/sites-available/omeka"
+      dest="/etc/nginx/sites-enabled/omeka"
+      state=link owner=root group=root
+  notify: restart nginx
+  tags:
+    - omeka
+    - nginx
+    - web
+
+- include: deploy.yml

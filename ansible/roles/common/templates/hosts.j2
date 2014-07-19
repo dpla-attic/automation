@@ -8,5 +8,5 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
 {% for h in groups['all'] %}
-{{ hostvars[h]['ansible_eth1']['ipv4']['address'] }}	{{ h }}
+{{ hostvars[h][internal_network_interface]['ipv4']['address'] }}	{{ h }}
 {% endfor %}

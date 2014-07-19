@@ -1,0 +1,2 @@
+# disable gzip for nagios checks
+gzip_disable "nagios-plugins";

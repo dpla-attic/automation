@@ -16,6 +16,9 @@ defaults
 	timeout client 50s
 	timeout server 5m
 
+
+### Bigcouch
+
 frontend bigcouch-chttpd-in
 	bind *:5984
 	default_backend bigcouch-chttpd
@@ -31,3 +34,29 @@ backend bigcouch-chttpd
 backend bigcouch-httpd
 	server dbnode1 192.168.50.4:5986 maxconn 500
 	server dbnode2 192.168.50.5:5986 maxconn 500
+
+
+### Web
+
+frontend web-http-in
+	bind *:80
+	default_backend web-http
+
+frontend web-https-in
+	bind *:443
+	default_backend web-https
+
+backend web-http
+	server webapp1 192.168.50.6:80 maxconn 500
+
+backend web-https
+	server webapp1 192.168.50.6:443 maxconn 500
+
+### API
+
+frontend api-http-in
+	bind *:{{ api_port }}
+	default_backend api-http
+
+backend api-http
+	server webapp1 192.168.50.6:{{ api_app_port }}

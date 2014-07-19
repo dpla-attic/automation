@@ -1,1 +1,10 @@
 all
+development_all
+production_all
+staging_all
+frontend_dev
+frontend_production
+frontend_staging
+frontend_dbs_dev
+frontend_dbs_production
+frontend_dbs_staging

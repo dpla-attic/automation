@@ -1,0 +1,278 @@
+
+# proxy configs
+proxy_cache_path  /var/cache/nginx  levels=1:2   keys_zone=staticfilecache:360m  max_size=10000m;
+proxy_temp_path /var/spool/nginx;
+proxy_cache_key       "$scheme://$host$request_uri";
+proxy_cache         staticfilecache;
+proxy_connect_timeout 30;
+proxy_read_timeout    120;
+proxy_send_timeout    120;
+proxy_redirect      off;
+# this causes issues with file cache - disabling :: jsd
+#proxy_buffering     off;
+
+# disable gzip for nagios checks
+gzip_disable "nagios-plugins";
+
+# use stale while updating, use next backend if error
+proxy_cache_use_stale updating;
+proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+
+# allows backend to see real ip
+proxy_set_header    Host            $host;
+proxy_set_header    X-Real-IP       $remote_addr;
+proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+
+# allows us to check the page's cache status
+add_header X-Cache-Status $upstream_cache_status;
+
+# adding a header cache_bypass:true will invalidate and recache a specific page
+proxy_cache_bypass        $http_cache_bypass $cookie__dpla_no_cache $do_not_cache;
+proxy_no_cache            $http_cache_bypass $cookie__dpla_no_cache $do_not_cache;
+
+# Need to set up a map of this size.
+map_hash_bucket_size 128;
+map $http_user_agent $bad_bot{
+    default     0;
+    "Mozilla/4.0 (compatible; ICS)"     1;
+    "Mozilla/4.0"       1;
+    "Mozilla/5.0"       1;
+    "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)"   1;
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)"    1;
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)"   1;
+    "Mozilla/4.0 (compatible;)"     1;
+    "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9)"   1;
+    "Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)"    1;
+    "Mozilla/4.0 (compatible; MSIE 5.0; Windows 98)"    1;
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows 98)"    1;
+    "Mozilla/5.0 Firefox/3.0.5"     1;
+    "Mozilla/3.0 (compatible)"  1;
+    "Mozilla/2.0 (compatible)"  1;
+    "Mozilla/4.0 (compatible; MSIE 6.0; MSIE 5.5; Windows NT 4.0) Opera 7.0 [en]"   1;
+    "Opera"     1;
+    "-"         1;
+    "0"         1;
+    "Mozilla/5.0 (compatible; SiteBot/0.1; +http://www.sitebot.org/robot/)"     1;
+}
+
+map $http_content_type $do_not_cache {
+    default         0;  
+    "application/json"      1;  
+}
+
+geo $whitelisted {
+    default 1;
+    127.0.0.1/32 0;
+    140.247.0.0/16 0; #harvard
+    23.22.230.215/32 0;
+    23.23.40.181/32 0;
+}
+
+map $whitelisted $limit {
+    1 $binary_remote_addr;
+    0 "";
+}
+
+# Zone Size is 10m, each session is 32 bytes, which is 327680 total session capacity.
+limit_conn_zone $limit zone=pageconnzone:10m;
+limit_req_zone  $limit zone=pagereqzone:10m rate=10r/s;
+
+# Wordpress servers
+upstream dpla_wp {
+{% for h in groups['wordpress'] %}
+    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ wordpress_app_port }} fail_timeout=120s;  # {{ h }}
+{% endfor %}
+}
+
+# Exhibitions servers
+upstream dpla_omeka {
+{% for h in groups['exhibitions'] %}
+    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ exhibitions_app_port }} fail_timeout=120s;  # {{ h }}
+{% endfor %}
+}
+
+# Frontend (portal) servers
+upstream dpla_portal {
+{% for h in groups['frontend'] %}
+    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ frontend_app_port }} fail_timeout=120s;  # {{ h }}
+{% endfor %}
+}
+
+# Old wiki
+upstream dpla_berkman {
+  server 128.103.64.94:80 weight=1 fail_timeout=120s;
+}
+
+server {
+
+    listen   80 default;
+    listen   [::]:80 default ipv6only=on;
+
+    server_name {{ frontend_hostname }};
+  
+    # Bad bot!
+    if ( $bad_bot = 1 ) {
+        return 403;
+    }
+
+    set $do_not_cache 0;
+
+    location / {
+
+        proxy_cache_valid 200 240m;
+
+        # Ignore cache-disabling headers set by the portal app
+        proxy_ignore_headers Cache-Control Set-Cookie;
+
+        # Up to 10 simultaneous page requests per IP 
+        limit_conn pageconnzone 10;
+        # Up to 20 requests / sec for pages.
+        limit_req zone=pagereqzone burst=20;
+    
+        proxy_pass          http://dpla_portal;
+
+        # robots.txt
+        location ~ ^/robots.txt$ {
+            alias /srv/www/robots.txt;
+        }
+
+        location ~* \.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
+            # Cache static-looking files for 120 minutes, setting a 10 day expiry time.
+            proxy_cache_valid 200 360m;
+            expires 864000;
+            proxy_pass http://dpla_portal;
+        }
+
+        # misc rewrites in the top level dir
+        rewrite ^/reps /info/get-involved/reps last;
+        rewrite ^/about/map /info/map last;
+        rewrite ^/about/schema /info/schema last;
+        rewrite ^/platform /info/developers/codex last;
+        rewrite ^/api(.*)$ http://{{ api_hostname }}$1 last;
+        rewrite ^/lists(.*)$ http://lists.dp.la$1 last;
+    }
+
+    location ~ ^/donate(/?|/.*)$ {
+        rewrite ^/donate(/?|/.*)$ http://{{ frontend_hostname }}/info/donate$1 last;
+    }
+
+    location /info {
+        proxy_cache_valid 200 240m;
+        proxy_cache_bypass        $http_cache_bypass $cookie_wordpress_logged_in;
+        proxy_no_cache            $http_cache_bypass $cookie_wordpress_logged_in;
+
+        # Up to 10 simultaneous page requests per IP
+        limit_conn pageconnzone 10;
+        # Up to 20 requests / sec for pages.
+        limit_req zone=pagereqzone burst=20;
+        if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
+            set $do_not_cache 1;
+        }
+
+        proxy_cache_key     "$scheme://$host$request_uri $do_not_cache";
+        proxy_pass          http://dpla_wp;
+
+        # misc rewrites in the top level dir
+        #
+        rewrite ^/info/get-involved/forums /info/forums permanent;
+        rewrite ^/info/about/org /info/about/policies permanent;
+
+        # static files 
+        location ~* \.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
+            # Cache static-looking files for 120 minutes, setting a 10 day expiry time.
+            # Do not cache for logged-in users.
+            proxy_cache_valid 200 360m;
+            expires 864000;
+            if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
+                set $do_not_cache 1;
+            }
+            proxy_cache_key     "$scheme://$host$request_uri $do_not_cache";
+            proxy_pass http://dpla_wp;
+        }
+
+        rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+        location ~* wp\-.*\.php|wp\-admin {
+            proxy_pass http://dpla_wp;
+        }
+
+        location ~* test\.php {
+            # Cache for non-logged-in users.
+            if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
+                set $do_not_cache 1;
+            }
+            proxy_cache_key     "$scheme://$host$request_uri $do_not_cache";
+            proxy_cache staticfilecache;
+        }
+
+        location ~* \/[^\/]+\/(feed|\.xml)\/? {
+            proxy_cache_valid 200 240m;
+            limit_conn pageconnzone 3;
+            limit_req zone=pagereqzone burst=16;
+            if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
+                set $do_not_cache 1;
+            }
+            proxy_cache_key     "$scheme://$host$request_uri $do_not_cache";
+            proxy_cache_valid 200 240m;
+            proxy_pass http://dpla_wp;
+        }
+
+        location ~* ^\/(apc|phpinfo)\.php {
+            access_log off;
+            allow 127.0.0.1;
+            deny all;
+            proxy_pass http://dpla_wp;
+        }
+
+    }
+
+    location /exhibitions {
+
+        proxy_cache_valid 200 240m;
+        proxy_cache_bypass        $http_cache_bypass $do_not_cache $cookie__dpla_no_cache;
+        proxy_no_cache            $http_cache_bypass $do_not_cache $cookie__dpla_no_cache;
+
+        # Ignore cache-disabling headers set by Omeka
+    	  proxy_ignore_headers Cache-Control Set-Cookie Expires;
+
+        # Up to 10 simultaneous page requests per IP
+        limit_conn pageconnzone 10;
+        # Up to 20 requests / sec for pages.
+        limit_req zone=pagereqzone burst=20;
+
+        proxy_pass          http://dpla_omeka;
+
+        # misc rewrites in the /exhibitions dir
+        #
+        rewrite ^/exhibitions/(activism|boston-sports-temples|history-of-survivance|this-land|new-deal|breadandroses|spirits) /exhibitions/exhibits/show/$1 permanent;
+
+        location /exhibitions/admin {
+            set $do_not_cache 1;
+            proxy_pass http://dpla_omeka;
+        }
+
+        location ~* \.(css|doc|docx|flv|gif|htm|ico|jpeg|jpg|js|m4v|mov|mp3|mp4|pdf|png|ppt|pptx|svg|svgz|swf|tif|ttf|wav|xls|xlsx)$ {
+            # Cache static-looking files for 120 minutes, setting a 10 day expiry time.
+            proxy_cache_valid 200 360m;
+            expires 864000;
+            proxy_pass http://dpla_omeka;
+        }
+    }
+
+    location /wiki {
+        proxy_set_header Host dev.dp.la;     
+        sub_filter dev.dp.la 'dp.la';
+        sub_filter_once off;
+        proxy_pass http://dpla_berkman/wiki;
+     }
+
+    location /nginx_status {
+        stub_status on;
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
+
+    location ~ /\.ht {
+        deny  all;
+    }
+}

@@ -1,0 +1,69 @@
+---
+
+- name: Ensure Nginx is present
+  apt: pkg=nginx state=present
+  tags:
+    - nginx
+    - web
+
+- name: Ensure git is present
+  apt: pkg=git state=present
+  tags:
+    - web
+
+- name: Disable Ubuntu default virtual host
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  notify: restart nginx
+  tags:
+    - nginx
+    - web
+
+- name: Update main Nginx configuration (nginx.conf)
+  template: src=etc_nginx_nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  notify: restart nginx
+  tags:
+    - nginx
+    - web
+
+- name: Copy Nginx settings for Nagios checks
+  copy: >
+      src=etc_nginx_conf.d_nagioschecks dest=/etc/nginx/conf.d/nagioschecks
+      owner=root group=root mode=0644
+  notify: restart nginx
+  tags:
+    - nginx
+    - web
+    - nagios
+
+- name: Ensure "dpla" user exists
+  user: >
+      name=dpla comment="DPLA application user"
+      home=/home/dpla shell=/bin/bash state=present
+  tags:
+    - users
+    - web
+
+- name: Ensure "webapp" group exists
+  # For granting read access to configuration files
+  group: name=webapp state=present
+  tags:
+    - users
+    - web
+
+- name: Ensure membership of "dpla" in "webapp" group
+  user: name=dpla groups=webapp
+  tags:
+    - users
+    - web
+
+- name: Ensure membership of "www-data" in "webapp" group
+  user: name="www-data" groups=webapp
+  tags:
+    - users
+    - web
+
+- name: Ensure dpla user's .ssh directory exists
+  file: path=/home/dpla/.ssh state=directory mode=0700 owner=dpla group=dpla
+  tags:
+    - users
+    - web

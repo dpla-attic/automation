@@ -1,0 +1,32 @@
+
+{# Assume there's just one frontend db server. #}
+{% set db_host = groups['frontend_dbs'][0] %}
+
+{# The "test" environment is not used yet. #}
+test:
+  adapter: postgresql
+  encoding: latin1
+  host: {{ db_host }}
+  database: api_test
+  username: {{ postgresql_user['name'] }}
+  password: {{ postgresql_user['password'] }}
+  port: 5432
+
+development:
+  adapter: postgresql
+  encoding: latin1
+  host: {{ db_host }}
+  hostname: localhost
+  database: api
+  username: {{ postgresql_user['name'] }}
+  password: {{ postgresql_user['password'] }}
+  port: 5432
+
+production:
+  adapter: postgresql
+  encoding: latin1
+  host: {{ db_host }}
+  database: api
+  username: {{ postgresql_user['name'] }}
+  password: {{ postgresql_user['password'] }}
+  port: 5432

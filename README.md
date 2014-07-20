@@ -33,10 +33,10 @@ Please install the following tools as documented on their websites:
   * ansible/roles/common/vars/main.yml.dist
   * ansible/roles/dbnode/vars/main.yml.dist
   * ansible/roles/mysql/vars/main.yml.dist
-* Copy or symlink the appropriate Vagrantfile.&lt;name&gt; to Vagrantfile.
-  At the moment, this means symlink Vagrantfile.ingestion to Vagrantfile.
+* Copy `Vagrantfile.dist` to `Vagrantfile`.
   In the future, there will be more hosts in our configuration than you'll want
-  to have running simultaneously as VMs.
+  to have running simultaneously as VMs, and you'll want to edit the default
+  Vagrantfile to suit your needs, commenting out VMs that you don't want running.
 * Make sure that Vagrant has downloaded the base server image that we'll need
   for our VMs:
 ```

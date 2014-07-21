@@ -12,6 +12,7 @@ bundle install
 
 /usr/bin/rsync -ruptolg --delete --delay-updates \
     --exclude 'var/log' \
+    --exclude 'tmp' \
     /home/dpla/api/ /srv/www/api
 if [ $? -ne 0 ]; then
     exit 1
@@ -20,9 +21,12 @@ fi
 cd /srv/www/api
 bundle exec rake db:migrate
 
-logdir='/srv/www/api/var/log'
-if [ ! -d $logdir ]; then
-    mkdir $logdir \
-        && chown dpla:webapp $logdir \
-        && chmod 0775 $logdir
-fi
+# Log and temporary directories
+dirs_to_check='/srv/www/api/var/log /srv/www/api/tmp'
+for dir in $dirs_to_check; do
+    if [ ! -d $dir ]; then
+        mkdir $dir \
+            && chown dpla:webapp $dir \
+            && chmod 0775 $dir
+    fi
+done

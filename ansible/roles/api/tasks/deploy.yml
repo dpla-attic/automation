@@ -1,11 +1,21 @@
 ---
 
-- name: Check out api (platform) app
+- name: Check out api (platform) app from its repository
   git: >
       repo=https://github.com/dpla/platform.git
       dest=/home/dpla/api
       version={{ api_branch_or_tag | default("master") }}
   sudo_user: dpla
+  when: not api_use_local_source
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+
+- name: Check out api (platform) app from mounted directory
+  script: copy_local_app.sh
+  when: api_use_local_source
   tags:
     - deployment
     - api
@@ -16,6 +26,7 @@
   template: >
       src=database.yml.j2 dest=/home/dpla/api/config/database.yml
       owner=dpla group=webapp mode=0640
+  when: not api_use_local_source
   tags:
     - deployment
     - api
@@ -26,6 +37,7 @@
   template: >
       src=dpla.yml.j2 dest=/home/dpla/api/v1/config/dpla.yml
       owner=dpla group=webapp mode=0640
+  when: not api_use_local_source
   tags:
     - deployment
     - api

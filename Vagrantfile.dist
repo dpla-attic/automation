@@ -7,6 +7,11 @@
 # have running, and which could be commented out in this file
 # to save system resources.
 #
+# Please note the synced_folder directives.  If you want to be able
+# to edit files locally (outside of the VM, in your host environment)
+# and have them synced with the VMs, then change these directives to
+# reference them. 
+#
 # At the moment, all of the VMs below are necessary, but this could
 # change in the future.
 
@@ -53,6 +58,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         webapp.vm.provider "virtualbox" do |vb|
             vb.memory = 768
         end
+        #
+        # *** EDIT THESE FOR LOCAL DEVELOPMENT ***
+        # Change the path to the synced local directory, if necessary,
+        # but don't modify the mount point.
+        # webapp.vm.synced_folder "../frontend", "/frontend_dev"
+        # webapp.vm.synced_folder "../platform", "/api_dev"
     end
 
 end

@@ -1,11 +1,21 @@
 ---
 
-- name: Check out frontend app
+- name: Check out frontend app from its repository
   git: >
       repo=https://github.com/dpla/frontend.git
       dest=/home/dpla/frontend
       version={{ frontend_branch_or_tag | default("master") }}
   sudo_user: dpla
+  when: not frontend_use_local_source
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+- name: Check out frontend app from mounted directory
+  script: copy_local_app.sh
+  when: frontend_use_local_source
   tags:
     - deployment
     - frontend
@@ -16,6 +26,7 @@
   template: >
       src=database.yml.j2 dest=/home/dpla/frontend/config/database.yml
       owner=dpla group=webapp mode=0640
+  when: not frontend_use_local_source
   tags:
     - deployment
     - frontend
@@ -26,6 +37,7 @@
   template: >
       src=settings.local.yml.j2 dest=/home/dpla/frontend/config/settings.local.yml
       owner=dpla group=webapp mode=0640
+  when: not frontend_use_local_source
   tags:
     - deployment
     - frontend

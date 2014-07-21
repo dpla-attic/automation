@@ -1,3 +1,7 @@
 
 unicorn_worker_processes: 2
 rails_env: development
+
+# Uncomment this to use your local working copy for the API
+# (See Vagrantfile)
+# api_use_local_source: true

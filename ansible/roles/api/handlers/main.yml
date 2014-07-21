@@ -1,4 +1,4 @@
 ---
 
 - name: restart unicorn
-  service: name=unicorn_api state=restarted sleep=10
+  service: name=unicorn_api state=restarted sleep=5

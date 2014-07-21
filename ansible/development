@@ -29,6 +29,8 @@ webapps
 
 [api:children]
 webapps
+[api_dev:children]
+webapps
 
 [memcached:children]
 webapps

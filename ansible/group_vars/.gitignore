@@ -11,3 +11,6 @@ frontend_dbs_staging
 elasticsearch_dev
 elasticsearch_production
 elasticsearch_staging
+api_dev
+api_production
+api_staging

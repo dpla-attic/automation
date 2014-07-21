@@ -96,8 +96,6 @@ directory, for that to be available to all of the playbooks in `playbooks`.
 
 * **There are bound to be _unknown_ issues, since this project is in a state
   of rapid change.  Note that we have not tagged a release version yet. :-)**
-* The unicorn (Rails web application server) init scripts don't do restarts
-  properly.  They start a new master process and don't kill the old one.
 * If you get errors about the vboxfs file system not being available, ssh into
   the virtual machine with `vagrant ssh <host>` and run these commands:
 ```

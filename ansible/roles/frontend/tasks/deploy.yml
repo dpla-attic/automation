@@ -87,7 +87,7 @@
     - web
 
 - name: Remove temporary private key for GitHub
-  file: path=/root/git_private_key state=absent
+  file: path=/home/dpla/git_private_key state=absent
   tags:
     - deployment
     - frontend

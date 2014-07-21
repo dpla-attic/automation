@@ -6,8 +6,10 @@
   roles:
     - common
 
+- include: playbooks/dev_loadbalancer.yml
+
 - include: playbooks/dbnodes.yml
 
-- include: playbooks/dev_loadbalancer.yml
+- include: playbooks/elasticsearch.yml
 
 - include: playbooks/dev_webapps.yml

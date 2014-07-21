@@ -8,12 +8,13 @@ dbnode2 ansible_ssh_host=192.168.50.5 hostname=dbnode2
 [webapps]
 webapp1 ansible_ssh_host=192.168.50.6 hostname=webapp1
 
+[frontend:children]
+webapps
 [frontend_dev:children]
 webapps
 
 [frontend_dbs:children]
 webapps
-
 [frontend_dbs_dev:children]
 webapps
 
@@ -26,14 +27,16 @@ webapps
 [exhibitions:children]
 webapps
 
-[frontend:children]
-webapps
-
 [api:children]
 webapps
 
 [memcached:children]
 webapps
+
+[elasticsearch:children]
+dbnodes
+[elasticsearch_dev:children]
+dbnodes
 
 [development_all:children]
 loadbalancer

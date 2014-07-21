@@ -8,3 +8,6 @@ frontend_staging
 frontend_dbs_dev
 frontend_dbs_production
 frontend_dbs_staging
+elasticsearch_dev
+elasticsearch_production
+elasticsearch_staging

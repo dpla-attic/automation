@@ -60,3 +60,13 @@ frontend api-http-in
 
 backend api-http
 	server webapp1 192.168.50.6:{{ api_app_port }}
+
+### Elasticsearch
+
+frontend elasticsearch-in
+	bind *:9200
+	default_backend elasticsearch
+
+backend elasticsearch
+	server dbnode1 192.168.50.4:9200 maxconn 500
+	server dbnode2 192.168.50.4:9200 maxconn 500

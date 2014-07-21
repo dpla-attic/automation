@@ -1,0 +1,7 @@
+---
+
+- name: Elasticsearch setup
+  hosts: elasticsearch
+  sudo: yes
+  roles:
+    - elasticsearch

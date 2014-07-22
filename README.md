@@ -21,13 +21,16 @@ Please install the following tools as documented on their websites:
 
 ### Steps
 * Copy the following files to their "live" equivalents (removing ".dist") and
-  edit them with values specific to your installation:
+  edit them with values specific to your installation.  Most files will not need
+  any changes.
   * ansible/group_vars/all.dist
     * Note that user shell accounts are configured in `ansible/group_vars/all`,
       and that they require SSH public keys in their ssh_authorized_keys fields.
       The `adminusers` variable is for administrative users who will run
       ansible-playbook.
   * ansible/group_vars/development_all.dist
+  * ansible/group_vars/api_dev.dist
+  * ansible/group_vars/elasticsearch_dev.dist
   * ansible/group_vars/frontend_dev.dist
   * ansible/group_vars/frontend_dbs_dev.dist
   * ansible/roles/common/vars/main.yml.dist

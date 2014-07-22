@@ -16,8 +16,8 @@ webapp_debug: 1
 exhibitions_branch_or_tag: "v16.1"
 
 mysql_users:
-  - {name: dpla_omeka, password: "heapsaucenearly"}
-  - {name: dpla_wordpress, password: "horsenothingbox"}
+  - {name: dpla_omeka, password: "changeme"}
+  - {name: dpla_wordpress, password: "changeme"}
 
 frontend_hostname: local.dp.la
 api_hostname: local.dp.la

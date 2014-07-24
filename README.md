@@ -11,7 +11,11 @@ idea is that, in the future, it should be used for cloud servers, too.
 
 ## Installation, VM setup:
 
-### Dependencies
+### Prerequisites and Dependencies
+
+At least when running all of the web application and database services together,
+which is the case with the default Vagrantfile mentioned below, we assume a host
+machine with at least 8 GB of memory.
 
 Please install the following tools as documented on their websites:
 
@@ -20,20 +24,24 @@ Please install the following tools as documented on their websites:
 * [Ansible](http://www.ansible.com/) (Python package.  Install with `pip install ansible`.  [Installation instructions](http://docs.ansible.com/intro_installation.html))
 
 ### Steps
+* Clone this project with Git or download the latest
+  [zipfile](https://github.com/dpla/automation/archive/master.zip) and open it.  If
+  you download the zipfile you won't be able to update it as easily when we issue
+  updates.
 * Copy the following files to their "live" equivalents (removing ".dist") and
   edit them with values specific to your installation.
-  * ansible/group_vars/all.dist
+  * `ansible/group_vars/all.dist`
     * Note that user shell accounts are configured in `ansible/group_vars/all`,
       and that they require SSH public keys in their ssh_authorized_keys fields.
       The `adminusers` variable is for administrative users who will run
       ansible-playbook.
-  * ansible/vars/development.yml.dist
-  * ansible/roles/api/vars/development.yml.dist
-    * Optional.  If you want to use a local source directory for the API app (see
-      Vagrantfile)
-  * ansible/roles/frontend/vars/development.yml.dist
-    * Optional.  For the frontend app, as above.  See Vagrantfile.
-* Optionally, copy and update the rest of the ansible/roles/*/development.yml.dist
+  * `ansible/vars/development.yml.dist`
+  * `ansible/roles/api/vars/development.yml.dist`
+    * Optional, if you want to use a local source directory for the API app (see
+      `Vagrantfile`).
+  * `ansible/roles/frontend/vars/development.yml.dist`
+    * Optional.  For the frontend app, as above.  See `Vagrantfile`.
+* Optionally, copy and update the rest of the `ansible/roles/*/development.yml.dist`
   files in a similar fashion.  There are defaults that will take effect if you don't
   make any changes.
 * Copy `Vagrantfile.dist` to `Vagrantfile`.
@@ -94,6 +102,13 @@ Please note that `ansible.cfg` needs to be in the working directory of the
 `ansible-playbook` command in order for it to read the path to the `roles`
 directory, for that to be available to all of the playbooks in `playbooks`.
 
+### SSH access
+
+You can SSH directly into your new VMs as if they were servers on your own private
+network.  For example:
+```
+$ ssh me@webapp1
+```
 
 ## Known issues
 
@@ -111,6 +126,20 @@ $ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` \
   I'll eventually create an Ansible playbook to handle this situation, which is
   a known issue with Vagrant with regard to Debian's apt-get upgrade of kernel
   packages.
+
+## Design considerations
+
+Roles, inventory, and variables have been laid out to allow, as much as possible, the
+use of the same roles and tasks in all stages of deployment -- development, staging,
+and production.
+
+We have considered using Docker, with its lower memory requirements.  It is
+important to us, however, that we be able to simulate our networking interfaces and
+their configuration, and it was not obvious that we could do that with Docker.
+
+We will keep watching the progress of Docker support in Vagrant, and this situation
+may change.   We would also like to hear from anyone who can suggest ways in which we
+might use Docker, keeping in mind our need to represent our network setup.
 
 
 ## Tips

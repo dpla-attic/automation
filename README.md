@@ -78,6 +78,19 @@ A second run to configure everything:
 $ ansible-playbook -i development -u <your username in group_vars/all> \
   dev_all.yml
 ```
+* The various sites will be online at:
+  * http://local.dp.la/
+  * http://local.dp.la/exhibitions/
+  * http://local.dp.la/info/  (not yet, coming soon)
+  * http://local.dp.la:8080/v2/items (the API)
+
+  However, there won't be any data ingested until you run an ingestion with
+  [the ingestion system](http://github.com/dpla/ingestion) and you've pointed
+  it at the BigCouch instance, which will be loadbal:5984.  You'll also have
+  to use the `rake` tasks in
+  [the API ("platform") app](http://github.com/dpla/platform) to set up the
+  ElasticSearch search index and initialize your repositories.  Please consult
+  those other projects for more information.
 
 ## Subsequent Usage
 
@@ -109,6 +122,23 @@ network.  For example:
 ```
 $ ssh me@webapp1
 ```
+
+### Suggested development workflow
+
+Here's an example with the API app.  The process would be similiar for the frontend
+app.
+
+1. Configure ansible/roles/vars/development.yml with `api_use_local_source: true`
+   and have a `webapp.vm.synced_folder` entry in your `Vagrantfile` for your
+   local working copy of the project.
+2. Make your changes to the local working copy.
+3. In a shell (assuming you're in the directory with `ansible.cfg`):
+```
+$ ansible-playbook -u <your username> -i development \
+  playbooks/deploy_api_development.yml
+```
+
+Repeat 2 and 3.
 
 ## Known issues
 

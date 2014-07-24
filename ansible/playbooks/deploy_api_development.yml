@@ -1,0 +1,15 @@
+---
+
+- name: Deploy API (development)
+  hosts: api
+  sudo: yes
+  tasks:
+    - include: ../roles/api/tasks/deploy.yml
+  handlers:
+    - include: ../roles/api/handlers/main.yml
+  vars:
+    level: development
+  vars_files:
+    - "../vars/development.yml"
+    - "../roles/api/defaults/main.yml"
+    - "../roles/api/vars/development.yml"

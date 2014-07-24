@@ -5,11 +5,13 @@
   sudo: yes
   roles:
     - common
+  vars_files:
+    - [ "vars/development.yml", "vars/defaults.yml" ]
 
 - include: playbooks/dev_loadbalancer.yml
 
-- include: playbooks/dbnodes.yml
+- include: playbooks/dbnodes.yml level=development
 
-- include: playbooks/elasticsearch.yml
+- include: playbooks/elasticsearch.yml level=development
 
-- include: playbooks/dev_webapps.yml
+- include: playbooks/dev_webapps.yml level=development

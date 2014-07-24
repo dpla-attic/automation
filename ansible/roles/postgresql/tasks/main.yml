@@ -1,5 +1,10 @@
 ---
 
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - postgresql
+
 - name: Ensure that PostgreSQL and Ansible dependencies are installed
   apt: >
       pkg="{{ item }}" state=present

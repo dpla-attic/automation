@@ -1,16 +1,1 @@
 all
-development_all
-production_all
-staging_all
-frontend_dev
-frontend_production
-frontend_staging
-frontend_dbs_dev
-frontend_dbs_production
-frontend_dbs_staging
-elasticsearch_dev
-elasticsearch_production
-elasticsearch_staging
-api_dev
-api_production
-api_staging

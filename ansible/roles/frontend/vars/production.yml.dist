@@ -1,0 +1,4 @@
+---
+
+rails_env: production
+unicorn_worker_processes: 8

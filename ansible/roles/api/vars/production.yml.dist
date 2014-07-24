@@ -1,3 +1,4 @@
+---
 
 unicorn_worker_processes: 8
 rails_env: production

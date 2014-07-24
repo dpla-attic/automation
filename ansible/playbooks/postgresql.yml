@@ -1,0 +1,11 @@
+---
+
+- name: PostgreSQL databases
+  hosts: postgresql_dbs
+  sudo: yes
+  roles:
+    - postgresql
+  vars:
+      level: production
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

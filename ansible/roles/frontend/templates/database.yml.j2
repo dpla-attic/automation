@@ -1,6 +1,6 @@
 
 {# Assume there's just one frontend db server. #}
-{% set db_host = groups['frontend_dbs'][0] %}
+{% set db_host = groups['postgresql_dbs'][0] %}
 
 {# The "test" environment is not used yet. #}
 test:

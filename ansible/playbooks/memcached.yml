@@ -1,11 +1,10 @@
 ---
 
-- name: Database nodes
-  hosts: dbnodes
-  serial: 1
+- name: memcacheds
+  hosts: memcached
   sudo: yes
   roles:
-    - dbnode
+    - memcached
   vars:
     # Default to production to keep development values from accidentally being
     # used in production.

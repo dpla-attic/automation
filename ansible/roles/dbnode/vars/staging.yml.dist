@@ -1,0 +1,4 @@
+---
+
+erlang_magic_cookie: CHANGEME
+couch_httpd_auth_secret: CHANGEME

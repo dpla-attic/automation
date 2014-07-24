@@ -1,5 +1,12 @@
 ---
 
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - mysql
+    - mysql_user
+
+
 - name: Ensure that MySQL server is installed
   apt: pkg={{ item }} state=present force=yes
   with_items:

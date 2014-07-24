@@ -10,12 +10,8 @@ webapp1 ansible_ssh_host=192.168.50.6 hostname=webapp1
 
 [frontend:children]
 webapps
-[frontend_dev:children]
-webapps
 
-[frontend_dbs:children]
-webapps
-[frontend_dbs_dev:children]
+[postgresql_dbs:children]
 webapps
 
 [site_proxies:children]
@@ -27,9 +23,10 @@ webapps
 [exhibitions:children]
 webapps
 
-[api:children]
+[mysql_dbs:children]
 webapps
-[api_dev:children]
+
+[api:children]
 webapps
 
 [memcached:children]
@@ -37,11 +34,4 @@ webapps
 
 [elasticsearch:children]
 dbnodes
-[elasticsearch_dev:children]
-dbnodes
-
-[development_all:children]
-loadbalancer
-dbnodes
-webapps
 

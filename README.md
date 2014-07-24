@@ -21,21 +21,21 @@ Please install the following tools as documented on their websites:
 
 ### Steps
 * Copy the following files to their "live" equivalents (removing ".dist") and
-  edit them with values specific to your installation.  Most files will not need
-  any changes.
+  edit them with values specific to your installation.
   * ansible/group_vars/all.dist
     * Note that user shell accounts are configured in `ansible/group_vars/all`,
       and that they require SSH public keys in their ssh_authorized_keys fields.
       The `adminusers` variable is for administrative users who will run
       ansible-playbook.
-  * ansible/group_vars/development_all.dist
-  * ansible/group_vars/api_dev.dist
-  * ansible/group_vars/elasticsearch_dev.dist
-  * ansible/group_vars/frontend_dev.dist
-  * ansible/group_vars/frontend_dbs_dev.dist
-  * ansible/roles/common/vars/main.yml.dist
-  * ansible/roles/dbnode/vars/main.yml.dist
-  * ansible/roles/mysql/vars/main.yml.dist
+  * ansible/vars/development.yml.dist
+  * ansible/roles/api/vars/development.yml.dist
+    * Optional.  If you want to use a local source directory for the API app (see
+      Vagrantfile)
+  * ansible/roles/frontend/vars/development.yml.dist
+    * Optional.  For the frontend app, as above.  See Vagrantfile.
+* Optionally, copy and update the rest of the ansible/roles/*/development.yml.dist
+  files in a similar fashion.  There are defaults that will take effect if you don't
+  make any changes.
 * Copy `Vagrantfile.dist` to `Vagrantfile`.
   In the future, there will be more hosts in our configuration than you'll want
   to have running simultaneously as VMs, and you'll want to edit the default

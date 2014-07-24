@@ -1,17 +1,52 @@
 ---
 
-- name: All web application services on one host
+- include: postgresql.yml
+
+- include: mysql.yml
+
+- include: memcached.yml
+
+- name: Common httpd configuration
   hosts: webapps
   sudo: yes
   roles:
     - common_web
+  vars:
+    level: production
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+
+- name: Common PHP configuration
+  hosts: webapps
+  sudo: yes
+  roles:
     - common_php
+  vars:
+    level: production
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+
+- name: Content-management and exhibitions services
+  hosts: webapps
+  sudo: yes
+  roles:
     - common_sitenode
     - site_proxy
-    - mysql
-    - postgresql
-    - memcached
-    - api
     - omeka
     - wordpress
+  vars:
+    level: production
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+
+- name: Frontend (portal) site
+  hosts: webapps
+  sudo: yes
+  roles:
     - frontend
+  vars:
+    level: production
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+
+- include: api.yml

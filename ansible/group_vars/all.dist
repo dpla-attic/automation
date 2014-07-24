@@ -12,5 +12,6 @@ adminusers:
 iana_timezone: US/Eastern
 
 # Path to the private key file (your private key file), which is associated
-# with a GitHub account that has access to private repositories.
-github_private_key_path: ~/.ssh/id_rsa
+# with a GitHub account that has access to private repositories.  This defaults
+# to ~/.ssh/id_rsa
+# github_private_key_path: ~/.ssh/id_rsa

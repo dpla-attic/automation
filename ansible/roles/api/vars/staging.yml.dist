@@ -1,0 +1,4 @@
+---
+
+unicorn_worker_processes: 4
+rails_env: staging

@@ -1,0 +1,6 @@
+---
+
+mysql_root_password: changeme
+mysql_users:
+  - {name: "dpla_omeka", password: "changeme"}
+  - {name: "dpla_wordpress", password: "changeme"}

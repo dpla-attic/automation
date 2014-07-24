@@ -1,11 +1,10 @@
 ---
 
-- name: Database nodes
-  hosts: dbnodes
-  serial: 1
+- name: API (platform) application
+  hosts: api
   sudo: yes
   roles:
-    - dbnode
+    - api
   vars:
     # Default to production to keep development values from accidentally being
     # used in production.

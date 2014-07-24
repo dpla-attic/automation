@@ -1,3 +1,8 @@
+---
+
+# Variables that should apply to all roles, only in the production
+# level of deployment.
+
 
 # The network interface to use for generating internal IP addresses
 # in various configuration files.  This is usually eth1 in a
@@ -6,24 +11,25 @@
 # We assume it's the same on all hosts!
 internal_network_interface: ansible_eth1
 
+
 # Whether to enable various settings that would display diagnostic
 # or debugging output (including error messages and stack traces)
 # in an HTTP response.
-webapp_debug: 1
+webapp_debug: 0
 
-### DPLA application versions for deployment
-#   These will default to "master" if not defined.
-exhibitions_branch_or_tag: "v16.1"
+frontend_hostname: dp.la
+api_hostname: api.dp.la
+# api_port is the port the *loadbalancer* answers on for API requests
+api_port: 80
 
-mysql_users:
-  - {name: dpla_omeka, password: "changeme"}
-  - {name: dpla_wordpress, password: "changeme"}
+api_key: changeme
 
-frontend_hostname: local.dp.la
-api_hostname: local.dp.la
+exhibitions_app_port: 8000
+wordpress_app_port: 8001
+frontend_app_port: 8002
+# api_app_port is the port the *backend app server* runs on
+api_app_port: 8003
 
-# This api_key is for a test account created by the platform app installation.
-api_key: aa11d0958e93bb25e457a726dc10a40f
 
 # We would normally get an IP address by querying the inventory, but
 # this will work easiest between development and production
@@ -31,16 +37,19 @@ bigcouch_cluster_loadbal: 192.168.50.2
 # same with Elasticsearch ...
 es_cluster_loadbal: 192.168.50.2
 
-email_notifications_from: someone@example.tld
 
-twitter_username: someuser
-twitter_widget_id: 1234512345
-facebook_account_name: someuser
-tumblr_account_name: someuser
+email_notifications_from: addr@example.tld
 
-google_analytics_property_id: UA-xxxxxx-1
+
+twitter_username: changeme
+twitter_widget_id: 12345changeme
+facebook_account_name: changeme
+tumblr_account_name: changeme
+
+google_analytics_property_id: UA-xxxxxxx-1
 
 ruby_rbenv_version: 1.9.3-p547
 
-bigcouch_admin_name: dpla
-bigcouch_admin_password: couchM3
+bigcouch_admin_name: changeme
+bigcouch_admin_password: changeme
+

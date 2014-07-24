@@ -1,6 +1,4 @@
-
-unicorn_worker_processes: 2
-rails_env: development
+---
 
 # Uncomment this to use your local working copy for the frontend (portal)
 # (See Vagrantfile)

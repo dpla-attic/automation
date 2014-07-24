@@ -1,0 +1,11 @@
+---
+
+ruby_rbenv_version: 1.9.3-p547
+internal_network_interface: ansible_eth1
+webapp_debug: 0
+
+api_port: 8080
+exhibitions_app_port: 8000
+wordpress_app_port: 8001
+frontend_app_port: 8002
+api_app_port: 8003

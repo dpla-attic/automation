@@ -1,11 +1,10 @@
 ---
 
-- name: Database nodes
-  hosts: dbnodes
-  serial: 1
+- name: MySQL
+  hosts: mysql_dbs
   sudo: yes
   roles:
-    - dbnode
+    - mysql
   vars:
     # Default to production to keep development values from accidentally being
     # used in production.

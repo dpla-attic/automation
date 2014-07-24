@@ -1,5 +1,14 @@
 ---
 
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - api
+    - api_deployment
+    - deployment
+    - web
+
+
 - name: Check out api (platform) app from its repository
   git: >
       repo=https://github.com/dpla/platform.git

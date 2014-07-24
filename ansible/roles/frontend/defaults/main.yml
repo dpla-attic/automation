@@ -1,3 +1,5 @@
 ---
 
+rails_env: development
+unicorn_worker_processes: 2
 frontend_use_local_source: false

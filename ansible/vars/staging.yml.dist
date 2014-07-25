@@ -44,6 +44,12 @@ es_cluster_loadbal: 192.168.50.2
 
 email_notifications_from: addr@example.tld
 
+postgresql_user: {name: "dpla", password: "changeme"}
+mysql_root_password: changeme
+mysql_users:
+  - {name: "dpla_omeka", password: "changeme"}
+  - {name: "dpla_wordpress", password: "changeme"}
+
 
 twitter_username: changeme
 twitter_widget_id: 12345changeme

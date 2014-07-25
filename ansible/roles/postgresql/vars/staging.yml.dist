@@ -1,4 +1,3 @@
 ---
 
-postgresql_user: {name: "dpla", password: "heyhoambiguity"}
 pg_max_connections: 100

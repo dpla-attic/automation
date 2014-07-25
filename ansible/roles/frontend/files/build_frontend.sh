@@ -21,6 +21,7 @@ kill $SSH_AGENT_PID
 
 /usr/bin/rsync -ruptolg --checksum --delete --delay-updates \
     --exclude 'log' \
+    --exclude 'tmp' \
     --exclude '.git' \
     /home/dpla/frontend/ /srv/www/frontend
 if [ $? -ne 0 ]; then

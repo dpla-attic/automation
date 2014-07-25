@@ -1,4 +1,4 @@
 ---
 
 - name: restart unicorn
-  service: name=unicorn_frontend state=restarted sleep=5
+  service: name=unicorn_frontend state=reloaded

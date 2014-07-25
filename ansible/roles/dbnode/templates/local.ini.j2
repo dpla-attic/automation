@@ -18,3 +18,5 @@ bind_address = {{ hostvars[hostname]['ansible_eth1']['ipv4']['address'] }}
 [query_servers]
 javascript = /opt/bigcouch/bin/couchjs -S 16384 /opt/bigcouch/share/couchjs/main.js
 
+[couchdb]
+os_process_timeout = 20000  ; 20 sec

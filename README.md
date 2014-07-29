@@ -21,7 +21,7 @@ Please install the following tools as documented on their websites:
 
 * [VirtualBox](https://www.virtualbox.org/) (Version 4.3)
 * [Vagrant](http://www.vagrantup.com/) (Version 1.5 or 1.6)
-* [Ansible](http://www.ansible.com/) (Python package.  Install with `pip install ansible`.  [Installation instructions](http://docs.ansible.com/intro_installation.html))
+* [Ansible](http://www.ansible.com/) (Version 1.6.  Python package.  Install with `pip install ansible`.  [Installation instructions](http://docs.ansible.com/intro_installation.html))
 
 ### Steps
 * Clone this project with Git or download the latest

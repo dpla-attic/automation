@@ -8,6 +8,7 @@ files.
 At this early stage, the only hosts being configured are VirtualBox VMs, but the
 idea is that, in the future, it should be used for cloud servers, too.
 
+[Release Notes](https://github.com/dpla/automation/wiki/Release-Notes)
 
 ## Installation, VM setup:
 

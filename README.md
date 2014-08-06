@@ -42,6 +42,7 @@ Please install the following tools as documented on their websites:
       `Vagrantfile`).
   * `ansible/roles/frontend/vars/development.yml.dist`
     * Optional.  For the frontend app, as above.  See `Vagrantfile`.
+  * `ansible/roles/elasticsearch/vars/development.yml.dist`
 * Optionally, copy and update the rest of the `ansible/roles/*/development.yml.dist`
   files in a similar fashion.  There are defaults that will take effect if you don't
   make any changes.

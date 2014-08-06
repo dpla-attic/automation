@@ -1,6 +1,9 @@
 ---
 # Elasticsearch Ansible Tasks
 
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+
 # Configure timezone
 # - name: Configuring timezone
 #   shell: echo {{ elasticsearch_timezone }} > /etc/timezone; dpkg-reconfigure --frontend noninteractive tzdata

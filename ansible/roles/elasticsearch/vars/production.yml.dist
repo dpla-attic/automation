@@ -1,3 +1,4 @@
 ---
 
 elasticsearch_heap_size: 4g
+elasticsearch_discovery_zen_ping_timeout: 30s

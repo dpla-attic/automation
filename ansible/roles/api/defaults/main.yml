@@ -4,3 +4,6 @@ unicorn_worker_processes: 2
 api_use_local_source: false
 api_branch_or_tag: master
 rails_env: development
+qa_app_username: qa
+# password is "changeme"
+qa_app_md5_password: "$apr1$bTHb7fKA$glS0Kk6zI6ny0GW0hPerk/"

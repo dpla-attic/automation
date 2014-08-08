@@ -23,7 +23,7 @@ server {
 
     location /qa {
         auth_basic "Restricted";
-        auth_basic_user_file /etc/nginx/qa.htpasswd;
+        auth_basic_user_file /etc/nginx/qa_htpasswd;
         try_files $uri $uri/index.html @api_app_server;
     }
 

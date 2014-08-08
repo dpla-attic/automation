@@ -62,5 +62,16 @@
     - nginx
     - web
 
+- name: Ensure state of QA app's password file
+  template: >
+      src="qa_htpasswd.j2"
+      dest="/etc/nginx/qa_htpasswd"
+      owner=root group=www-data mode=0640
+  notify: restart nginx
+  tags:
+    - api
+    - nginx
+    - web
+    - htpasswd
 
 - include: deploy.yml

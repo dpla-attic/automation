@@ -67,3 +67,10 @@
   copy: src=ssh_config dest=/etc/ssh/ssh_config owner=root group=root mode=0644
   tags:
     - packages
+
+- name: Update systemwide SSH known hosts
+  copy: >
+      src=etc_ssh_ssh_known_hosts dest=/etc/ssh/ssh_known_hosts
+      owner=root group=root mode=0644
+  tags:
+    - ssh

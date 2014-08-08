@@ -1,5 +1,11 @@
 ---
 
+- name: Ensure existence of /srv/www/ directory
+  file: >
+      path=/srv/www state=directory owner=root group=root mode=0755
+  tags:
+    - web
+
 - name: Ensure Nginx is present
   apt: pkg=nginx state=present
   tags:

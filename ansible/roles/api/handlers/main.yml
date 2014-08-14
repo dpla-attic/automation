@@ -3,5 +3,8 @@
 - name: restart unicorn
   service: name=unicorn_api state=reloaded
 
+- name: restart delayed job
+  service: name=delayed_job_api state=restarted
+
 - name: restart nginx
   service: name=nginx state=reloaded

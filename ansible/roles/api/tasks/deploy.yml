@@ -86,7 +86,9 @@
   script: >
       build_api.sh {{ ruby_rbenv_version }}
   sudo_user: dpla
-  notify: restart unicorn
+  notify:
+    - restart delayed job
+    - restart unicorn
   tags:
     - deployment
     - api

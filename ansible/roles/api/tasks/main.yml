@@ -34,8 +34,42 @@
     - api
     - web
 
-- name: Ensure that Unicorn init script starts and stops on boot/shutdown
-  command: update-rc.d unicorn_api defaults
+- name: Clear existing unicorn init script run levels in case of change
+  command: update-rc.d -f unicorn_api remove
+  tags:
+    - api
+    - web
+
+- name: Ensure Unicorn init script run levels
+  command: update-rc.d unicorn_api defaults 21 18
+  tags:
+    - api
+    - web
+
+- name: Ensure state of delayed job init script
+  template: >
+      src=etc_init.d_delayed_job_api.j2 dest=/etc/init.d/delayed_job_api
+      owner=root group=root mode=0755
+  tags:
+    - api
+    - web
+
+- name: Ensure state of delayed job control script
+  template: >
+      src=delayed_job_api.sh.j2 dest=/usr/local/sbin/delayed_job_api.sh
+      owner=root group=root mode=0755
+  tags:
+    - api
+    - web
+
+- name: Clear existing unicorn init script run levels in case of change
+  command: update-rc.d -f delayed_job_api remove
+  tags:
+    - api
+    - web
+
+- name: Ensure delayed job init script run levels
+  command: update-rc.d delayed_job_api defaults 20 19
   tags:
     - api
     - web

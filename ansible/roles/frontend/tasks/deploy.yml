@@ -72,6 +72,14 @@
     - frontend_deployment
     - web
 
+- name: Ensure existence of frontend/tmp directory
+  file: path=/srv/www/frontend/tmp state=directory owner=dpla group=dpla mode=0755
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
 # Krazy hijinx ensue to get around having a private GitHub repo for the frontend
 # assets gem...
 

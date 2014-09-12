@@ -15,3 +15,10 @@ iana_timezone: US/Eastern
 # with a GitHub account that has access to private repositories.  This defaults
 # to ~/.ssh/id_rsa
 # github_private_key_path: ~/.ssh/id_rsa
+
+## The following variables are only relevant if you're using Amazon SES for mail
+# ses_user: CHANGEME
+# ses_password: CHANGEME
+
+## Likewise, this is only relevant if you're using the aws_postfix role:
+# smtp_relayhost_and_port: smtp.example.com:25

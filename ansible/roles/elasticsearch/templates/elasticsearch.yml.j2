@@ -26,7 +26,11 @@
 #
 # cluster.name: elasticsearch
 {% if elasticsearch_cluster_name is defined %}
-cluster.name: {{ elasticsearch_cluster_name }}
+{% if level == "contentqa" %}
+cluster.name: {{ elasticsearch_cluster_name }}_{{ ansible_hostname }}
+{% else %}
+cluster.name: {{ elasticsearch_cluster_name }}_{{ level }}
+{% endif %}
 {% endif %}
 
 #################################### Node #####################################

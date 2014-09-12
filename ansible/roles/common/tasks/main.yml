@@ -33,6 +33,12 @@
     - packages
     - time
 
+- name: Ensure correct locale
+  file: src=etc_default_locale dest=/etc/default/locale mode=0644
+  tags:
+    - packages
+    - locale
+
 - name: Install packages
   apt: pkg={{ item }} state=present
   with_items:

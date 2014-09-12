@@ -1,0 +1,19 @@
+---
+
+- include: postgresql.yml
+
+- include: mysql.yml
+
+- include: memcached.yml
+
+- name: Common httpd configuration
+  hosts: webapps
+  sudo: yes
+  roles:
+    - common_web
+  vars:
+    level: production
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+
+- include: api.yml

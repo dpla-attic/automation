@@ -74,3 +74,12 @@
       owner=root group=root mode=0644
   tags:
     - ssh
+
+- name: Ensure that users of 'admin' group can sudo without password
+  copy: >
+      src=etc_sudoers.d_exempt-group dest=/etc/sudoers.d/10-exempt-group
+      owner=root group=root mode=0440
+  tags:
+    - sudo
+    - users
+

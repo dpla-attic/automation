@@ -4,3 +4,9 @@
   apt: name=memcached state=present
   tags:
     - memcached
+
+- name: Ensure state of memcached configuration
+  template: src=memcached.conf.j2 dest=/etc/memcached.conf
+  notify: restart memcached
+  tags:
+    - memcached

@@ -13,7 +13,7 @@ socket_options = [{recbuf, 262144}, {sndbuf, 262144}, {nodelay, true}]
 
 [httpd]
 ; bind_address = 0.0.0.0
-bind_address = {{ hostvars[hostname]['ansible_eth1']['ipv4']['address'] }}
+bind_address = {{ hostvars[hostname][internal_network_interface]['ipv4']['address'] }}
 
 [query_servers]
 javascript = /opt/bigcouch/bin/couchjs -S 16384 /opt/bigcouch/share/couchjs/main.js

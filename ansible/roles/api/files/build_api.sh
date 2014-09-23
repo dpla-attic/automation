@@ -31,4 +31,7 @@ for dir in $dirs_to_check; do
 done
 
 cd /srv/www/api
-bundle exec rake db:migrate
+bundle exec rake jobs:clear \
+    && rm -rf tmp/qa_reports/* \
+    && bundle exec rake tmp:clear \
+    && bundle exec rake db:migrate

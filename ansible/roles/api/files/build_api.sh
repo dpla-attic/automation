@@ -20,9 +20,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-cd /srv/www/api
-bundle exec rake db:migrate
-
 # Log and temporary directories
 dirs_to_check='/srv/www/api/var/log /srv/www/api/tmp'
 for dir in $dirs_to_check; do
@@ -32,3 +29,6 @@ for dir in $dirs_to_check; do
             && chmod 0775 $dir
     fi
 done
+
+cd /srv/www/api
+bundle exec rake db:migrate

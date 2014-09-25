@@ -1,0 +1,40 @@
+---
+
+- name: Ensure that mail packages are installed
+  apt: >
+      name="{{ item }}" state=present
+  with_items:
+    - postfix
+    - mailutils
+  tags:
+    - postfix
+    - mail
+
+- name: Ensure state of postfix configuration file
+  template: >
+      src=main.cf.j2 dest=/etc/postfix/main.cf mode=0644
+  notify: restart postfix
+  tags:
+    - postfix
+    - mail
+
+- name: Ensure state of SASL credentials file
+  template: >
+      src=sasl_passwd.j2 dest=/etc/postfix/sasl_passwd mode=0600
+  notify: restart postfix
+  tags:
+    - postfix
+    - mail
+
+- name: Build SASL credentials database
+  command: postmap hash:/etc/postfix/sasl_passwd
+  notify: restart postfix
+  tags:
+    - postfix
+    - mail
+
+- name: Ensure correct ownership and mode of SASL database file
+  file: path=/etc/postfix/sasl_passwd.db owner=root group=root mode=0600
+  tags:
+    - postfix
+    - mail

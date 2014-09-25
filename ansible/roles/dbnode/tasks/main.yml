@@ -35,11 +35,26 @@
 
 - meta: flush_handlers
 
-- name: Add nodes to cluster
+- name: Add nodes to cluster (not contentqa)
+  # This is the typical case.  There is a group of BigCouch nodes and you want
+  # each node in the inventory file added to the cluster.
   uri: >
       url="http://{{ hostname }}:5986/nodes/{{ dbnode_id_name }}@{{ item }}"
       method=PUT body="{}" status_code="201,409"
   with_items: groups['dbnodes']
+  when: level != "contentqa"
+  tags:
+    - database
+
+- name: Add nodes to cluster (contentqa)
+  # This is a special case for a content QA environment, where there could be
+  # multiple QA hosts, but each one only has a single BigCouch node and you don't
+  # want them talking to each other, even though there are multiple dbnodes in
+  # the inventory.
+  uri: >
+      url="http://{{ ansible_hostname }}:5986/nodes/{{ dbnode_id_name }}@{{ ansible_hostname }}"
+      method=PUT body="{}" status_code="201,409"
+  when: level == "contentqa"
   tags:
     - database
 

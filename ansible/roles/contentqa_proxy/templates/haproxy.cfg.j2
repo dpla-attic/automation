@@ -1,0 +1,25 @@
+
+global
+	daemon
+	maxconn 1000
+	log 127.0.0.1 local1 info
+
+defaults
+	mode http
+	log global
+	option httplog
+	option dontlognull
+	option redispatch
+	option forwardfor
+	retries 3
+	timeout connect 5s
+	timeout client 50s
+	timeout server 5m
+
+frontend http-in
+	bind *:80
+	default_backend http-contentqa
+
+backend http-contentqa
+	server {{ ansible_hostname }} {{ hostvars[ansible_hostname][internal_network_interface]['ipv4']['address'] }}:{{ api_app_port }} maxconn 500
+	

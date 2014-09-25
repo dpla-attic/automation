@@ -39,7 +39,7 @@
 
 - name: Make sure our databases exist
   postgresql_db: >
-      name={{ item }} encoding=LATIN1 state=present template=template0
+      name={{ item }} encoding=UTF8 state=present template=template0
   sudo_user: postgres
   with_items:
     - dpla_portal

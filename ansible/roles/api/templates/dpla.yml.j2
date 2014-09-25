@@ -69,9 +69,13 @@ caching:
   cache_results: true
   store: dalli_store
   memcache_servers:
+{% if level != "contentqa" %}
 {% for h in groups['memcached'] %}
     - {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}
 {% endfor %}
+{% else %}
+    - {{ hostvars[ansible_hostname][internal_network_interface]['ipv4']['address'] }}
+    {% endif %}
 
 field_boosts:
   item:

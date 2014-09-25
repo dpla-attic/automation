@@ -1,0 +1,47 @@
+---
+
+- name: Common
+  hosts: all
+  sudo: yes
+  roles:
+    - common
+  vars_files:
+    - ["vars/contentqa.yml", "vars/defaults.yml"]
+
+- name: HTTP proxy
+  hosts: contentqa_proxy_host
+  sudo: yes
+  roles:
+    - contentqa_proxy
+  vars_files:
+    - ["vars/contentqa.yml", "vars/defaults.yml"]
+
+- name: Mail
+  hosts: all
+  sudo: yes
+  roles:
+    - aws_postfix
+  vars_files:
+    - ["vars/contentqa.yml", "vars/defaults.yml"]
+
+- include: playbooks/dbnodes.yml level=contentqa
+
+- include: playbooks/elasticsearch.yml level=contentqa
+
+- include: playbooks/contentqa_webapps.yml level=contentqa
+
+- hosts: api
+  sudo: yes
+  tasks:
+    - name: Ensure existence of QA API account
+      # This could fail if you try to run a "contentqa" VirtualBox VM, because mail
+      # will probably not be set up.
+      ignore_errors: yes
+      uri: >
+          url=http://{{ ansible_hostname }}:{{ api_app_port }}/v2/api_key/aa22-qa-app@dp.la
+          method=POST
+      tags:
+        - api
+        - api_auth
+  vars_files:
+    - ["vars/contentqa.yml", "vars/defaults.yml"]

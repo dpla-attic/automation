@@ -1,0 +1,35 @@
+---
+
+- name: Install packages
+  apt: >
+      pkg="{{ item }}" state=present
+  with_items:
+    - haproxy
+    - hatop
+  tags:
+    - contentqa_proxy
+
+- name: Copy haproxy init defaults file
+  copy: src=etc_default_haproxy dest=/etc/default/haproxy owner=root group=root mode=0644
+  notify: restart haproxy
+  tags:
+    - contentqa_proxy
+
+- name: Update haproxy config file
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+  tags:
+    - contentqa_proxy
+
+- name: Configure syslog logging of haproxy messages
+  copy: src=etc_rsyslog.d_49-haproxy.conf dest=/etc/rsyslog.d/49-haproxy.conf mode=0644
+  notify: restart rsyslog
+  tags:
+    - contentqa_proxy
+    - rsyslog
+
+- name: Make sure haproxy logs are rotated
+  copy: src=etc_logrotate.d_haproxy dest=/etc/logrotate.d/haproxy mode=0644
+  tags:
+    - contentqa_proxy
+    - rsyslog

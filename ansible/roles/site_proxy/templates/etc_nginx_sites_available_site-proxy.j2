@@ -171,6 +171,7 @@ server {
 
         proxy_cache_key     "$scheme://$host$request_uri $do_not_cache";
         proxy_pass          http://dpla_wp;
+        client_max_body_size 25M;
 
         # misc rewrites in the top level dir
         #
@@ -240,6 +241,7 @@ server {
         limit_req zone=pagereqzone burst=20;
 
         proxy_pass          http://dpla_omeka;
+        client_max_body_size 25M;
 
         # misc rewrites in the /exhibitions dir
         #

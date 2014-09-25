@@ -1,0 +1,15 @@
+---
+
+- name: Deploy frontend (staging)
+  hosts: frontend
+  sudo: yes
+  tasks:
+    - include: ../roles/frontend/tasks/deploy.yml
+  handlers:
+    - include: ../roles/frontend/handlers/main.yml
+  vars:
+    level: staging
+  vars_files:
+    - "../vars/staging.yml"
+    - "../roles/frontend/defaults/main.yml"
+    - "../roles/frontend/vars/staging.yml"

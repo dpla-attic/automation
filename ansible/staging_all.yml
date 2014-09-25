@@ -1,0 +1,77 @@
+---
+
+- name: Common
+  hosts: all
+  sudo: yes
+  roles:
+    - common
+    - aws_postfix
+  vars:
+    level: staging
+  vars_files:
+    - ["vars/staging.yml", "vars/defaults.yml"]
+
+- include: playbooks/dbnodes.yml level=staging
+
+- include: playbooks/elasticsearch.yml level=staging
+
+- include: playbooks/postgresql.yml level=staging
+
+- include: playbooks/mysql.yml level=staging
+
+- include: playbooks/memcached.yml level=staging
+
+- name: Common httpd configuration
+  hosts:
+    - api
+    - frontend
+    - site_proxies
+    - cms-stg
+  sudo: yes
+  roles:
+    - common_web
+  vars:
+    level: staging
+  vars_files:
+    - ["vars/staging.yml", "vars/defaults.yml"]
+
+- name: Site proxies
+  # This play should come before the other web-related ones to ensure that the
+  # site proxy cache exists before the other ones try to clear it.
+  hosts:
+    - site_proxies
+  sudo: yes
+  roles:
+    - site_proxy
+  vars:
+    level: staging
+  vars_files:
+    - ["vars/staging.yml", "vars/defaults.yml"]
+
+- name: Content management systems
+  hosts:
+    - cms-stg
+  sudo: yes
+  roles:
+    - common_php
+    - common_sitenode
+    - omeka
+    - wordpress
+  vars:
+    level: staging
+  vars_files:
+    - ["vars/staging.yml", "vars/defaults.yml"]
+
+- name: Frontend (portal) site
+  hosts: frontend
+  sudo: yes
+  roles:
+    - frontend
+  vars:
+    level: staging
+  vars_files:
+    - ["vars/staging.yml", "vars/defaults.yml"]
+
+- include: playbooks/api.yml level=staging
+
+- include: playbooks/ingestion.yml

@@ -76,6 +76,9 @@
 {% for host in groups['frontend'] %}
 host   all             all            {{ host }}             md5
 {% endfor %}
+{% for host in groups['api'] %}
+host   all             all            {{ host }}             md5
+{% endfor %}
 
 # Deny access to postgresql user from other hosts
 host    all             postgres       0.0.0.0/0               reject

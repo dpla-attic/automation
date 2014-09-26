@@ -46,7 +46,7 @@
     - omeka_deployment
     - web
 
-- name: Check out exhibitions assets (private repository)
+- name: Check out exhibitions assets
   git: >
        repo=https://github.com/dpla/exhibitions-assets.git
        dest="/home/dpla/exhibitions-assets"

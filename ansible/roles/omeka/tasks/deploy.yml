@@ -46,13 +46,11 @@
     - omeka_deployment
     - web
 
-- name: Check out exhibitions assets (private repository)
+- name: Check out exhibitions assets
   git: >
-       repo=ssh://git@github.com/dpla/exhibitions-assets.git
+       repo=https://github.com/dpla/exhibitions-assets.git
        dest="/home/dpla/exhibitions-assets"
        version=master
-       accept_hostkey=yes
-       key_file=/home/dpla/git_private_key
   sudo_user: dpla
   tags:
     - deployment

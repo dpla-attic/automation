@@ -2,7 +2,7 @@
 # (specified using -sname) or it can by fully qualified (-name).  There can be
 # no communication between nodes running with the -sname flag and those running 
 # with the -name flag.
--sname {{ dbnode_id_name }}@{{ hostname }}
+-sname {{ dbnode_id_name }}@{{ inventory_hostname }}
 
 # All nodes must share the same magic cookie for distributed Erlang to work.
 # Comment out this line if you synchronized the cookies by other means (using

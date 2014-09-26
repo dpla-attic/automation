@@ -74,7 +74,7 @@ caching:
     - {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}
 {% endfor %}
 {% else %}
-    - {{ hostvars[ansible_hostname][internal_network_interface]['ipv4']['address'] }}
+    - {{ hostvars[inventory_hostname][internal_network_interface]['ipv4']['address'] }}
     {% endif %}
 
 field_boosts:

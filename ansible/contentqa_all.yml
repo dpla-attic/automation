@@ -38,7 +38,7 @@
       # will probably not be set up.
       ignore_errors: yes
       uri: >
-          url=http://{{ ansible_hostname }}:{{ api_app_port }}/v2/api_key/aa22-qa-app@dp.la
+          url=http://{{ inventory_hostname }}:{{ api_app_port }}/v2/api_key/aa22-qa-app@dp.la
           method=POST
       tags:
         - api

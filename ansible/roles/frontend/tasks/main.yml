@@ -8,6 +8,8 @@
     - libpq-dev
     - libmagickcore-dev
     - libmagickwand-dev
+    - libreadline6
+    - libreadline6-dev
   tags:
     - packages
     - frontend

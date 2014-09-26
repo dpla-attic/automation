@@ -15,6 +15,9 @@
     - libpq-dev
     - libsqlite3-dev
     - g++
+    - libreadline6
+    - libreadline6-dev
+    - zip
   tags:
     - packages
     - api

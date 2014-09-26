@@ -34,7 +34,7 @@
     - time
 
 - name: Ensure correct locale
-  file: src=etc_default_locale dest=/etc/default/locale mode=0644
+  copy: src=etc_default_locale dest=/etc/default/locale mode=0644
   tags:
     - packages
     - locale

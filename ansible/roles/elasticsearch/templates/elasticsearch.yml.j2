@@ -27,7 +27,7 @@
 # cluster.name: elasticsearch
 {% if elasticsearch_cluster_name is defined %}
 {% if level == "contentqa" %}
-cluster.name: {{ elasticsearch_cluster_name }}_{{ ansible_hostname }}
+cluster.name: {{ elasticsearch_cluster_name }}_{{ inventory_hostname }}
 {% else %}
 cluster.name: {{ elasticsearch_cluster_name }}_{{ level }}
 {% endif %}
@@ -42,7 +42,7 @@ cluster.name: {{ elasticsearch_cluster_name }}_{{ level }}
 {# % if elasticsearch_node_name is defined % #}
 {# node.name: {{ elasticsearch_node_name }} #}
 {# % endif % #}
-node.name: {{ ansible_hostname }}
+node.name: {{ inventory_hostname }}
 
 # Every node can be configured to allow or deny being eligible as the master,
 # and to allow or deny to store the data.
@@ -262,7 +262,7 @@ network.publish_host: {{ elasticsearch_network_publish_host }}
 {# {% if elasticsearch_network_host is defined %} #}
 {# network.host: {{ elasticsearch_network_host }} #}
 {# {% endif %} #}
-network.host: {{ hostvars[ansible_hostname][internal_network_interface]['ipv4']['address'] }}
+network.host: {{ hostvars[inventory_hostname][internal_network_interface]['ipv4']['address'] }}
 
 # Set a custom port for the node to node communication (9300 by default):
 #

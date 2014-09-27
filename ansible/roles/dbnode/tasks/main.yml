@@ -39,7 +39,7 @@
   # This is the typical case.  There is a group of BigCouch nodes and you want
   # each node in the inventory file added to the cluster.
   uri: >
-      url="http://{{ hostname }}:5986/nodes/{{ dbnode_id_name }}@{{ item }}"
+      url="http://{{ inventory_hostname }}:5986/nodes/{{ dbnode_id_name }}@{{ item }}"
       method=PUT body="{}" status_code="201,409"
   with_items: groups['dbnodes']
   when: level != "contentqa"
@@ -52,7 +52,7 @@
   # want them talking to each other, even though there are multiple dbnodes in
   # the inventory.
   uri: >
-      url="http://{{ ansible_hostname }}:5986/nodes/{{ dbnode_id_name }}@{{ ansible_hostname }}"
+      url="http://{{ inventory_hostname }}:5986/nodes/{{ dbnode_id_name }}@{{ inventory_hostname }}"
       method=PUT body="{}" status_code="201,409"
   when: level == "contentqa"
   tags:

@@ -89,6 +89,7 @@
   notify:
     - restart delayed job
     - restart unicorn
+    - restart memcached
   tags:
     - deployment
     - api

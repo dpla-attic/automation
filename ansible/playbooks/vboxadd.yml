@@ -1,0 +1,22 @@
+---
+
+# Work around the issue with VirtualBox and Debian / Ubuntu where
+# a package update of kernel modules will require the reinstallation
+# of VirtualBox's vboxfs kernel module for mounting a shared filesystem.
+
+# You can run it on a particular affected host with ansible-playbook's
+# --limit option.  For example,
+# $ ansible-playbook -u mb -i development --limit loadbal playbooks/vboxadd.yml
+
+# After running, restart the affected host, for example, with:
+# $ vagrant reload loadbal
+
+- name: Reinstall vboxfs kernel module for VirtualBox
+  hosts: all
+  sudo: yes
+  tasks:
+    - stat: path=/etc/init.d/vboxadd
+      register: vboxadd
+    - name: Update Vagrant vboxsf kernel in development (Virtualbox VM)
+      command: /etc/init.d/vboxadd setup
+      when: vboxadd.stat.exists and vboxadd.stat.xusr

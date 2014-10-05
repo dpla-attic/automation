@@ -144,20 +144,30 @@ Repeat 2 and 3.
 
 ## Known issues
 
-* **There are bound to be _unknown_ issues, since this project is in a state
+**There are bound to be _unknown_ issues, since this project is in a state
   of rapid change.  Note that we have not tagged a release version yet. :-)**
-* If you get errors about the vboxfs file system not being available, ssh into
-  the virtual machine with `vagrant ssh <host>` and run these commands:
+
+If you get errors about the vboxfs file system not being available, perform
+the following steps:
+
+1. Run:
+   ```
+   ansible-playbook -u <your username> -i development \
+   [--limit <a particular hostname>] playbooks/vboxadd.yml
+   ```
+   ... where `--limit` is optional and will restrict the operation to just
+   one of your VMs.
+2. Restart the affected VM with `vagrant reload <host>`.  You could alternately
+   SSH into the virtual machine with `vagrant ssh <host>` and run these commands:
 ```
-$ sudo /etc/init.d/vboxadd setup
 $ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`getent group vagrant | \
   cut -d: -f3` /vagrant /vagrant
 $ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` \
   /vagrant /vagrant
 ```
-  I'll eventually create an Ansible playbook to handle this situation, which is
-  a known issue with Vagrant with regard to Debian's apt-get upgrade of kernel
-  packages.
+
+This problem with mounts failing is a known issue with Vagrant with regard to
+Debian's apt-get upgrade of kernel packages.
 
 ## Design considerations
 
@@ -179,7 +189,8 @@ might use Docker, keeping in mind our need to represent our network setup.
 * The first time you create a VM, it has to do an extensive package upgrade
   of the the software in the base image, after which you should restart the VM
   with "vagrant reload," and then watch out for the known issue, above,
-  regarding vboxfs.  After that, you shouldn't have to do this again.
+  regarding vboxfs.  You will only have to update the vboxfs after a new
+  install, or after doing a package upgrade that updates kernel modules.
 * You probably want to exclude `$HOME/VirtualBox VMs/` from any backup jobs that
   you have going on.  The VMs can be recreated at any time, as long as you
   aren't storing data that can't be regenerated.

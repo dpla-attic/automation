@@ -38,6 +38,6 @@ done
 # - mb
 cd /srv/www/api
 bundle exec rake jobs:clear \
-    && rm -rf tmp/qa_reports/* \
+    && bundle exec rake contentqa:delete_reports \
     && bundle exec rake tmp:clear \
     && bundle exec rake db:migrate

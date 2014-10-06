@@ -14,6 +14,7 @@ cd $HOME/frontend
 rbenv shell $USE_VERSION
 
 bundle install
+rbenv rehash
 bundle exec rake assets:precompile
 
 # Variable set above by ssh-agent

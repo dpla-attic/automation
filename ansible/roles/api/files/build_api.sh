@@ -21,9 +21,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-cd /srv/www/api
-bundle exec rake db:migrate
-
 # Log and temporary directories
 dirs_to_check='/srv/www/api/var/log /srv/www/api/tmp'
 for dir in $dirs_to_check; do
@@ -33,3 +30,15 @@ for dir in $dirs_to_check; do
             && chmod 0775 $dir
     fi
 done
+
+# Clear out the job queue, caches, and temporary files.
+# Is it OK to do this here in one place, or will there be
+# issues with upgrades?  We'll at least want to ensure that
+# the current application instance is taken out of any
+# loadbalancer's rotation for the duration of this script.
+# - mb
+cd /srv/www/api
+bundle exec rake jobs:clear \
+    && bundle exec rake contentqa:delete_reports \
+    && bundle exec rake tmp:clear \
+    && bundle exec rake db:migrate

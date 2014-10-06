@@ -30,6 +30,23 @@ sig () {
     test -s "$pid" && kill -$1 `cat $pid`
 }
 
+have_good_pidfile() {
+    if [ -s "$pid" ]; then
+        kill -0 `cat $pid` 2>/dev/null
+        if [ $? -ne 0 ]; then
+            return 1
+        else
+            return 0
+        fi
+    else
+        return 1
+    fi
+}
+
+rmpid() {
+    rm -f $pid
+}
+
 case $1 in
 start)
     sig 0 && echo >&2 "Already running" && exit 0
@@ -48,6 +65,7 @@ force-stop)
     echo >&2 "Not running"
     ;;
 restart|reload)
+    have_good_pidfile || rmpid
     sig HUP && echo reloaded OK && exit 0
     echo >&2 "Couldn't reload.  Starting instead"
     if [ "$(whoami)" != "$USERNAME" ]; then

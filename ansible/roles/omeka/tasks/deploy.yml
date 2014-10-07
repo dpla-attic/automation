@@ -102,7 +102,16 @@
     - omeka_deployment
     - web
 
-- name: Ensure existence of "files" directories
+- name: Ensure existence of "files" base directory
+  file: >
+      path="/srv/www/exhibitions/files" state=directory
+      mode=0755 owner=dpla group=dpla
+  tags:
+    - deployment
+    - omeka
+    - omeka_deployment
+    - web
+- name: Ensure existence of "files" subdirectories
   file: >
       path="/srv/www/exhibitions/files/{{ item }}"
       state=directory mode=0755 owner="www-data" group="www-data"

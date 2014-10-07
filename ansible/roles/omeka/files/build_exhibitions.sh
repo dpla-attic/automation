@@ -3,7 +3,7 @@
 /usr/bin/rsync -ruptolgC --delete --delay-updates \
     --exclude 'themes/dpla/exhibitions-assets' \
     --exclude 'application/logs' \
-    --exclude 'application/files' \
+    --exclude 'files' \
     /home/dpla/exhibitions /srv/www
 
 if [ $? -ne 0 ]; then

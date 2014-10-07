@@ -46,7 +46,8 @@
     - mysql
 
 - name: Ensure existence of MySQL databases
-  mysql_db: name={{ item }} state=present
+  mysql_db: >
+      name={{ item }} state=present encoding=utf8
   with_items:
     - dpla_omeka
     - dpla_wp

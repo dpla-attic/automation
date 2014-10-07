@@ -5,7 +5,7 @@
 {# The "test" environment is not used yet. #}
 test:
   adapter: postgresql
-  encoding: latin1
+  encoding: unicode
   host: {{ db_host }}
   database: api_test
   username: {{ postgresql_user['name'] }}
@@ -14,7 +14,7 @@ test:
 
 development:
   adapter: postgresql
-  encoding: latin1
+  encoding: unicode
   host: {{ db_host }}
   hostname: localhost
   database: api
@@ -24,7 +24,7 @@ development:
 
 production:
   adapter: postgresql
-  encoding: latin1
+  encoding: unicode
   host: {{ db_host }}
   database: api
   username: {{ postgresql_user['name'] }}

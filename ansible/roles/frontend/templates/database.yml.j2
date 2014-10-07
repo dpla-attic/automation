@@ -10,7 +10,7 @@ test:
   database: dpla_portal_test
   username: {{ postgresql_user['name'] }}
   password: {{ postgresql_user['password'] }}
-  encoding: utf8
+  encoding: unicode
 
 development:
   adapter: postgresql
@@ -19,7 +19,7 @@ development:
   database: dpla_portal
   username: {{ postgresql_user['name'] }}
   password: {{ postgresql_user['password'] }}
-  encoding: utf8
+  encoding: unicode
 
 production:
   adapter: postgresql
@@ -28,4 +28,4 @@ production:
   database: dpla_portal
   username: {{ postgresql_user['name'] }}
   password: {{ postgresql_user['password'] }}
-  encoding: utf8
+  encoding: unicode

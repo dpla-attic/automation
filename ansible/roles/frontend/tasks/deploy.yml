@@ -4,7 +4,7 @@
   git: >
       repo=https://github.com/dpla/frontend.git
       dest=/home/dpla/frontend
-      version={{ frontend_branch_or_tag | default("master") }}
+      version={{ frontend_branch_or_tag }}
   sudo_user: dpla
   when: not frontend_use_local_source
   tags:

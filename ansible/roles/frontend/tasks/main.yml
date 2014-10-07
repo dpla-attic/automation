@@ -5,6 +5,7 @@
       pkg="{{ item }}" state=present
   with_items:
     - postgresql-common
+    - postgresql-client
     - libpq-dev
     - libmagickcore-dev
     - libmagickwand-dev

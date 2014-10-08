@@ -5,9 +5,6 @@ The intention of this project is to provide automated configuration management
 for production, development, and staging environments with the same set of
 files.
 
-At this early stage, the only hosts being configured are VirtualBox VMs, but the
-idea is that, in the future, it should be used for cloud servers, too.
-
 [Release Notes](https://github.com/dpla/automation/wiki/Release-Notes)
 
 ## Installation, VM setup:
@@ -40,10 +37,12 @@ Please install the following tools as documented on their websites:
   * `ansible/roles/api/vars/development.yml.dist`
     * Optional, if you want to use a local source directory for the API app (see
       `Vagrantfile`).
+  * `ansible/roles/elasticsearch/vars/development.yml.dist`
+  * `ansible/roles/postgresql/vars/development.yml.dist`
   * `ansible/roles/frontend/vars/development.yml.dist`
     * Optional.  For the frontend app, as above.  See `Vagrantfile`.
   * `ansible/roles/elasticsearch/vars/development.yml.dist`
-* Optionally, copy and update the rest of the `ansible/roles/*/development.yml.dist`
+* Optionally, copy and update any other `ansible/roles/*/development.yml.dist`
   files in a similar fashion.  There are defaults that will take effect if you don't
   make any changes.
 * Copy `Vagrantfile.dist` to `Vagrantfile`.
@@ -83,7 +82,6 @@ $ ansible-playbook -i development -u <your username in group_vars/all> \
 * The various sites will be online at:
   * http://local.dp.la/
   * http://local.dp.la/exhibitions/
-  * http://local.dp.la/info/  (not yet, coming soon)
   * http://local.dp.la:8080/v2/items (the API)
 
   However, there won't be any data ingested until you run an ingestion with
@@ -92,7 +90,8 @@ $ ansible-playbook -i development -u <your username in group_vars/all> \
   to use the `rake` tasks in
   [the API ("platform") app](http://github.com/dpla/platform) to set up the
   ElasticSearch search index and initialize your repositories.  Please consult
-  those other projects for more information.
+  those other projects for more information.  There's a playbook for an
+  ingestion server that's not implemented yet in the development VMs.
 
 ## Subsequent Usage
 
@@ -144,9 +143,6 @@ Repeat 2 and 3.
 
 ## Known issues
 
-**There are bound to be _unknown_ issues, since this project is in a state
-  of rapid change.  Note that we have not tagged a release version yet. :-)**
-
 If you get errors about the vboxfs file system not being available, perform
 the following steps:
 
@@ -168,6 +164,9 @@ $ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` \
 
 This problem with mounts failing is a known issue with Vagrant with regard to
 Debian's apt-get upgrade of kernel packages.
+
+We are testing out a Vagrant plugin that will allow for easier updates of the
+hosts' VirtualBox Guest Additions.
 
 ## Design considerations
 

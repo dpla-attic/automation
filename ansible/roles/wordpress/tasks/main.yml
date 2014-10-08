@@ -1,5 +1,126 @@
 ---
 
+
+# The wordpress_install tasks have to be done the first time around.
+# The wordpress_deployment tasks are what you'll usually run if you don't have
+# to change the Wordpress version and you've already installed it.
+
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - wordpress
+    - wordpress_install
+    - wordpress_deployment
+
+
+- name: Download Wordpress
+  get_url: >
+      url="http://wordpress.org/wordpress-{{ wordpress_version }}.tar.gz"
+      dest=/tmp/wordpress-{{ wordpress_version}}.tar.gz
+      mode=0644
+  when: do_wordpress
+  tags:
+    - wordpress
+    - wordpress_install
+
+
+- name: Unpack Wordpress
+  command: >
+      tar -C /tmp -zxf /tmp/wordpress-{{ wordpress_version }}.tar.gz
+  when: do_wordpress
+  tags:
+    - wordpress
+    - wordpress_install
+
+- name: Synchronize new Wordpress with build directory
+  script: sync_new_wordpress.sh
+  sudo_user: dpla
+  when: do_wordpress
+  tags:
+    - wordpress
+    - wordpress_install
+
+- name: Remove temporary Wordpress directory
+  file: path=/tmp/wordpress state=absent
+  when: do_wordpress
+  tags:
+    - wordpress
+    - wordpress_install
+
+- name: Prep for build with private repo (git)
+  when: do_wordpress and not wp_theme_use_local_source
+  copy: >
+      src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
+      dest=/home/dpla/git_private_key
+      owner=dpla group=dpla mode=0600
+  tags:
+    - wordpress
+    - wordpress_install
+    - wordpress_deployment
+
+
+
+- name: Build Wordpress (local)
+  when: do_wordpress and wp_theme_use_local_source
+  sudo_user: dpla
+  script: build_wordpress_local.sh
+  tags:
+    - wordpress
+    - wordpress_install
+    - wordpress_deployment
+
+- name: Build Wordpress (remote)
+  when: do_wordpress and not wp_theme_use_local_source
+  sudo_user: dpla
+  script: build_wordpress_remote.sh master
+  tags:
+    - wordpress
+    - wordpress_install
+    - wordpress_deployment
+
+
+- name: Ensure existence of site root
+  file: path=/srv/www/wordpress state=directory owner=dpla group=dpla mode=0755
+  tags:
+    - wordpress
+    - wordpress_install
+    - wordpress_deployment
+
+- name: Sync installation to site root
+  script: sync_to_siteroot.sh
+  sudo_user: dpla
+  when: do_wordpress
+  notify:
+    - clear site proxy cache
+  tags:
+    - wordpress
+    - wordpress_install
+    - wordpress_deployment
+
+- name: Ensure state of uploads directory
+  file: >
+      path=/srv/www/wordpress/wp-content/uploads state=directory
+      owner=www-data group=www-data mode=0755
+  when: do_wordpress
+  tags:
+    - wordpress
+    - wordpress_install
+    - wordpress_deployment
+
+- name: Ensure state of Wordpress configuration file
+  template: >
+      src=wp-config.php.j2 dest=/srv/www/wordpress/wp-config.php
+      owner=dpla group=www-data mode=0640
+  when: do_wordpress
+  notify:
+    - restart php5-fpm
+    - clear site proxy cache
+  tags:
+    - wordpress
+    - wordpress_install
+    - wordpress_deployment
+
+
 - name: Update php-fpm pool for Wordpress
   template: >
       src=etc_php5_fpm_pool.d_wp.conf.j2
@@ -16,7 +137,9 @@
       src=etc_nginx_sites_available_wordpress.j2
       dest="/etc/nginx/sites-available/wordpress"
       owner=root group=root mode=0644
-  notify: restart nginx
+  notify:
+    - restart nginx
+    - clear site proxy cache
   tags:
     - wordpress
     - nginx
@@ -27,7 +150,9 @@
       src="/etc/nginx/sites-available/wordpress"
       dest="/etc/nginx/sites-enabled/wordpress"
       state=link owner=root group=root
-  notify: restart nginx
+  notify:
+    - restart nginx
+    - clear site proxy cache
   tags:
     - wordpress
     - nginx

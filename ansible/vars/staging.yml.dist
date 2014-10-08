@@ -15,7 +15,7 @@ internal_network_interface: ansible_eth1
 # Whether to enable various settings that would display diagnostic
 # or debugging output (including error messages and stack traces)
 # in an HTTP response.
-webapp_debug: 1
+webapp_debug: false
 
 frontend_hostname: staging.dp.la
 api_hostname: api.staging.dp.la

@@ -64,6 +64,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # but don't modify the mount point.
         # webapp.vm.synced_folder "../frontend", "/frontend_dev"
         # webapp.vm.synced_folder "../platform", "/api_dev"
+        # webapp.vm.synced_folder "../wordpress-plugins", "/wordpress-plugins"
+        # webapp.vm.synced_folder "../frontend-wp-theme", "/wordpress-theme"
     end
 
 end

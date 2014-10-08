@@ -1,0 +1,6 @@
+---
+
+# Uncomment this to have Wordpress installed
+# This will not be useful unless you have access to the private Git
+# repositories.
+# do_wordpress: true

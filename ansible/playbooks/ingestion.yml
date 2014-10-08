@@ -1,0 +1,27 @@
+---
+
+- hosts: ingestion
+  sudo: yes
+  tasks:
+    - name: Make sure that the "dpla" user exists
+      user: >
+          name=dpla comment="DPLA application user"
+          home=/home/dpla shell=/bin/bash state=present
+    - name: Ensure that Python dependencies are installed
+      # Most of these are necessary for building Python with pyenv, and g++ is
+      # included under the assumption that some module may need it
+      apt: >
+          pkg="{{ item }}" state=present
+      with_items:
+        - git
+        - gcc
+        - g++
+        - build-essential
+        - libssl-dev
+        - zlib1g-dev
+        - libbz2-dev
+        - libreadline-dev
+        - libsqlite3-dev
+        - wget
+        - llvm
+

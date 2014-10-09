@@ -32,10 +32,15 @@ api_app_port: 8003
 
 
 # We would normally get an IP address by querying the inventory, but
-# this will work easiest between development and production
+# this will work easiest between development and production.
+# *_cluster_loadbal is the internal-network hostname
+# *_elb_name is the ELB name property, for staging and production only
 bigcouch_cluster_loadbal: 192.168.50.2
-# same with Elasticsearch ...
+bigcouch_elb_name: repo-lbal-prod
 es_cluster_loadbal: 192.168.50.2
+es_elb_name: search-lbal-prod
+api_elb_name: api-lbal-prod
+siteproxy_elb_name: siteproxy-elb-prod
 
 
 email_notifications_from: addr@example.tld

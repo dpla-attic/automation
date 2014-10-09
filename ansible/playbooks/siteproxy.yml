@@ -1,22 +1,15 @@
 ---
 
-- hosts: 127.0.0.1
-  connection: local
-  sudo: false
-  tasks:
-    - name: Turn off shard replica allocation
-      when: level != 'contentqa'
-      local_action: >
-          script ../files/set-allocation.sh off "{{ es_cluster_loadbal }}"
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
 
-- name: Elasticsearch setup
-  hosts: elasticsearch
-  serial: 1
+- name: Site proxies
+  hosts:
+    - site_proxies
   sudo: yes
+  serial: 1
   roles:
-    - elasticsearch
+    - site_proxy
   pre_tasks:
     - name: Gather ec2 facts
       ec2_facts:
@@ -27,24 +20,23 @@
       sudo: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
-        ec2_elbs: "{{ es_elb_name }}"
+        ec2_elbs: "{{ siteproxy_elb_name }}"
         aws_access_key: "{{ aws_access_key }}"
         aws_secret_key: "{{ aws_secret_key }}"
         aws_region: "{{ aws_region }}"
         state: absent
   post_tasks:
-    - name: Wait for ES node to come back up
+    - name: Wait for site proxy node to come back up
       sudo: false
-      # Assume default port, 9200.
       local_action: >
-          wait_for host="{{ inventory_hostname }}" port=9200 delay=30 timeout=300
+          wait_for host="{{ inventory_hostname }}" port=80 delay=2 timeout=30
     - name: Register instance with loadbalancer again
       local_action: ec2_elb
       when: level == 'production' or level == 'staging'
       sudo: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
-        ec2_elbs: "{{ es_elb_name }}"
+        ec2_elbs: "{{ siteproxy_elb_name }}"
         aws_access_key: "{{ aws_access_key }}"
         aws_secret_key: "{{ aws_secret_key }}"
         aws_region: "{{ aws_region }}"
@@ -57,13 +49,3 @@
   vars_files:
     - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 
-- hosts: 127.0.0.1
-  connection: local
-  sudo: false
-  tasks:
-    - name: Turn shard replica allocation back on
-      when: level != 'contentqa'
-      local_action: >
-          script ../files/set-allocation.sh on "{{ es_cluster_loadbal }}"
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

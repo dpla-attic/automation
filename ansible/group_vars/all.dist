@@ -22,3 +22,8 @@ iana_timezone: US/Eastern
 
 ## Likewise, this is only relevant if you're using the aws_postfix role:
 # smtp_relayhost_and_port: smtp.example.com:25
+
+# For production and staging:
+aws_region: changeme
+aws_access_key: changeme
+aws_secret_key: changeme

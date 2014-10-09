@@ -1,10 +1,47 @@
 ---
 
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
 - name: API (platform) application
   hosts: api
+  serial: 1
   sudo: yes
   roles:
     - api
+  pre_tasks:
+    - name: Gather ec2 facts
+      ec2_facts:
+      when: level == 'production' or level == 'staging'
+    - name: De-register instance from loadbalancer
+      local_action: ec2_elb
+      when: level == 'production' or level == 'staging'
+      sudo: false
+      args:
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        ec2_elbs: "{{ api_elb_name }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        state: absent
+  post_tasks:
+    - name: Wait for API node to come back up
+      sudo: false
+      local_action: >
+          wait_for host="{{ inventory_hostname }}" port="{{ api_app_port }}"
+          delay=2 timeout=30
+    - name: Register instance with loadbalancer again
+      local_action: ec2_elb
+      when: level == 'production' or level == 'staging'
+      sudo: false
+      args:
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        ec2_elbs: "{{ api_elb_name }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        state: present
+        wait_timeout: 22
   vars:
     # Default to production to keep development values from accidentally being
     # used in production.

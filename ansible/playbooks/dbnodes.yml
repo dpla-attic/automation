@@ -6,6 +6,42 @@
   sudo: yes
   roles:
     - dbnode
+  pre_tasks:
+    - name: Gather ec2 facts
+      ec2_facts:
+      when: level == 'production' or level == 'staging'
+      tags:
+        - database
+        - packages
+    - name: De-register instance from loadbalancer
+      local_action: ec2_elb
+      when: level == 'production' or level == 'staging'
+      sudo: false
+      args:
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        ec2_elbs: "{{ bigcouch_elb_name }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        state: absent
+      tags:
+        - database
+        - packages
+  post_tasks:
+    - name: Register instance with loadbalancer again
+      local_action: ec2_elb
+      when: level == 'production' or level == 'staging'
+      sudo: false
+      args:
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        ec2_elbs: "{{ bigcouch_elb_name }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        state: present
+      tags:
+        - database
+        - packages
   vars:
     # Default to production to keep development values from accidentally being
     # used in production.

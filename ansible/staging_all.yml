@@ -35,18 +35,9 @@
   vars_files:
     - ["vars/staging.yml", "vars/defaults.yml"]
 
-- name: Site proxies
-  # This play should come before the other web-related ones to ensure that the
-  # site proxy cache exists before the other ones try to clear it.
-  hosts:
-    - site_proxies
-  sudo: yes
-  roles:
-    - site_proxy
-  vars:
-    level: staging
-  vars_files:
-    - ["vars/staging.yml", "vars/defaults.yml"]
+# The siteproxy playbook should come before the other web-related ones to ensure that
+# the site proxy cache exists before the other ones try to clear it.
+- include: playbooks/siteproxy.yml level=staging
 
 - name: Content management systems
   hosts:

@@ -425,9 +425,9 @@ discovery.zen.ping.multicast.enabled: {{ elasticsearch_discovery_zen_ping_multic
 #    to perform discovery when new nodes (master or data) are started:
 #
 # discovery.zen.ping.unicast.hosts: ["host1", "host2:port", "host3[portX-portY]"]
-{% if elasticsearch_discovery_zen_ping_unicast_hosts is defined %}
-discovery.zen.ping.unicast.hosts: {{ elasticsearch_discovery_zen_ping_unicast_hosts }}
-{% endif %}
+
+discovery.zen.ping.unicast.hosts: {{ groups['elasticsearch'] | safe }}
+
 
 # EC2 discovery allows to use AWS EC2 API in order to perform discovery.
 #

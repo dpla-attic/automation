@@ -21,6 +21,7 @@ Please install the following tools as documented on their websites:
 * [Vagrant](http://www.vagrantup.com/) (Version 1.5 or 1.6)
 * [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest/) (`vagrant plugin install vagrant-vbguest`)
 * [Ansible](http://www.ansible.com/) (Version 1.6.  Python package.  Install with `pip install ansible`.  [Installation instructions](http://docs.ansible.com/intro_installation.html))
+* _Optional_: If you'll be using the staging or production environments, you will need to install the `boto` python module locally:  `pip install boto`.  This is not relevant if you're using the development VMs.
 
 ### Steps
 * Clone this project with Git or download the latest

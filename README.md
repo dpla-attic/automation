@@ -19,6 +19,7 @@ Please install the following tools as documented on their websites:
 
 * [VirtualBox](https://www.virtualbox.org/) (Version 4.3)
 * [Vagrant](http://www.vagrantup.com/) (Version 1.5 or 1.6)
+* [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest/) (`vagrant plugin install vagrant-vbguest`)
 * [Ansible](http://www.ansible.com/) (Version 1.6.  Python package.  Install with `pip install ansible`.  [Installation instructions](http://docs.ansible.com/intro_installation.html))
 
 ### Steps
@@ -141,32 +142,6 @@ $ ansible-playbook -u <your username> -i development \
 
 Repeat 2 and 3.
 
-## Known issues
-
-If you get errors about the vboxfs file system not being available, perform
-the following steps:
-
-1. Run:
-   ```
-   ansible-playbook -u <your username> -i development \
-   [--limit <a particular hostname>] playbooks/vboxadd.yml
-   ```
-   ... where `--limit` is optional and will restrict the operation to just
-   one of your VMs.
-2. Restart the affected VM with `vagrant reload <host>`.  You could alternately
-   SSH into the virtual machine with `vagrant ssh <host>` and run these commands:
-```
-$ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`getent group vagrant | \
-  cut -d: -f3` /vagrant /vagrant
-$ sudo mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` \
-  /vagrant /vagrant
-```
-
-This problem with mounts failing is a known issue with Vagrant with regard to
-Debian's apt-get upgrade of kernel packages.
-
-We are testing out a Vagrant plugin that will allow for easier updates of the
-hosts' VirtualBox Guest Additions.
 
 ## Design considerations
 
@@ -187,9 +162,7 @@ might use Docker, keeping in mind our need to represent our network setup.
 
 * The first time you create a VM, it has to do an extensive package upgrade
   of the the software in the base image, after which you should restart the VM
-  with "vagrant reload," and then watch out for the known issue, above,
-  regarding vboxfs.  You will only have to update the vboxfs after a new
-  install, or after doing a package upgrade that updates kernel modules.
+  with "vagrant reload".
 * You probably want to exclude `$HOME/VirtualBox VMs/` from any backup jobs that
   you have going on.  The VMs can be recreated at any time, as long as you
   aren't storing data that can't be regenerated.

@@ -38,7 +38,7 @@ done
 # loadbalancer's rotation for the duration of this script.
 # - mb
 cd /srv/www/api
-bundle exec rake jobs:clear \
-    && bundle exec rake contentqa:delete_reports \
-    && bundle exec rake tmp:clear \
-    && bundle exec rake db:migrate
+bundle exec rake db:migrate \
+     && bundle exec rake tmp:clear \
+     && bundle exec rake jobs:clear \
+     && bundle exec rake contentqa:delete_reports

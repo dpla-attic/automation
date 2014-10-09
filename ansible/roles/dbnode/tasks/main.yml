@@ -7,9 +7,15 @@
 
 - name: Add cloudant package list
   template: src=cloudant.list.j2 dest=/etc/apt/sources.list.d/cloudant.list
+  tags:
+    - packages
+    - database
 
 - name: Update apt package index for bigcouch
   apt: update_cache=yes
+  tags:
+    - packages
+    - database
 
 - name: Install packages
   apt: pkg={{ item }} state=present force=yes
@@ -60,3 +66,5 @@
 
 - name: Add logrotate task for bigcouch
   copy: src=etc_logrotate_d_bigcouch dest=/etc/logrotate.d/bigcouch owner=root group=root mode=0644
+  tags:
+    - database

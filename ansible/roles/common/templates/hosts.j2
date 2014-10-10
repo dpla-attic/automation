@@ -11,6 +11,6 @@ ff02::2 ip6-allrouters
 {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}	{{ h }}
 {% endfor %}
 
-{% if level == 'development' %}
+{% if level is defined and level == 'development' %}
 {{ hostvars['loadbal'][internal_network_interface]['ipv4']['address'] }} local.dp.la
 {% endif %}

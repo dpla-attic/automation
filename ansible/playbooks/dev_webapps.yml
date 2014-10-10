@@ -11,8 +11,6 @@
   sudo: yes
   roles:
     - common_web
-  vars:
-    level: production
   vars_files:
     - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 
@@ -21,8 +19,6 @@
   sudo: yes
   roles:
     - common_php
-  vars:
-    level: production
   vars_files:
     - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 
@@ -34,8 +30,6 @@
     - site_proxy
     - omeka
     - wordpress
-  vars:
-    level: production
   vars_files:
     - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 
@@ -44,8 +38,6 @@
   sudo: yes
   roles:
     - frontend
-  vars:
-    level: production
   vars_files:
     - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 

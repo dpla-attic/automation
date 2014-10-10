@@ -1,5 +1,13 @@
 ---
 
+# To run standalone, specify
+# --extra-vars "level=<development|staging|production|contentqa>"
+# ... or see one of the convenience playbooks that includes this one with the
+#     correct value.
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
 - hosts: 127.0.0.1
   connection: local
   sudo: false
@@ -50,10 +58,6 @@
         aws_region: "{{ aws_region }}"
         state: present
         wait_timeout: 22
-  vars:
-    # Default to production to keep development values from accidentally being
-    # used in production.
-    level: production
   vars_files:
     - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 

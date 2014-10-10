@@ -1,5 +1,8 @@
 ---
 
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
 - name: Deploy API (staging)
   hosts: api
   sudo: yes

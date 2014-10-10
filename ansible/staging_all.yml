@@ -1,15 +1,8 @@
 ---
 
-- name: Common
-  hosts: all
-  sudo: yes
-  roles:
-    - common
-    - aws_postfix
-  vars:
-    level: staging
-  vars_files:
-    - ["vars/staging.yml", "vars/defaults.yml"]
+- include: playbooks/common.yml level=staging
+
+- include: playbooks/aws_postfix.yml level=staging
 
 - include: playbooks/dbnodes.yml level=staging
 

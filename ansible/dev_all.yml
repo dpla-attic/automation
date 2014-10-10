@@ -1,14 +1,6 @@
 ---
 
-- name: Common
-  hosts: all
-  sudo: yes
-  roles:
-    - common
-  vars:
-    level: development
-  vars_files:
-    - [ "vars/development.yml", "vars/defaults.yml" ]
+- include: playbooks/common.yml level=development
 
 - include: playbooks/dev_loadbalancer.yml
 

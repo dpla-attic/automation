@@ -1,5 +1,7 @@
 ---
 
+# This gets included by ../contentqa_all.yml.
+
 - include: postgresql.yml
 
 - include: mysql.yml
@@ -12,7 +14,7 @@
   roles:
     - common_web
   vars:
-    level: production
+    level: contentqa
   vars_files:
     - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 

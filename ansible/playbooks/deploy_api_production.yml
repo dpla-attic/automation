@@ -3,7 +3,7 @@
 - name: Gather inventory facts in case playbook is run standalone
   hosts: all
 
-- name: Deploy API (development)
+- name: Deploy API (production  )
   hosts: api
   sudo: yes
   tasks:
@@ -11,8 +11,8 @@
   handlers:
     - include: ../roles/api/handlers/main.yml
   vars:
-    level: development
+    level: production  
   vars_files:
-    - "../vars/development.yml"
+    - "../vars/production  .yml"
     - "../roles/api/defaults/main.yml"
-    - "../roles/api/vars/development.yml"
+    - "../roles/api/vars/production  .yml"

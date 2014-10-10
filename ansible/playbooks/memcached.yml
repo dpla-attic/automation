@@ -5,9 +5,5 @@
   sudo: yes
   roles:
     - memcached
-  vars:
-    # Default to production to keep development values from accidentally being
-    # used in production.
-    level: production
   vars_files:
     - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

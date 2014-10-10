@@ -3,7 +3,7 @@
 - name: Gather inventory facts in case playbook is run standalone
   hosts: all
 
-- name: Deploy frontend (staging)
+- name: Deploy frontend (production)
   hosts: frontend
   sudo: yes
   tasks:
@@ -11,8 +11,8 @@
   handlers:
     - include: ../roles/frontend/handlers/main.yml
   vars:
-    level: staging
+    level: production  
   vars_files:
-    - "../vars/staging.yml"
+    - "../vars/production.yml"
     - "../roles/frontend/defaults/main.yml"
-    - "../roles/frontend/vars/staging.yml"
+    - "../roles/frontend/vars/production.yml"

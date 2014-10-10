@@ -5,3 +5,4 @@ elasticsearch_version: 0.90.13
 elasticsearch_plugins:
   - { name: 'elasticsearch/elasticsearch-lang-javascript/1.4.0'}
   - { name: 'elasticsearch/elasticsearch-river-couchdb/1.3.0'}
+  - { name: 'lukas-vlcek/bigdesk/2.2.3'}

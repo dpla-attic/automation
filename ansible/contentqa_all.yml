@@ -1,12 +1,6 @@
 ---
 
-- name: Common
-  hosts: all
-  sudo: yes
-  roles:
-    - common
-  vars_files:
-    - ["vars/contentqa.yml", "vars/defaults.yml"]
+- include: playbooks/common.yml level=contentqa
 
 - name: HTTP proxy
   hosts: contentqa_proxy_host

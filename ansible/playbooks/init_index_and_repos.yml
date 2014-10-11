@@ -1,0 +1,96 @@
+---
+
+# This playbook must be invoked with --extra-vars "level=<environment>".
+# For example, --extra-vars "level=development".
+# You also have to be sure you're passing ansible-playbook the correct inventory
+# file with the -i option!
+
+# To have this create the test API account, specify
+# --extra-vars "create_test_account=true" to ansible-playbook.
+# For example, --extra-vars "level=development create_test_account=true"
+# This test account is useful in development or testing, because there are still
+# automated tests that expect it to exist.
+
+# After this playbook is run, you need to use the sync_couch_views.py module in
+# the "ingestion" project to create CouchDB views in the various databases, and
+# then run an ingest with other ingestion tools.
+
+# Example invocation:
+# $ ansible-playbook -u mb -i development playbooks/init_index_and_repos.yml \
+#   --extra-vars "level=development create_test_account=true"
+
+
+- hosts:
+    - api[0]
+  sudo: yes
+  tasks:
+
+    - name: Delete any existing river
+      script: >
+          ../files/delete_river.sh {{ ruby_rbenv_version }}
+      sudo_user: dpla
+
+    - name: Drop existing repositories
+      local_action: uri
+      sudo: no
+      args:
+          url: "http://{{ bigcouch_cluster_loadbal }}:5984/{{ item }}"
+          method: DELETE
+          user: "{{ bigcouch_admin_name }}"
+          password: "{{ bigcouch_admin_password}}"
+          force_basic_auth: yes
+          status_code: "200,404"
+      with_items:
+        - dpla
+        - dashboard
+        - bulk_downloads
+        - dpla_api_auth
+
+    - name: Create new repositories (except dpla_api_auth)
+      local_action: uri
+      sudo: no
+      args:
+          url: "http://{{ bigcouch_cluster_loadbal }}:5984/{{ item }}"
+          method: PUT
+          user: "{{ bigcouch_admin_name }}"
+          password: "{{ bigcouch_admin_password}}"
+          force_basic_auth: yes
+          status_code: "201"
+      with_items:
+        - dpla
+        - dashboard
+        - bulk_downloads
+
+    - name: Create api key database (with its design doc)
+      script: >
+          ../files/create_api_key_database.sh
+      sudo_user: dpla
+
+    - name: Create new index and river
+      script: >
+          ../files/create_index_and_river.sh {{ ruby_rbenv_version }}
+      sudo_user: dpla
+
+    - name: Delete any undeployed indices
+      script: >
+          ../files/delete_undeployed_indices.sh {{ ruby_rbenv_version }}
+      sudo_user: dpla
+
+    - name: Create test API user (optional)
+      when: create_test_account is defined
+      local_action: uri
+      sudo: no
+      args:
+          url: "http://{{ bigcouch_cluster_loadbal }}:5984/dpla_api_auth/aa11d0958e93bb25e457a726dc10a40f"
+          method: PUT
+          HEADER_Content-Type: application/json
+          body: '{"owner":"test@test.tld"}'
+          user: "{{ bigcouch_admin_name }}"
+          password: "{{ bigcouch_admin_password}}"
+          force_basic_auth: yes
+          status_code: "201"
+
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+  vars:
+    level: fail_if_this_is_not_given_explicitly

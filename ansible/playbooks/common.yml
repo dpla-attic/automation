@@ -12,4 +12,4 @@
   roles:
     - common
   vars_files:
-    - [ "../vars/development.yml", "../vars/defaults.yml" ]
+    - [ "../vars/{{ level }}.yml", "../vars/defaults.yml" ]

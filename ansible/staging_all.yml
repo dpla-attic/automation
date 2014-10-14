@@ -14,19 +14,7 @@
 
 - include: playbooks/memcached.yml level=staging
 
-- name: Common httpd configuration
-  hosts:
-    - api
-    - frontend
-    - site_proxies
-    - cms-stg
-  sudo: yes
-  roles:
-    - common_web
-  vars:
-    level: staging
-  vars_files:
-    - ["vars/staging.yml", "vars/defaults.yml"]
+- include: playbooks/common_httpd.yml level=staging
 
 # The siteproxy playbook should come before the other web-related ones to ensure that
 # the site proxy cache exists before the other ones try to clear it.

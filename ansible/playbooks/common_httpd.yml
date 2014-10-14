@@ -1,0 +1,21 @@
+---
+
+# HTTP provisioning and configuration common to all servers that
+# run Nginx.
+# To run standalone, specify
+# --extra-vars "level=<development|staging|production|contentqa>"
+# ... or see one of the convenience playbooks that includes this one with the
+#     correct value.
+
+- name: Common httpd configuration
+  hosts:
+    - api
+    - frontend
+    - site_proxies
+    - wordpress
+    - exhibitions
+  sudo: yes
+  roles:
+    - common_web
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

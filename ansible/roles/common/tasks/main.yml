@@ -46,6 +46,7 @@
     - curl
     - sysstat
     - python-httplib2
+    - ntp
   tags:
     - packages
 

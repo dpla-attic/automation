@@ -43,7 +43,7 @@
       with_items:
         - dpla
         - dashboard
-        - bulk_downloads
+        - bulk_download
         - dpla_api_auth
 
     - name: Create new repositories (except dpla_api_auth)
@@ -59,7 +59,7 @@
       with_items:
         - dpla
         - dashboard
-        - bulk_downloads
+        - bulk_download
 
     - name: Create api key database (with its design doc)
       script: >

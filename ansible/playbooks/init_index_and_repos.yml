@@ -63,7 +63,7 @@
 
     - name: Create api key database (with its design doc)
       script: >
-          ../files/create_api_key_database.sh
+          ../files/create_api_key_database.sh {{ ruby_rbenv_version }}
       sudo_user: dpla
 
     - name: Create new index and river

@@ -1,0 +1,59 @@
+---
+
+# Configuration for all production hosts.
+
+# For first-time initialization:
+#   - run this with --extra-vars "initial_run=true"
+#     to prevent an error with Elasticsearch shard replication.
+#   - See the comment in playbooks/siteproxy.yml regarding
+#     the loadbalancer health check.
+
+
+- include: playbooks/common.yml level=production
+
+- include: playbooks/aws_postfix.yml level=production
+
+- include: playbooks/dbnodes.yml level=production
+
+- include: playbooks/elasticsearch.yml level=production
+
+- include: playbooks/postgresql.yml level=production
+
+- include: playbooks/mysql.yml level=production
+
+- include: playbooks/memcached.yml level=production
+
+- include: playbooks/common_httpd.yml level=production
+
+# The siteproxy playbook should come before the other web-related ones to ensure that
+# the site proxy cache exists before the other ones try to clear it.
+- include: playbooks/siteproxy.yml level=production
+
+- name: Content management systems
+  hosts:
+    - wordpress
+    - exhibitions
+  sudo: yes
+  roles:
+    - common_php
+    - common_sitenode
+    - omeka
+    - wordpress
+  vars:
+    level: production
+  vars_files:
+    - ["vars/production.yml", "vars/defaults.yml"]
+
+- name: Frontend (portal) site
+  hosts: frontend
+  sudo: yes
+  roles:
+    - frontend
+  vars:
+    level: production
+  vars_files:
+    - ["vars/production.yml", "vars/defaults.yml"]
+
+- include: playbooks/api.yml level=production
+
+- include: playbooks/ingestion.yml

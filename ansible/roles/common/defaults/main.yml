@@ -1,1 +1,4 @@
 ---
+
+# This default value is for development:
+munin_master_ipaddr: 192.168.50.6

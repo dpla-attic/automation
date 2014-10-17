@@ -1,0 +1,36 @@
+---
+
+- name: Ensure that Nginx is installed
+  apt: package=nginx state=present
+
+- name: Ensure state of monitoring Nginx config file
+  template: >-
+      src=etc_nginx_sites-available_monitoring.j2
+      dest=/etc/nginx/sites-available/monitoring
+  notify: restart nginx   
+
+- name: Make sure that Nginx default site is out of the way
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  notify: restart nginx
+
+- name: Make sure monitoring Nginx configuration is enabled
+  file: >
+      src=/etc/nginx/sites-available/monitoring dest=/etc/nginx/sites-enabled/monitoring
+      state=link
+  notify: restart nginx
+
+- name: Ensure existence of /var/www/ directory
+  file: path=/var/www state=directory mode=0755 owner=root group=root
+
+- name: Ensure state of index page
+  copy: src=index.html dest=/var/www/index.html owner=root group=root mode=0644
+
+- name: Enable Munin Nginx plugins
+  file: >-
+      src=/usr/share/munin/plugins/{{ item }}
+      dest=/etc/munin/plugins/{{ item }}
+      state=link owner=root group=root
+  with_items:
+    - nginx_request
+    - nginx_status
+  notify: restart munin node

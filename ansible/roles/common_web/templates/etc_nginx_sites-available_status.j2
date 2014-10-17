@@ -1,0 +1,9 @@
+
+server {
+    listen 8888;
+    server_name {{ inventory_hostname }};
+    location /nginx_status {
+        stub_status on;
+        access_log off;
+    }
+}

@@ -1,0 +1,26 @@
+---
+
+- name: Ensure existence of munin package
+  apt: package=munin state=present
+  tags:
+    - munin_master
+    - packages
+
+- name: Ensure state of munin master configuration file
+  template: >
+      src=munin.conf.j2
+      dest=/etc/munin/munin.conf
+      owner=root group=root mode=0644
+  tags:
+    - munin_master
+  # Nothing to restart because the master process runs on cron.
+
+- name: Enable Munin stats plugins
+  file: >-
+      src=/usr/share/munin/plugins/{{ item }}
+      dest=/etc/munin/plugins/{{ item }}
+      state=link owner=root group=root
+  with_items:
+    - munin_stats
+    - munin_update
+  notify: restart munin node

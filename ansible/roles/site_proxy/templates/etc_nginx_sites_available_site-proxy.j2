@@ -267,13 +267,6 @@ server {
         proxy_pass http://dpla_berkman/wiki;
      }
 
-    location /nginx_status {
-        stub_status on;
-        access_log off;
-        allow 127.0.0.1;
-        deny all;
-    }
-
     location ~ /\.ht {
         deny  all;
     }

@@ -73,3 +73,48 @@
   tags:
     - users
     - web
+
+- name: Ensure state of server-status configuration for monitoring
+  template: >-
+      src=etc_nginx_sites-available_status.j2 dest=/etc/nginx/sites-available/status
+      mode=0644 owner=root group=root
+  notify: restart nginx
+  tags:
+    - nginx
+    - web
+    - munin
+
+- name: Make sure that server-status virtual host is enabled
+  file: >
+      src=/etc/nginx/sites-available/status
+      dest=/etc/nginx/sites-enabled/status
+      state=link owner=root group=root
+  tags:
+    - nginx
+    - web
+    - munin
+
+- name: Ensure correct configuration of Munin Nginx plugins
+  template: >
+      src=munin_plugin_conf.d_nginx.j2 dest=/etc/munin/plugin-conf.d/zzz-nginx
+      owner=root group=root mode=0644
+  notify: restart munin node
+  tags:
+    - munin
+
+- name: Ensure that libwww-perl is installed for the Munin Nginx plugins
+  apt: package=libwww-perl state=present
+  tags:
+    - munin
+
+- name: Enable Munin Nginx plugins
+  file: >-
+      src=/usr/share/munin/plugins/{{ item }}
+      dest=/etc/munin/plugins/{{ item }}
+      state=link owner=root group=root
+  with_items:
+    - nginx_request
+    - nginx_status
+  tags:
+    - munin
+

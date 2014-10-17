@@ -47,8 +47,28 @@
     - sysstat
     - python-httplib2
     - ntp
+    - munin-node
   tags:
     - packages
+
+- name: Disable default munin plugins that we don't need
+  file: >
+     path="/etc/munin/plugins/{{ item }}" state=absent
+  with_items:
+    - nfs4_client
+    - nfs_client
+    - nfsd
+    - nfsd4
+    - entropy
+  notify: restart munin node
+  tags:
+    - munin
+
+- name: Ensure state of munin node configuration file
+  template: src=munin-node.conf.j2 dest=/etc/munin/munin-node.conf owner=root group=root mode=0644
+  notify: restart munin node
+  tags:
+    - munin
 
 - name: Copy sysstat init defaults file
   copy: src=etc_default_sysstat dest=/etc/default/sysstat owner=root group=root mode=0644

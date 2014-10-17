@@ -5,3 +5,6 @@
 
 - name: restart sysstat
   service: name=sysstat state=restarted
+
+- name: restart munin node
+  service: name=munin-node state=reloaded

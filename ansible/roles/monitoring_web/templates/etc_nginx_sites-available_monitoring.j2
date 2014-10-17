@@ -1,0 +1,13 @@
+
+server {
+    listen {{ monitoring_http_port }};
+    root /var/www;
+    index index.html;
+    server_name {{ inventory_hostname }};
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+    location /munin {
+        alias /var/cache/munin/www;
+    }
+}

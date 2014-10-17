@@ -31,11 +31,4 @@ server {
     error_page 422 /srv/www/frontend/public/422.html;
     error_page 500 /srv/www/frontend/public/500.html;
 
-    location /nginx_status {
-        stub_status on;
-        access_log off;
-        allow 127.0.0.1;
-        deny all;
-    }
-
 }

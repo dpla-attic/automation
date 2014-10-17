@@ -1,0 +1,20 @@
+---
+
+munin_groups:
+    # The values are the names of inventory groups in the 'central' inventory
+    Staging:
+        Repository: dbnodes_stg
+        Search: elasticsearch_stg
+        Ingestion: ingestion_stg
+        API: api_stg
+        Frontend: frontend_stg
+        PostgreSQL: postgres_stg
+        CMS: cms_stg
+    Production:
+        Repository: dbnodes_prod
+        Search: elasticsearch_prod
+        Ingestion: ingestion_prod
+        API: api_prod
+        Frontend: frontend_prod
+        PostgreSQL: postgres_prod
+        CMS: cms_prod

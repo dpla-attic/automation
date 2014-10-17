@@ -27,3 +27,6 @@ iana_timezone: US/Eastern
 aws_region: changeme
 aws_access_key: changeme
 aws_secret_key: changeme
+
+# Not necessary in development:
+munin_master_ipaddr: CHANGEME

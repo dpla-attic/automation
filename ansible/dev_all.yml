@@ -10,6 +10,13 @@
 
 - include: playbooks/common.yml level=development
 
+- name: Configure webapp1 as Munin master for development
+  hosts: webapp1
+  roles:
+    - munin_master
+    - monitoring_web
+  sudo: yes
+
 - include: playbooks/dev_loadbalancer.yml
 
 - include: playbooks/dbnodes.yml level=development

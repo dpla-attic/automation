@@ -80,7 +80,7 @@ $ ansible-playbook -i development -u vagrant \
 A second run to configure everything:
 ```
 $ ansible-playbook -i development -u <your username in group_vars/all> \
-  dev_all.yml
+  dev_all.yml --extra-vars "initial_run=true"
 ```
 * The various sites will be online at:
   * http://local.dp.la/

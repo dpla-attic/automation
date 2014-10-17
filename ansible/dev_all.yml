@@ -1,5 +1,13 @@
 ---
 
+# Configuration for development VMs.
+
+# For first-time initialization:
+#   - run this with --extra-vars "initial_run=true"
+#     to prevent an error with Elasticsearch shard replication.
+#   - See the comment in playbooks/siteproxy.yml regarding
+#     the loadbalancer health check.
+
 - include: playbooks/common.yml level=development
 
 - include: playbooks/dev_loadbalancer.yml

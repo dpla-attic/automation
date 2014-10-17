@@ -2,10 +2,6 @@
 # Example Vagrantfile.
 #
 # Copy this to `Vagrantfile' and edit to suit your needs.
-# Depending on your scenario (ingestion, api development, frontend
-# development, etc.), you could have VMs that you do not need to
-# have running, and which could be commented out in this file
-# to save system resources.
 #
 # Please note the synced_folder directives.  If you want to be able
 # to edit files locally (outside of the VM, in your host environment)

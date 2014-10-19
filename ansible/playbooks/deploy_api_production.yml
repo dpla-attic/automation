@@ -13,6 +13,6 @@
   vars:
     level: production  
   vars_files:
-    - "../vars/production  .yml"
+    - "../vars/production.yml"
     - "../roles/api/defaults/main.yml"
-    - "../roles/api/vars/production  .yml"
+    - "../roles/api/vars/production.yml"

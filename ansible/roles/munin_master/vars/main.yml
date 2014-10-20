@@ -8,6 +8,7 @@ munin_groups:
         Ingestion: ingestion_stg
         API: api_stg
         Frontend: frontend_stg
+        Siteproxy: siteproxy_stg
         PostgreSQL: postgres_stg
         CMS: cms_stg
     Production:
@@ -16,5 +17,6 @@ munin_groups:
         Ingestion: ingestion_prod
         API: api_prod
         Frontend: frontend_prod
+        Siteproxy: siteproxy_stg
         PostgreSQL: postgres_prod
         CMS: cms_prod

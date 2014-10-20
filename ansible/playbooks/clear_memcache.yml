@@ -1,0 +1,6 @@
+---
+
+- hosts: memcached
+  sudo: yes
+  tasks:
+  - service: name=memcached state=restarted

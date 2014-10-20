@@ -1,0 +1,6 @@
+---
+
+- hosts: site_proxies
+  sudo: yes
+  tasks:
+  - command: find /var/cache/nginx -type f -delete

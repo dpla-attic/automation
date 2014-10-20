@@ -6,6 +6,7 @@
 - name: Deploy frontend (production)
   hosts: frontend
   sudo: yes
+  serial: 1
   tasks:
     - include: ../roles/frontend/tasks/deploy.yml
   handlers:

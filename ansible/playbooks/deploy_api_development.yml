@@ -6,8 +6,13 @@
 - name: Deploy API (development)
   hosts: api
   sudo: yes
+  serial: 1
+  pre_tasks:
+    - include: pre_post_tasks/api_pretasks.yml
   tasks:
     - include: ../roles/api/tasks/deploy.yml
+  post_tasks:
+    - include: pre_post_tasks/api_posttasks.yml
   handlers:
     - include: ../roles/api/handlers/main.yml
   vars:

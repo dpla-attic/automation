@@ -1,0 +1,20 @@
+---
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
+- name: Deploy Wordpress (development)
+  hosts: wordpress
+  sudo: yes
+  serial: 1
+  tasks:
+    - include: ../roles/wordpress/tasks/main.yml tags=wordpress_deployment
+  handlers:
+    - include: ../roles/wordpress/handlers/main.yml
+  vars:
+    level: development
+  vars_files:
+    - "../vars/development.yml"
+    - "../roles/wordpress/defaults/main.yml"
+    - "../roles/wordpress/vars/main.yml"
+    - "../roles/wordpress/vars/development.yml"

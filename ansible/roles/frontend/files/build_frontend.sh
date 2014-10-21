@@ -24,6 +24,7 @@ kill $SSH_AGENT_PID
     --exclude 'log' \
     --exclude 'tmp' \
     --exclude '.git' \
+    --exclude 'public/uploads' \
     /home/dpla/frontend/ /srv/www/frontend
 if [ $? -ne 0 ]; then
     exit 1

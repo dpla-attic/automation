@@ -114,3 +114,13 @@
     - frontend_deployment
     - web
 
+- name: Ensure existence of uploads directory
+  file: >-
+      path=/srv/www/frontend/public/uploads state=directory
+      owner=www-data group=www-data mode=0755
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+

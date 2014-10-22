@@ -41,7 +41,7 @@ bigcouch_cluster_loadbal: 192.168.50.2
 # same with Elasticsearch ...
 es_cluster_loadbal: 192.168.50.2
 
-
+admin_notifications_from: addr@example.tld
 email_notifications_from: addr@example.tld
 
 

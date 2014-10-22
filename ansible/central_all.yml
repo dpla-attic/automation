@@ -14,9 +14,11 @@
   sudo: yes
   roles:
     - common
+    - aws_postfix
     - munin_master
     - common_web
     - monitoring_web
   vars:
-    internal_network_interface: ansible_eth0
     production_munin_master: true
+  vars_files:
+    - ["vars/production.yml"]

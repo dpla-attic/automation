@@ -42,7 +42,7 @@ es_elb_name: search-lbal-prod
 api_elb_name: api-lbal-prod
 siteproxy_elb_name: siteproxy-elb-prod
 
-
+admin_notifications_from: addr@example.tld
 email_notifications_from: addr@example.tld
 
 

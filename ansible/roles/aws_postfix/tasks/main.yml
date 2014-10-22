@@ -38,3 +38,29 @@
   tags:
     - postfix
     - mail
+
+- name: Make sure Postfix 'generic' address-mapping file is up-to-date
+  template: >-
+      src=generic.j2 dest=/etc/postfix/generic mode=0644 owner=root group=root
+  tags:
+    - postfix
+    - mail
+
+- name: Rebuild postfix generic database
+  command: postmap hash:/etc/postfix/generic
+  # No need to restart Postfix
+  tags:
+    - postfix
+    - mail
+
+- name: Ensure that /etc/aliases is up-to-date
+  template: src=aliases.j2 dest=/etc/aliases mode=0644 owner=root group=root
+  tags:
+    - postfix
+    - mail
+
+- name: Run newaliases for updated aliases file
+  command: newaliases
+  tags:
+    - postfix
+    - mail

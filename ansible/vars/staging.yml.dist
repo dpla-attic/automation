@@ -46,7 +46,7 @@ es_elb_name: search-lbal-stg
 api_elb_name: api-lbal-stg
 siteproxy_elb_name: siteproxy-lbal-stg
 
-
+admin_notifications_from: addr@example.tld
 email_notifications_from: addr@example.tld
 
 postgresql_user: {name: "dpla", password: "changeme"}

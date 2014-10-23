@@ -20,15 +20,16 @@ Please install the following tools as documented on their websites:
 * [VirtualBox](https://www.virtualbox.org/) (Version 4.3)
 * [Vagrant](http://www.vagrantup.com/) (Version 1.5 or 1.6)
 * [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest/) (`vagrant plugin install vagrant-vbguest`)
-* [Ansible](http://www.ansible.com/) (Version 1.7.  Python package.  Install with `pip install ansible`.  [Installation instructions](http://docs.ansible.com/intro_installation.html))
-* The Python `httplib2` module:  `pip install httplib2`.
-* _Optional_: If you'll be using the staging or production environments, you will need to install the `boto` python module locally:  `pip install boto`.  This is not relevant if you're using the development VMs.
+* [Ansible](http://www.ansible.com/) (Version 1.7 or greater; [installation instructions](http://docs.ansible.com/intro_installation.html))
+* Additional dependencies described in the `pip` requirements file (see below)
 
 ### Steps
 * Clone this project with Git or download the latest
   [zipfile](https://github.com/dpla/automation/archive/master.zip) and open it.  If
   you download the zipfile you won't be able to update it as easily when we issue
   updates.
+* Install the additional dependencies using `pip`:
+  * `pip install -r requirements.txt`
 * Copy the following files to their "live" equivalents (removing ".dist") and
   edit them with values specific to your installation.
   * `ansible/group_vars/all.dist`

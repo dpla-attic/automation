@@ -34,12 +34,14 @@ locale.name = ""
 ; Debugging ;
 ;;;;;;;;;;;;;
 
+{% set debug_value = 'true' if webapp_debug == true else 'false' %}
+
 ; debug.exceptions
 ; Throw exceptions for bad URLs.
 ; default: false
 ;
 ; This should only be enabled when debugging or developing for Omeka.
-debug.exceptions = false
+debug.exceptions = {{ debug_value }}
 
 ; debug.request
 ; Dump data about each web request to the browser.
@@ -84,14 +86,15 @@ debug.emailLogPriority = Zend_Log::ERR
 ; Errors, exceptions, and other messages will be logged to
 ; application/logs/errors.log (this file must be writable by the web
 ; server if logging is enabled).
-log.errors = true
+log.errors = {{ debug_value }}
 
 ; log.priority
 ; The minimum priority level of messages that should be logged.
 ; When developing/debugging, use Zend_Log::DEBUG for debug() to work. This will record everything.
 ; default: Zend_Log::WARN (Logs warnings and above)
 ; log.priority = Zend_Log::WARN
-log.priority = Zend_Log::DEBUG
+{% set log_priority = 'DEBUG' if webapp_debug == true else 'WARN' %}
+log.priority = Zend_Log::{{ log_priority }}
 
 ; log.sql
 ; Log SQL statements.
@@ -266,7 +269,7 @@ dpla.apiUrl = 'http://{{ api_hostname }}:{{ api_port }}/v2'
 dpla.apiKey = '{{ api_key }}';
 
 ; exhibitions browse: default size of the page. Means, how much exhibits display on first page. Other exhibits would be displayed with pagination
-dpla.exhibit_page_size = 8
+dpla.exhibit_page_size = 16
 
 ; exhibitions browse: number of items in line
 dpla.exhibit_line_size = 4

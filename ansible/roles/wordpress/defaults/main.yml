@@ -11,3 +11,5 @@ wp_auth_salt:       ")=d{XACbc/^+q<,r`L`q]R$1rA)!D{XgG^kmTAI#f3h`-yF>&U#/]);sN;E
 wp_secure_auth_salt: "|6lyuZV=2s~LL]w91$*xtcOm(ZeaL,E^Q$-L{G: IgMp-T6| $aij}+],x7+4:~f"
 wp_logged_in_salt:   "Z?.WWr]I;Bu;^!=P ]BK?<x[%lNL*47MWa4=+)4SP7aV21;$<J!g{0m*Q;=3s&q8"
 wp_nonce_salt:       "-DV|s.W8/BL^ZP>tz.d2b<KZ9}PxQg.lB13i+)MAvr[+c3+bqbl.OKQA&SZNe*+*"
+
+wp_branch_or_tag: master

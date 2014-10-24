@@ -1,5 +1,13 @@
 ---
 
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
 - name: Check out frontend app from its repository
   git: >
       repo=https://github.com/dpla/frontend.git

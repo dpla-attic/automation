@@ -1,5 +1,12 @@
 ---
 
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - frontend
+    - web
+    - nginx
+
 - name: Ensure existence of necessary packages
   apt: >
       pkg="{{ item }}" state=present

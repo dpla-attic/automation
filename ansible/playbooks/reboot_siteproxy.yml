@@ -1,0 +1,45 @@
+---
+
+- name: Reboot site proxies
+  hosts: site_proxies
+  sudo: true
+  serial: 1
+  tasks:
+    - name: Gather ec2 facts
+      ec2_facts:
+    - name: De-register instance from loadbalancer
+      local_action: ec2_elb
+      sudo: false
+      args:
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        ec2_elbs: "{{ siteproxy_elb_name }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        state: absent
+    # TODO:  when Ansible 1.8 is released, check for connnection draining
+    # with `wait_for ... state=drained'.
+    - name: Reboot
+      command: /sbin/shutdown -r now
+      async: 0
+      poll: 0
+      ignore_errors: true
+    - name: Wait for instance to come back up
+      sudo: false
+      local_action: >-
+          wait_for host="{{ inventory_hostname }}"
+          port="80" delay=60 timeout=600
+    - name: Register instance with loadbalancer again
+      sudo: false
+      local_action: ec2_elb
+      when: level == 'production' or level == 'staging'
+      sudo: false
+      args:
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        ec2_elbs: "{{ siteproxy_elb_name }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        state: present
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

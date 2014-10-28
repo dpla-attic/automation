@@ -1,0 +1,14 @@
+---
+
+- name: Upgrade o/s packages
+  hosts: all
+  sudo: yes
+  tasks:
+    - name: Update apt package index
+      apt: update_cache=yes
+      tags:
+        - packages
+    - name: Upgrade apt packages
+      apt: upgrade=safe
+      tags:
+        - packages

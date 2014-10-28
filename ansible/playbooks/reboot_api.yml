@@ -1,0 +1,21 @@
+---
+
+
+- name: Reboot API instances
+  hosts: api
+  serial: 1
+  sudo: yes
+  pre_tasks:
+  tasks:
+    - include: pre_post_tasks/api_pretasks.yml
+    - name: Reboot
+      command: /sbin/shutdown -r now
+      async: 0
+      poll: 0
+      ignore_errors: true
+    - include: pre_post_tasks/api_posttasks.yml
+      vars:
+          delay: 60
+          timeout: 600
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

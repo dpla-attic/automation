@@ -4,7 +4,8 @@
   sudo: false
   local_action: >
       wait_for host="{{ inventory_hostname }}" port="{{ api_app_port }}"
-      delay=2 timeout=30
+      delay={{ delay | default(2) }}
+      timeout={{ timeout | default(30) }}
 - name: Register instance with loadbalancer again
   # Note that, on initialization of the whole environment, when there are
   # no origin servers yet behind the loadbalancer, this task could fail if
@@ -12,7 +13,8 @@
   # various status codes that could result from everything not being set
   # up yet.  You can get around this by having the loadbalancer simply
   # probe for port 80 while you're initializing everything, and then
-  # switch it later to a HTTP check for "/".
+  # switch it later to a HTTP check for a success response from a
+  # particular resource.
   local_action: ec2_elb
   when: level == 'production' or level == 'staging'
   sudo: false

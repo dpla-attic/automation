@@ -23,6 +23,9 @@ webapps
 [exhibitions:children]
 webapps
 
+[cms:children]
+webapps
+
 [mysql_dbs:children]
 webapps
 

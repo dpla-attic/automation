@@ -49,3 +49,7 @@ smtp_tls_note_starttls_offer = yes
 smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 
 smtp_generic_maps = hash:/etc/postfix/generic
+
+notify_classes = resource software bounce
+bounce_queue_lifetime = 12h
+maximal_queue_lifetime = 2d

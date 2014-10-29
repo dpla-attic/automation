@@ -5,6 +5,19 @@
   tags:
     - postgresql
 
+- name: Set kernel shared memory to be enough for PostgreSQL
+  template: >-
+      src="30-postgresql-shm.conf.j2"
+      dest=/etc/sysctl.d/30-postgresql-shm.conf
+      owner=root group=root mode=0644
+  tags:
+    - postgresql
+
+- name: Load Kernel settings modified above
+  command: sysctl -p /etc/sysctl.d/30-postgresql-shm.conf
+  tags:
+    - postgresql
+
 - name: Ensure that PostgreSQL and Ansible dependencies are installed
   apt: >
       pkg="{{ item }}" state=present

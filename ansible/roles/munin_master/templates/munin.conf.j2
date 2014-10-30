@@ -106,7 +106,7 @@ includedir /etc/munin/munin-conf.d
 {% for environment in munin_groups %}
 {% for cl_name in munin_groups[environment] %}
 {% for host in groups[munin_groups[environment][cl_name]] %}
-[{{ environment }};{{ cl_name }};{{ host }}]
+[{{ environment }}_{{ cl_name }};{{ host }}]
     address {{ host }}
 {% endfor %}
 {% endfor %}

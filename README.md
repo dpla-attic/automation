@@ -83,19 +83,35 @@ A second run to configure everything:
 $ ansible-playbook -i development -u <your username in group_vars/all> \
   dev_all.yml --extra-vars "initial_run=true"
 ```
-* The various sites will be online at:
-  * http://local.dp.la/
-  * http://local.dp.la/exhibitions/
-  * http://local.dp.la:8080/v2/items (the API)
 
-  However, there won't be any data ingested until you run an ingestion with
-  [the ingestion system](http://github.com/dpla/ingestion) and you've pointed
-  it at the BigCouch instance, which will be loadbal:5984.  You'll also have
-  to use the `rake` tasks in
-  [the API ("platform") app](http://github.com/dpla/platform) to set up the
-  ElasticSearch search index and initialize your repositories.  Please consult
-  those other projects for more information.  There's a playbook for an
-  ingestion server that's not implemented yet in the development VMs.
+The various sites will be online at:
+
+* http://local.dp.la/
+* http://local.dp.la/exhibitions/
+* http://local.dp.la:8080/v2/items (the API)
+
+
+However, there won't be any data ingested until you run an ingestion with
+[the ingestion system](http://github.com/dpla/ingestion) and you've pointed
+it at the BigCouch instance, which will be loadbal:5984.
+
+You may use the following command to initialize new repositories:
+
+```
+$ ansible-playbook -i development -u <your username> playbooks/init_index_and_repos.yml --extra-vars "level=development create_test_account=true"
+```
+
+That command deletes and re-creates the BigCouch repositories and ElasticSearch
+search index, which is good for development purposes, but use it with care,
+because it does delete everything.  See the comments in the top of
+`init_index_and_repos.yml`.
+
+You'll also want to become familiar with the `rake` tasks in
+[the API ("platform") app](http://github.com/dpla/platform) to set up the
+ElasticSearch search index and initialize your repositories.  Please consult
+those other projects for more information.  There's a playbook for an
+ingestion server that's not implemented yet in the development VMs.
+
 
 ## Subsequent Usage
 

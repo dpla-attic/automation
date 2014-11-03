@@ -49,6 +49,7 @@
     - ntp
     - munin-node
     - munin-plugins-extra
+    - zlib1g-dev
   tags:
     - packages
     - munin
@@ -119,4 +120,3 @@
   tags:
     - ingestion
     - scripts
-

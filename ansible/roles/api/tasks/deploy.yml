@@ -65,7 +65,7 @@
 
 - name: Make sure rbenv and bundler are current
   script: >
-      install_ruby_tools.sh {{ ruby_rbenv_version }}
+      ../../../files/install_ruby_tools.sh {{ ruby_rbenv_version }}
   sudo_user: dpla
   tags:
     - deployment

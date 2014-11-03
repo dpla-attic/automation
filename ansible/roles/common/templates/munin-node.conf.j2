@@ -46,7 +46,11 @@ ignore_file \.pod$
 # cidr_allow 192.0.2.0/24
 # cidr_deny  192.0.2.42/32
 
+{% if level == 'development' %}
+cidr_allow 192.168.50.0/24
+{% else %}
 cidr_allow {{ munin_master_ipaddr }}/32
+{% endif %}
 
 # Which address to bind to;
 # host *

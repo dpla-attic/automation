@@ -48,8 +48,10 @@
     - python-httplib2
     - ntp
     - munin-node
+    - munin-plugins-extra
   tags:
     - packages
+    - munin
 
 - name: Disable default munin plugins that we don't need
   file: >

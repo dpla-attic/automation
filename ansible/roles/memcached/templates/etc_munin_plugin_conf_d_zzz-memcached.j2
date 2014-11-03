@@ -1,0 +1,2 @@
+[memcached*]
+    env.host {{ hostvars[inventory_hostname][internal_network_interface]['ipv4']['address'] }}

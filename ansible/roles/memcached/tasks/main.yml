@@ -10,3 +10,34 @@
   notify: restart memcached
   tags:
     - memcached
+
+# libcache-memcached-perl
+- name: Ensure existence of Munin dependency for memcached
+  apt: name=libcache-memcached-perl state=present
+  tags:
+    - memcached
+    - munin
+
+- name: Set up memcached data-collection for Munin
+  file: >-
+      src=/usr/share/munin/plugins/memcached_
+      dest=/etc/munin/plugins/{{ item }}
+      state=link
+  with_items:
+    - memcached_rates
+    - memcached_bytes
+    - memcached_counters
+  notify: restart munin-node
+  tags:
+    - munin
+    - memcached
+
+- name: Ensure state of configuration for Munin plugin
+  template: >-
+      src=etc_munin_plugin_conf_d_zzz-memcached.j2
+      dest=/etc/munin/plugin-conf.d/zzz-memcached
+      owner=root group=root mode=0644
+  notify: restart munin-node
+  tags:
+    - munin
+    - memcached

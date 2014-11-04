@@ -33,3 +33,4 @@
   tags:
     - contentqa_proxy
     - rsyslog
+    - logrotate

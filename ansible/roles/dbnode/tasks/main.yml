@@ -68,3 +68,5 @@
   copy: src=etc_logrotate_d_bigcouch dest=/etc/logrotate.d/bigcouch owner=root group=root mode=0644
   tags:
     - database
+    - logrotate
+

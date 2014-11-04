@@ -1,0 +1,18 @@
+/srv/www/frontend/log/{{ rails_env }}.log
+/srv/www/frontend/log/unicorn.stderr.log
+/srv/www/frontend/log/unicorn.stdout.log
+{
+    daily
+    missingok
+    rotate 60
+    compress
+    delaycompress
+    dateext
+    notifempty
+    create 0644 dpla dpla
+    sharedscripts
+    postrotate
+        service unicorn_frontend reload
+    endscript
+
+}

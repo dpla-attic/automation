@@ -112,4 +112,13 @@
     - web
     - htpasswd
 
+- name: Make sure that API app logs get rotated
+  template: >-
+      src=etc_logrotate.d_api_rails_logs.j2
+      dest=/etc/logrotate.d/api_rails_logs
+      owner=root group=root mode=0644
+  tags:
+    - api
+    - logrotate
+
 - include: deploy.yml

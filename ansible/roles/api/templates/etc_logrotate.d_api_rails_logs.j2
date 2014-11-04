@@ -1,0 +1,33 @@
+/srv/www/api/var/log/elasticsearch-{{ rails_env }}.log
+/srv/www/api/var/log/{{ rails_env }}.log
+/srv/www/api/var/log/unicorn.stderr.log
+/srv/www/api/var/log/unicorn.stdout.log
+{
+    daily
+    missingok
+    rotate 60
+    compress
+    delaycompress
+    dateext
+    notifempty
+    create 0644 dpla dpla
+    sharedscripts
+    postrotate
+        service unicorn_api reload
+    endscript
+}
+
+/srv/www/api/var/log/delayed_job.log
+{
+    weekly
+    missingok
+    rotate 8
+    delaycompress
+    dateext
+    notifempty
+    create 0644 dpla dpla
+    sharedscripts
+    postrotate
+        service unicorn_api reload
+    endscript
+}

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+ingestion_api_res="$(curl -ks  http://{{ bigcouch_cluster_loadbal }}:5984/dashboard/_design/all_ingestion_docs/_view/for_active_ingestions | grep -i 'total_rows":0' 2>&1)"
+
+verbose=""
+if [[ "$1" == '-v' ]]
+then
+  verbose=true
+fi
+
+if [[ -n $ingestion_api_res ]]
+then
+  if [[ -n $verbose ]]
+  then
+    echo 'No!'
+  fi
+    exit 0
+else
+  if [[ -n $verbose ]]
+  then
+    echo 'Yes!'
+  fi
+    exit 1
+fi

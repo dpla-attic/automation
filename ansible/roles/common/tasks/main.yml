@@ -112,3 +112,11 @@
     - sudo
     - users
 
+- name: Install is_ingestion_running.sh script
+  template: >-
+      src=is_ingestion_running.sh.j2 dest=/usr/local/bin/is_ingestion_running
+      owner=root group=root mode=0755
+  tags:
+    - ingestion
+    - scripts
+

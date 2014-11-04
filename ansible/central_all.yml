@@ -22,3 +22,54 @@
     production_munin_master: true
   vars_files:
     - ["vars/production.yml"]
+
+- name: Install rbenv/bundler/extra gems to central
+  hosts: central
+  sudo: yes
+  sudo_user: dpla
+  tasks:
+    - name: Make sure rbenv and bundler are current
+      script: >
+          files/install_ruby_tools.sh {{ ruby_rbenv_version }}
+      tags:
+        - scripts
+    - name: Ensure gems are present for BigCouch restore script
+      script: >
+          files/install_couchdb_restore_gems.sh {{ ruby_rbenv_version }}
+      tags:
+        - scripts
+  vars_files:
+    - ["vars/production.yml"]
+
+- name: Install scripts to central
+  hosts: central
+  sudo: yes
+  tasks:
+    - name: Install Elasticsearch heap stats script
+      copy: >-
+        src=files/get-elasticsearch-heap-stats.rb
+        dest=/usr/local/bin/get-elasticsearch-heap-stats.rb
+        owner=root group=root mode=755
+      tags:
+        - scripts
+    - name: Install BigCouch backup script
+      copy: >-
+        src=files/backup_couchdb_file.sh
+        dest=/usr/local/bin/backup_couchdb_file.sh owner=root group=root
+        mode=755
+      tags:
+        - scripts
+    - name: Install BigCouch compaction script
+      copy: >-
+        src=files/compact-bigcouch.rb dest=/usr/local/bin/compact-bigcouch.rb
+        owner=root group=root mode=755
+      tags:
+        - scripts
+    - name: Install BigCouch restore script
+      copy: >-
+        src=files/couchdb-restore.rb dest=/usr/local/bin/couchdb-restore.rb
+        owner=root group=root mode=755
+      tags:
+        - scripts
+  vars_files:
+    - ["vars/production.yml"]

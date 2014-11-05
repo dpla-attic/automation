@@ -6,6 +6,7 @@
     - api
     - web
     - nginx
+    - logrotate
 
 - name: Ensure existence of necessary packages
   apt: >

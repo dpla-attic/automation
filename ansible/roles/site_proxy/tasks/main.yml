@@ -39,7 +39,10 @@
     - site_proxy
 
 - name: Ensure state of robots.txt
-  copy: src=robots.txt dest=/srv/www/robots.txt owner=root group=root mode=0644
+  template: >-
+      src=robots.txt.j2
+      dest=/srv/www/robots.txt
+      owner=root group=root mode=0644
   tags:
     - web
     - site_proxy

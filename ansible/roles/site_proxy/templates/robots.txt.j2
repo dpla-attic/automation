@@ -1,0 +1,17 @@
+User-agent: *
+
+{% if level == 'production' %}
+
+Disallow: /search
+Disallow: /timeline
+Disallow: /map
+Disallow: /bookshelf
+
+{% if sitemap_host is defined %}
+Sitemap: http://{{ sitemap_host }}/all_item_urls.xml
+{% endif %}
+
+{% else %}
+Disallow: /
+{% endif %}
+

@@ -66,5 +66,15 @@
     - nginx
     - web
 
+- name: Make sure that frontend app logs get rotated
+  template: >-
+      src=etc_logrotate.d_frontend_rails_logs.j2
+      dest=/etc/logrotate.d/frontend_rails_logs
+      owner=root group=root mode=0644
+  tags:
+    - frontend
+    - web
+    - logrotate
+
 
 - include: deploy.yml

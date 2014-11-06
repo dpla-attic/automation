@@ -120,3 +120,10 @@
   tags:
     - ingestion
     - scripts
+
+- name: Install notify_slack.sh script
+  template: >-
+      src=notify_slack.sh.j2 dest=/usr/local/bin/notify_slack
+      owner=root group=root mode=0755
+  tags:
+    - scripts

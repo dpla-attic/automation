@@ -10,7 +10,7 @@ server {
     server_name {{ frontend_hostname }};
 
     location / {
-        root /srv/www/frontend;
+        root /srv/www/frontend/public;
         try_files $uri $uri/index.html @frontend_app_server;
     }
 

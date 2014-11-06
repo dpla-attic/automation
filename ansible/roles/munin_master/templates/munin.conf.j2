@@ -54,6 +54,15 @@ includedir /etc/munin/munin-conf.d
 # For those with Nagios, the following might come in handy. In addition,
 # the services must be defined in the Nagios server as well.
 #contact.nagios.command /usr/bin/send_nsca nagios.host.comm -c /etc/nsca.conf
+contact.techstaff.command mail -s "[munin: ${var:group} - ${var:host}] ${var:graph_title}" {{ munin_notification_email_recipient }}
+contact.techstaff.always_send warning critical
+
+{% if slack_webhook_url is defined %}
+contact.slack.command MUNIN_SERVICESTATE="${var:worst}" MUNIN_HOST="${var:host}" MUNIN_SERVICE="${var:graph_title}" MUNIN_GROUP=${var:group} /usr/local/bin/notify_slack_munin
+contact.slack.always_send warning critical
+# note: This has to be on one line for munin to parse properly
+contact.slack.text ${if:cfields \u000A* CRITICALs:${loop<,>:cfields  ${var:label} is ${var:value} (outside range [${var:crange}])${if:extinfo : ${var:extinfo}}}.}${if:wfields \u000A* WARNINGs:${loop<,>:wfields  ${var:label} is ${var:value} (outside range [${var:wrange}])${if:extinfo : ${var:extinfo}}}.}${if:ufields \u000A* UNKNOWNs:${loop<,>:ufields  ${var:label} is ${var:value}${if:extinfo : ${var:extinfo}}}.}${if:fofields \u000A* OKs:${loop<,>:fofields  ${var:label} is ${var:value}${if:extinfo : ${var:extinfo}}}.}
+{% endif %}
 
 # a simple host tree
 # [localhost.localdomain]

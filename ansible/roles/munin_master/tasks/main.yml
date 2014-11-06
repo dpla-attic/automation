@@ -15,6 +15,14 @@
     - munin_master
   # Nothing to restart because the master process runs on cron.
 
+- name: Install notify_slack_munin.sh script
+  template: >-
+      src=notify_slack_munin.sh.j2 dest=/usr/local/bin/notify_slack_munin
+      owner=root group=root mode=0755
+  tags:
+    - munin_master
+    - scripts
+
 - name: Enable Munin stats plugins
   file: >-
       src=/usr/share/munin/plugins/{{ item }}

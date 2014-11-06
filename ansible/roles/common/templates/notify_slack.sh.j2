@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# generic slack notification script - takes a wellformed JSON object via STDIN
+# posts that JSON to a slack webhook
+# to generate, use the format described on these pages:
+# 
+# * https://api.slack.com/docs/attachments
+
+input=`cat`
+
+#Send message to Slack
+curl -sX POST -o /dev/null --data "payload=${input}" {{ slack_webhook_url }} 2>&1

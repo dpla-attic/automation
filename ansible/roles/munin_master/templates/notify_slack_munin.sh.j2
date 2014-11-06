@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# munin slack notification script
+
+input=`cat`
+SLACK_CHANNEL="{{ slack_channel }}"
+SLACK_USERNAME="munin"
+SLACK_ICON_EMOJI=":munin:"
+
+#Set the message icon based on service state
+if [ "$MUNIN_SERVICESTATE" = "CRITICAL" ]
+then
+    ICON=":exclamation:"
+    COLOR="danger"
+elif [ "$MUNIN_SERVICESTATE" = "WARNING" ]
+then
+    ICON=":warning:"
+    COLOR="warning"
+elif [ "$MUNIN_SERVICESTATE" = "ok" ]
+then
+    ICON=":white_check_mark:"
+    COLOR="good"
+elif [ "$MUNIN_SERVICESTATE" = "OK" ]
+then
+    ICON=":white_check_mark:"
+    COLOR="good"
+elif [ "$MUNIN_SERVICESTATE" = "UNKNOWN" ]
+then
+    ICON=":question:"
+    COLOR="#00CCCC"
+else
+    ICON=":white_medium_square:"
+    COLOR="#CCCCCC"
+fi
+
+# Generate the JSON payload
+PAYLOAD="{\"channel\": \"${SLACK_CHANNEL}\", \"username\": \"${SLACK_USERNAME}\", \"icon_emoji\": \"${SLACK_ICON_EMOJI}\", \"attachments\": [{\"color\": \"${COLOR}\", \"fallback\": \"Munin alert - ${MUNIN_SERVICESTATE}: ${MUNIN_SERVICE} on ${MUNIN_HOST}\", \"pretext\": \"${ICON} Munin alert - ${MUNIN_SERVICESTATE}: ${MUNIN_SERVICE} on ${MUNIN_HOST} in ${MUNIN_GROUP} - <http://central/munin/|View Munin>\", \"fields\": [{\"title\": \"Severity\", \"value\": \"${MUNIN_SERVICESTATE}\", \"short\": \"true\"}, {\"title\": \"Service\", \"value\": \"${MUNIN_SERVICE}\", \"short\": \"true\"}, {\"title\": \"Host\", \"value\": \"${MUNIN_HOST}\", \"short\": \"true\"}, {\"title\": \"Current Values\", \"value\": \"${input}\", \"short\": \"false\"}]}]}"
+
+#Send message to Slack
+curl -sX POST -o /dev/null --data "payload=${PAYLOAD}" {{ slack_webhook_url }} 2>&1

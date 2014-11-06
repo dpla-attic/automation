@@ -271,3 +271,11 @@ server {
         deny  all;
     }
 }
+
+server {
+    listen 80;
+    server_name www.{{ frontend_hostname }};
+    location / {
+        rewrite ^(.*)$ http://{{ frontend_hostname }}$1 permanent;
+    }
+}

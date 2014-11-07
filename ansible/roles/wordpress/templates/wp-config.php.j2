@@ -1,7 +1,7 @@
 <?php
 
-define('WP_HOME', 'http://'. $_SERVER['HTTP_HOST'] .'/info');
-define('WP_SITEURL', 'http://'. $_SERVER['HTTP_HOST'] .'/info');
+define('WP_HOME', 'http://{{ frontend_hostname }}/info');
+define('WP_SITEURL', 'http://{{ frontend_hostname }}/info');
 
 /** The name of the database for WordPress */
 define('DB_NAME', 'dpla_wp');

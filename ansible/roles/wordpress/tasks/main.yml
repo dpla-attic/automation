@@ -7,6 +7,8 @@
     - wordpress
     - wordpress_install
     - wordpress_deployment
+    - php
+    - web
 
 - name: Prep for build with private repo (git)
   when: do_wordpress and not wp_theme_use_local_source
@@ -59,7 +61,7 @@
   when: do_wordpress
   notify:
     - clear site proxy cache
-    - restart php5-fpm
+    - reload php5-fpm
   tags:
     - wordpress
     - wordpress_install
@@ -81,7 +83,7 @@
       owner=dpla group=www-data mode=0640
   when: do_wordpress
   notify:
-    - restart php5-fpm
+    - reload php5-fpm
     - clear site proxy cache
   tags:
     - wordpress
@@ -93,7 +95,7 @@
       src=etc_php5_fpm_pool.d_wp.conf.j2
       dest=/etc/php5/fpm/pool.d/wp.conf
       owner=root group=root mode=0644
-  notify: restart php5-fpm
+  notify: reload php5-fpm
   tags:
     - wordpress
     - php

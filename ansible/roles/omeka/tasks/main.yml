@@ -1,5 +1,13 @@
 ---
 
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - omeka
+    - php
+    - web
+    - nginx
+
 - name: Ensure full installation of Imagemagick
   apt: pkg=imagemagick state=present
   tags:

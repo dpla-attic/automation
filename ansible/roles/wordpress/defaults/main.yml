@@ -13,3 +13,10 @@ wp_logged_in_salt:   "Z?.WWr]I;Bu;^!=P ]BK?<x[%lNL*47MWa4=+)4SP7aV21;$<J!g{0m*Q;
 wp_nonce_salt:       "-DV|s.W8/BL^ZP>tz.d2b<KZ9}PxQg.lB13i+)MAvr[+c3+bqbl.OKQA&SZNe*+*"
 
 wp_branch_or_tag: master
+
+# PHP-FPM tuning parameters
+wp_php_max_children: 10
+wp_php_start_servers: 2
+wp_php_min_spare_servers: 2
+wp_php_max_spare_servers: 4
+wp_php_max_requests: 500

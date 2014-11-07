@@ -1,4 +1,4 @@
-/var/log/haproxy*
+/var/log/haproxy.log
 {
     rotate 7
     daily

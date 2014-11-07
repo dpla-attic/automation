@@ -1,7 +1,7 @@
 ---
 
 - name: Ensure existence of PHP
-  apt: >
+  apt: >-
       pkg="{{ item }}" state=present force=yes
   with_items:
     - php5-curl
@@ -16,7 +16,7 @@
     - php
 
 - name: Update PHP configuration (php.ini)
-  template: >
+  template: >-
       src=php.ini.j2 dest=/etc/php5/fpm/php.ini
       owner=root group=root mode=0644
   tags:
@@ -24,9 +24,17 @@
     - php
 
 - name: Update PHP configuration (php-fpm.conf)
-  template: >
+  template: >-
       src="php-fpm.conf.j2" dest="/etc/php5/fpm/php-fpm.conf"
       owner=root group=root mode=0644
+  tags:
+    - web
+    - php
+
+- name: Make sure that the php5-fpm error log gets rotated
+  copy: >-
+      src=etc_logrotate.d_php5-fpm  dest=/etc/logrotate.d/php5-fpm
+      mode=0644 owner=root group=root
   tags:
     - web
     - php

@@ -19,6 +19,7 @@
   template: >
       src=php.ini.j2 dest=/etc/php5/fpm/php.ini
       owner=root group=root mode=0644
+  notify: reload php
   tags:
     - web
     - php
@@ -27,6 +28,14 @@
   template: >
       src="php-fpm.conf.j2" dest="/etc/php5/fpm/php-fpm.conf"
       owner=root group=root mode=0644
+  notify: reload php
+  tags:
+    - web
+    - php
+
+- name: Make sure default "www" pool is absent
+  file: path=/etc/php5/fpm/pool.d/www.conf state=absent
+  notify: reload php
   tags:
     - web
     - php

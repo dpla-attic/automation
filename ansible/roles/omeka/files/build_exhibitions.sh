@@ -4,6 +4,7 @@
     --exclude 'themes/dpla/exhibitions-assets' \
     --exclude 'application/logs' \
     --exclude 'files' \
+    --exclude 'plugins/Dropbox/files' \
     /home/dpla/exhibitions /srv/www
 
 if [ $? -ne 0 ]; then

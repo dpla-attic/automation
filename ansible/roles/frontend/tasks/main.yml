@@ -30,6 +30,7 @@
   tags:
     - frontend
     - web
+    - initscripts
 
 - name: Ensure state of Unicorn startup script
   template: >
@@ -38,12 +39,15 @@
   tags:
     - frontend
     - web
+    - scripts
+    - initscripts
 
 - name: Ensure that Unicorn init script starts and stops on boot/shutdown
   command: update-rc.d unicorn_frontend defaults
   tags:
     - frontend
     - web
+    - initscripts
 
 - name: Update webserver virtual host for frontend app
   template: >

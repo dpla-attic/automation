@@ -30,6 +30,7 @@
   tags:
     - api
     - web
+    - initscripts
 
 - name: Ensure state of Unicorn startup script
   template: >
@@ -44,12 +45,14 @@
   tags:
     - api
     - web
+    - initscripts
 
 - name: Ensure Unicorn init script run levels
   command: update-rc.d unicorn_api defaults 21 18
   tags:
     - api
     - web
+    - initscripts
 
 - name: Ensure state of delayed job init script
   template: >
@@ -58,6 +61,7 @@
   tags:
     - api
     - web
+    - initscripts
 
 - name: Ensure state of delayed job control script
   template: >
@@ -66,18 +70,22 @@
   tags:
     - api
     - web
+    - scripts
+    - initscripts
 
 - name: Clear existing unicorn init script run levels in case of change
   command: update-rc.d -f delayed_job_api remove
   tags:
     - api
     - web
+    - initscripts
 
 - name: Ensure delayed job init script run levels
   command: update-rc.d delayed_job_api defaults 20 19
   tags:
     - api
     - web
+    - initscripts
 
 - name: Update webserver virtual host for api app
   template: >

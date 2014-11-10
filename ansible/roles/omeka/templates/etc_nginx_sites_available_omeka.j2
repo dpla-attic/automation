@@ -4,9 +4,8 @@ server {
     listen {{ exhibitions_app_port }};
     server_name default;
 
-    # It's unclear if client_max_body_size is necessary.  It was in the
-    # configuration from which this one has been transferred (albeit in
-    # nginx.conf, not this equivalent file).  --MB
+    # This large maximum request body size is assumed to be necessary for
+    # media file uploads.  Also see the siteproxy configuration.
     client_max_body_size 25m;
 
     location /exhibitions {

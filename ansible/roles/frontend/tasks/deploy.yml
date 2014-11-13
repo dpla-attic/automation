@@ -103,19 +103,23 @@
     - frontend_deployment
     - web
 
-- name: Build frontend app
-  script: >
-      build_frontend.sh {{ ruby_rbenv_version }}
-  sudo_user: dpla
-  notify: restart unicorn
+- name: Stop Unicorn (gracefully)
+  # Unicorn is stopped completely, and later restarted, because we assume that
+  # preload_app is true, and this option means that a SIGHUP to reload Unicorn's
+  # configuration won't cause it to reload program code.  In a setting other than
+  # development, the NGINX reverse-proxy in front of Unicorn will be routing requests
+  # to the other servers in the same pool.
+  service: name=unicorn_frontend state=stopped
   tags:
     - deployment
     - frontend
     - frontend_deployment
     - web
 
-- name: Remove temporary private key for GitHub
-  file: path=/home/dpla/git_private_key state=absent
+- name: Build frontend app
+  script: >
+      build_frontend.sh {{ ruby_rbenv_version }}
+  sudo_user: dpla
   tags:
     - deployment
     - frontend
@@ -141,3 +145,20 @@
     - frontend
     - frontend_deployment
     - web
+
+- name: Start Unicorn
+  service: name=unicorn_frontend state=started
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
+- name: Remove temporary private key for GitHub
+  file: path=/home/dpla/git_private_key state=absent
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+

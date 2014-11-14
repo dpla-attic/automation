@@ -57,6 +57,7 @@ start)
     fi
     ;;
 stop)
+    # QUIT triggers a graceful stop acc. to http://unicorn.bogomips.org/SIGNALS.html
     sig QUIT && exit 0
     echo >&2 "Not running"
     ;;

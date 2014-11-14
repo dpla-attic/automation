@@ -1,7 +1,4 @@
 ---
 
-- name: restart unicorn
-  service: name=unicorn_frontend state=reloaded
-
 - name: restart nginx
   service: name=nginx state=reloaded

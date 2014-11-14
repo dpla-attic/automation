@@ -81,6 +81,18 @@
     - api_deployment
     - web
 
+- name: Stop Unicorn (gracefully)
+  # Unicorn is stopped completely, and later restarted, because we assume that
+  # preload_app is true, and this option means that a SIGHUP to reload Unicorn's
+  # configuration won't cause it to reload program code.  In a setting other than
+  # development, the loadbalancer in front of the API node will be routing requests
+  # to the other servers in the same pool.
+  service: name=unicorn_api state=stopped
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
 
 - name: Build api app
   script: >
@@ -88,7 +100,6 @@
   sudo_user: dpla
   notify:
     - restart delayed job
-    - restart unicorn
     - restart memcached
   tags:
     - deployment
@@ -100,6 +111,14 @@
   command: find /var/cache/nginx -type f -delete
   delegate_to: "{{ item }}"
   with_items: groups.site_proxies
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+
+- name: Start Unicorn
+  service: name=unicorn_api state=started
   tags:
     - deployment
     - api

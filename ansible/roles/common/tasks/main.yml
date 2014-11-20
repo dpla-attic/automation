@@ -122,6 +122,7 @@
     - scripts
 
 - name: Install notify_slack.sh script
+  when: slack_webhook_url is defined
   template: >-
       src=notify_slack.sh.j2 dest=/usr/local/bin/notify_slack
       owner=root group=root mode=0755

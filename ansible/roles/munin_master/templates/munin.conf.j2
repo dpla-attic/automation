@@ -54,8 +54,10 @@ includedir /etc/munin/munin-conf.d
 # For those with Nagios, the following might come in handy. In addition,
 # the services must be defined in the Nagios server as well.
 #contact.nagios.command /usr/bin/send_nsca nagios.host.comm -c /etc/nsca.conf
+{% if munin_notification_email_recipient is defined %}
 contact.techstaff.command mail -s "[munin: ${var:group} - ${var:host}] ${var:graph_title}" {{ munin_notification_email_recipient }}
 contact.techstaff.always_send warning critical
+{% endif %}
 
 {% if slack_webhook_url is defined %}
 contact.slack.command MUNIN_SERVICESTATE="${var:worst}" MUNIN_HOST="${var:host}" MUNIN_SERVICE="${var:graph_title}" MUNIN_GROUP=${var:group} /usr/local/bin/notify_slack_munin

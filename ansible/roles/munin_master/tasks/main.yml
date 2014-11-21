@@ -1,5 +1,12 @@
 ---
 
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - munin_master
+    - packages
+    - scripts
+
 - name: Ensure existence of munin package
   apt: package=munin state=present
   tags:

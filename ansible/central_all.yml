@@ -13,6 +13,9 @@
   hosts: central
   sudo: yes
   roles:
+    # The only one of these roles so far that has environment-specific variables
+    # is munin_master.  If any role has environment-specific variables files, the
+    # production file will be included.
     - common
     - aws_postfix
     - munin_master
@@ -20,6 +23,7 @@
     - monitoring_web
   vars:
     production_munin_master: true
+    level: production
   vars_files:
     - ["vars/production.yml"]
 

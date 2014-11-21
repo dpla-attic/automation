@@ -69,4 +69,3 @@ sitemap_host: sitemaps.example.tld
 # You should set these manually in your environment.
 # slack_channel: "#channel"
 # slack_webhook_url: https://hooks.slack.com/services/XXXXX/YYYYY/ZZZZZZZZ
-# munin_notification_email_recipient: example@example.com

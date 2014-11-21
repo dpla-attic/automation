@@ -1,0 +1,6 @@
+---
+
+# Copy this to <environment>.yml (e.g. "production.yml") to
+# allow Munin to send out email alerts.
+
+munin_notification_email_recipient: example@example.tld

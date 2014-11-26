@@ -1,6 +1,7 @@
 ---
 
-exhibitions_branch_or_tag: "v16.1"
+exhibitions_branch_or_tag: "v18.0.2"
+exhibitions_api_key: "{{ api_key }}"
 
 # PHP-FPM tuning parameters
 omeka_php_max_children: 10

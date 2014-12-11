@@ -2,3 +2,4 @@
 
 postgresql_user: {name: "dpla", password: "changeme"}
 pg_max_connections: 50
+pg_backup_keep_days: 30

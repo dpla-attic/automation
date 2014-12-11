@@ -1,0 +1,5 @@
+
+10 3 * * * root ts=`date +'\%Y-\%m-\%d'`; fn="/backups/mysql/dpla_omeka_$ts.sql.gz"; mysqldump --opt dpla_omeka | gzip > $fn
+11 3 * * * root ts=`date +'\%Y-\%m-\%d'`; fn="/backups/mysql/dpla_wp_$ts.sql.gz"; mysqldump --opt dpla_wp | gzip > $fn
+12 3 * * * root ts=`date +'\%Y-\%m-\%d'`; fn="/backups/mysql/mysql_$ts.sql.gz"; mysqldump --opt --events mysql | gzip > $fn
+15 3 * * * root find /backups/mysql -type f -mtime +{{ mysql_backup_keep_days }} -exec rm {} \\;

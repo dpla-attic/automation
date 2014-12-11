@@ -4,7 +4,7 @@
 
 - include: postgresql.yml
 
-- include: mysql.yml
+# Note that contentqa does not have MySQL.
 
 - include: memcached.yml
 

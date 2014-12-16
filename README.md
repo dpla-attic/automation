@@ -78,8 +78,10 @@ $ ansible-playbook -i development -u vagrant \
   --private-key=$HOME/.vagrant.d/insecure_private_key dev_all.yml \
   -t users
 ```
-A second run to configure everything:
+Then some more invocations to configure everything:
 ```
+$ ansible-playbook -i development -u <your username in group_vars/all> \
+  playbooks/package_upgrade.yml
 $ ansible-playbook -i development -u <your username in group_vars/all> \
   dev_all.yml --extra-vars "initial_run=true"
 ```

@@ -16,16 +16,6 @@
   tags:
     - networking
 
-- name: Update apt package index
-  apt: update_cache=yes
-  tags:
-    - packages
-
-- name: Upgrade apt packages
-  apt: upgrade=safe
-  tags:
-    - packages
-
 - name: Ensure correct time zone
   shell: >
       echo {{ iana_timezone }} > /etc/timezone; dpkg-reconfigure --frontend noninteractive tzdata
@@ -40,7 +30,8 @@
     - locale
 
 - name: Install packages
-  apt: pkg={{ item }} state=present
+  apt: >-
+    pkg="{{ item }}" state=present update_cache=yes
   with_items:
     - make
     - curl
@@ -50,6 +41,7 @@
     - munin-node
     - munin-plugins-extra
     - zlib1g-dev
+    - debian-goodies
   tags:
     - packages
     - munin

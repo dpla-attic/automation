@@ -1,6 +1,7 @@
 ---
 
 # Reboot staging or production
+# Do not run this directly; use reboot_staging.yml or reboot_production.yml!
 
 - name: Instances that can be rebooted in parallel
   # TODO:  pre and post tasks that put cms sites and frontend

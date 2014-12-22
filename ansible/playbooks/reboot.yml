@@ -31,6 +31,8 @@
 
 - include: reboot_elasticsearch.yml
 
+- include: reboot_postgresql.yml
+
 - include: reboot_api.yml
 
 - include: reboot_frontend.yml

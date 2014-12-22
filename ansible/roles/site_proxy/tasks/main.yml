@@ -46,3 +46,12 @@
   tags:
     - web
     - site_proxy
+
+- name: Make sure the 503 error page is current
+  template: >-
+    src=503.html.j2
+    dest=/var/www/503.html
+    owner=root group=root mode=0644
+  tags:
+    - web
+    - site_proxy

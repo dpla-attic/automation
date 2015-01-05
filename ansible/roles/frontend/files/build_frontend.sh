@@ -14,6 +14,7 @@ cd $HOME/frontend
 rbenv shell $USE_VERSION
 
 bundle install
+bundle update dpla_frontend_assets
 rbenv rehash
 bundle exec rake assets:precompile
 

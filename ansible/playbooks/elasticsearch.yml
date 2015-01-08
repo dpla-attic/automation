@@ -13,7 +13,7 @@
   sudo: false
   tasks:
     - name: Turn off shard replica allocation
-      when: level != 'contentqa' and initial_run is not defined
+      when: level != 'contentqa' and initial_run is not defined and ingestion2 is not defined
       local_action: >
           script ../files/set-allocation.sh off "{{ es_cluster_loadbal }}"
   vars_files:
@@ -69,7 +69,7 @@
   sudo: false
   tasks:
     - name: Turn shard replica allocation back on
-      when: level != 'contentqa'
+      when: level != 'contentqa' and ingestion2 is not defined
       local_action: >
           script ../files/set-allocation.sh on "{{ es_cluster_loadbal }}"
   vars_files:

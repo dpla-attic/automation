@@ -1,0 +1,47 @@
+---
+
+- file: path=/v1 state=directory owner=root group=root mode=0755
+
+- name: Ensure the state of the Solr data directory
+  file: path=/v1/solrdata state=directory owner=tomcat7 group=tomcat7 mode=0755
+
+- name: Make sure that Solr is installed
+  script: install_solr.sh {{ solr_version }}
+  register: script_result
+  changed_when: "'changed' in script_result.stdout"
+  notify: restart tomcat
+
+- name: Ensure the state of the Solr context file
+  template: >-
+    src=solr-tomcat.xml.j2 dest="/opt/solr/solr-tomcat.xml"
+    mode=0644 owner=root group=root
+  # TODO:  reload Solr instead of restarting tomcat
+  notify: restart tomcat
+
+- name: Symlink Solr context file
+  file: >-
+    src=/opt/solr/solr-tomcat.xml
+    dest=/etc/tomcat7/Catalina/localhost/solr.xml
+    state=link
+
+- name: Ensure state of stopwords file
+  copy: >-
+    src=stopwords_en.txt dest=/opt/solr/dpla/solr/collection1/conf/stopwords_en.txt
+    mode=0644 owner=root group=root
+  notify: restart tomcat
+
+# Logging (http://wiki.apache.org/solr/SolrLogging)
+# see also install_solr.sh ...
+- name: Make sure Solr logging directory is in the proper state
+  file: path=/var/log/solr state=directory mode=0755 owner=tomcat7 group=tomcat7
+- name: Ensure state of logging config files (see above)
+  template: >-
+    src=log4j.properties.j2 dest=/opt/solr/log4j.properties
+    mode=0644 owner=root group=root
+  notify: restart tomcat
+- name: Symlink logging config file
+  file: >-
+    src=/opt/solr/log4j.properties dest=/usr/share/tomcat7/lib/log4j.properties
+    state=link
+  notify: restart tomcat
+

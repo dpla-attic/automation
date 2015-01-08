@@ -126,6 +126,14 @@ contact.slack.text ${if:cfields \u000A* CRITICALs:${loop<,>:cfields  ${var:label
 [central]
     address central
 
+{% elif ingestion2 is defined %}
+
+[Development;dev1]
+    address dev1
+
+[Development;dev2]
+    address dev2
+
 {% else %}
 
 [Development;Repository;dbnode1]

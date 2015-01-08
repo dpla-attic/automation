@@ -1,0 +1,44 @@
+
+# Example Vagrantfile.
+#
+# Copy this to `Vagrantfile' and edit to suit your needs.
+#
+# Please note the synced_folder directives.  If you want to be able
+# to edit files locally (outside of the VM, in your host environment)
+# and have them synced with the VMs, then change these directives to
+# reference them.
+#
+
+VAGRANTFILE_API_VERSION = '2'
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # Frontend, web, ElasticSearch
+  config.vm.define :dev1 do |dev1|
+    dev1.vm.box = 'hashicorp/precise64'  # Ubuntu 12.04 LTS
+    dev1.vm.network :private_network, ip: '192.168.50.7'
+    dev1.vm.provider :virtualbox do |vb|
+      vb.memory = 2048
+    end
+    #
+    # *** EDIT THESE FOR LOCAL DEVELOPMENT ***
+    # If necessary, you may change the path to the synced local directory
+    # (the first argument), but don't modify the mount point.
+    # dev1.vm.synced_folder "../frontend", "/frontend_dev"
+    # dev1.vm.synced_folder "../platform", "/api_dev"
+  end
+
+  # Ingestion2
+  config.vm.define :dev2 do |dev2|
+    dev2.vm.box = 'ubuntu/trusty64'  # Ubuntu 14.04 LTS
+    dev2.vm.network :private_network, ip: '192.168.50.8'
+    dev2.vm.provider :virtualbox do |vb|
+      vb.memory = 2048
+    end
+    # *** EDIT THESE FOR LOCAL DEVELOPMENT ***
+    # As above, change the path to the local diretory.
+    # dev2.vm.synced_folder "../krikri", "/krikri"
+    # dev2.vm.synced_folder "../heidrun", "/heidrun"
+  end
+
+end

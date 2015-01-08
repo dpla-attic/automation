@@ -1,0 +1,12 @@
+/opt/heidrun/log/{{ rails_env }}.log
+/opt/heidrun/log/worker.log
+{
+    daily
+    missingok
+    rotate 60
+    compress
+    delaycompress
+    dateext
+    notifempty
+    copytruncate
+}

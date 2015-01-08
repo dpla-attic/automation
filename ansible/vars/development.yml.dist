@@ -21,6 +21,7 @@ frontend_hostname: local.dp.la
 api_hostname: local.dp.la
 # api_port is the port the *loadbalancer* answers on for API requests
 api_port: 8080
+ingestion_hostname: ingestion2.local.dp.la
 
 # In this development config file, the following api_key corresponds to
 # one of the test keys created by `rake v1:recreate_repo_api_key_database`
@@ -33,7 +34,7 @@ wordpress_app_port: 8001
 frontend_app_port: 8002
 # api_app_port is the port the *backend app server* runs on
 api_app_port: 8003
-
+ingestion_app_port: 8004
 
 # We would normally get an IP address by querying the inventory, but
 # this will work easiest between development and production

@@ -12,5 +12,15 @@ ff02::2 ip6-allrouters
 {% endfor %}
 
 {% if level is defined and level == 'development' %}
+{% if ingestion2 is defined %}
+192.168.50.7 local.dp.la
+{% else %}
 {{ hostvars['loadbal'][internal_network_interface]['ipv4']['address'] }} local.dp.la
+{% endif %}
+{% endif %}
+
+{% if marmotta_domain is defined and inventory_hostname != 'central' %}
+{# assume one Marmotta host: #}
+{% set marmottahost = groups['marmotta'][0] %}
+{{ hostvars[marmottahost][internal_network_interface]['ipv4']['address'] }} {{ marmotta_domain }}
 {% endif %}

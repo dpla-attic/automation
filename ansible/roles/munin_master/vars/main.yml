@@ -11,6 +11,10 @@ munin_groups:
         Siteproxy: siteproxy_stg
         PostgreSQL: postgres_stg
         CMS: cms_stg
+        Ingestion2_app: ingestion_app_stg
+        Marmotta: marmotta_stg
+        Solr: solr_stg
+        Worker: worker_stg
     Production:
         Repository: dbnodes_prod
         Search: elasticsearch_prod
@@ -20,3 +24,7 @@ munin_groups:
         Siteproxy: siteproxy_prod
         PostgreSQL: postgres_prod
         CMS: cms_prod
+        Ingestion2_app: ingestion_app_prod
+        Marmotta: marmotta_prod
+        Solr: solr_prod
+        Worker: worker_prod

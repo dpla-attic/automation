@@ -1,0 +1,47 @@
+---
+
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+
+- file: >-
+    path="{{ marmotta_home }}" state=directory owner=tomcat7 group=tomcat7
+    mode=0755
+
+- name: Add Marmotta APT package list
+  copy: src=marmotta.list dest=/etc/apt/sources.list.d/marmotta.list
+
+- name: Make sure that the marmotta package is up-to-date
+  apt: pkg=marmotta state=present update_cache=yes force=yes
+
+- name: Ensure state of Tomcat context for Marmotta
+  template: >-
+    src=ROOT.xml.j2 dest=/etc/tomcat7/Catalina/localhost/ROOT.xml
+    mode=0644 owner=root group=root
+  notify: restart tomcat
+
+- name: Make sure that the original Marmotta context file is absent
+  file: path=/etc/tomcat7/Catalina/localhost/marmotta.xml state=absent
+  notify: restart tomcat
+
+- name: Ensure state of Marmotta .properties files
+  template: >-
+    src="{{ item }}.j2" dest="{{ marmotta_home }}/{{ item }}"
+    mode=0640 owner=tomcat7 group=tomcat7
+  with_items:
+    - system-config.properties
+    - system-meta.properties
+  notify: restart tomcat
+
+- name: Update webserver virtual host for Marmotta
+  template: >-
+      src="etc_nginx_sites-available_marmotta.j2"
+      dest="/etc/nginx/sites-available/marmotta"
+      owner=root group=root mode=0644
+  notify: restart nginx
+
+- name: Symlink webserver virtual host for Marmotta
+  file: >-
+      src="/etc/nginx/sites-available/marmotta"
+      dest="/etc/nginx/sites-enabled/marmotta"
+      state=link owner=root group=root
+  notify: restart nginx

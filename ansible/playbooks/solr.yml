@@ -1,0 +1,16 @@
+---
+
+# To run standalone, specify
+# --extra-vars "level=<development|staging|production>"
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
+- name: Solr
+  hosts:
+    - solr
+  sudo: yes
+  roles:
+    - { role: solr, tags: ['solr']}
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

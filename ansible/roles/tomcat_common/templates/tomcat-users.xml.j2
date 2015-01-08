@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tomcat-users>
+  <role rolename="manager" />
+  <role rolename="admin" />
+  <role rolename="admin-gui" />
+  <role rolename="manager-gui" />
+  <user username="{{ tomcat_admin_username }}" password="{{ tomcat_admin_password }}"
+        roles="manager-gui,admin-gui,manager,admin" />
+</tomcat-users>

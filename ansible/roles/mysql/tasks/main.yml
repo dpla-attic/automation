@@ -76,12 +76,14 @@
     - mysql_user
 
 - name: Make sure that the backups directory exists
-  file: path=/backups state=directory owner=root group=root mode=0755
+  file: >-
+    path="{{ backups_basedir }}" state=directory owner=root group=root mode=0755
   tags:
     - mysql
     - backups
-- name: Make sure that the PostgreSQL backups directory exists
-  file: path=/backups/mysql state=directory owner=root group=root mode=0770
+- name: Make sure that the MySQL backups directory exists
+  file: >-
+    path="{{ backups_basedir }}/mysql" state=directory owner=root group=root mode=0770
   tags:
     - mysql
     - backups

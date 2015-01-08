@@ -1,0 +1,33 @@
+---
+
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+
+- name: Make sure that the Tomcat packages are installed
+  apt: name={{ item }} state=present
+  with_items:
+    - tomcat7
+    - tomcat7-admin
+
+- name: Ensure state of Tomcat startup options file
+  template: >-
+    src=etc_default_tomcat7.j2 dest=/etc/default/tomcat7
+    mode=0644 owner=root group=root
+  notify: restart tomcat
+
+- name: Ensure state of Tomcat access control file
+  template: >-
+    src=tomcat-users.xml.j2 dest=/etc/tomcat7/tomcat-users.xml
+    mode=0640 owner=root group=tomcat7
+  notify: restart tomcat
+
+- name: Ensure the state of other Tomcat configuration files
+  template: >-
+    src="{{ item }}.j2" dest="/etc/tomcat7/{{ item }}"
+    mode=0644 owner=root group=tomcat7
+  with_items:
+    - context.xml
+    - logging.properties
+    - server.xml
+    - web.xml
+  notify: restart tomcat

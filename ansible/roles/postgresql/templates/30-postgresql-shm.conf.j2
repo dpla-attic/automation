@@ -8,6 +8,8 @@
 kernel.shmmax = {{ kernel_shmmax }}
 {% endif %}
 
+{% if kernel_shmall is defined %}
 # Maximum total size of shared memory in pages (normally 4096 bytes)
-#kernel.shmall = 2097152
-
+# Default is 2097152 pages, or 8GB
+kernel.shmall = {{ kernel_shmall }}
+{% endif %}

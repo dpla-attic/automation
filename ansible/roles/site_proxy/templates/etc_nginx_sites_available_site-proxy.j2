@@ -77,6 +77,8 @@ map $whitelisted $limit {
 limit_conn_zone $limit zone=pageconnzone:10m;
 limit_req_zone  $limit zone=pagereqzone:10m rate=10r/s;
 
+{% if ingestion2 is not defined %}
+
 # Wordpress servers
 upstream dpla_wp {
 {% for h in groups['wordpress'] %}
@@ -90,6 +92,8 @@ upstream dpla_omeka {
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ exhibitions_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
 }
+
+{% endif %}
 
 # Frontend (portal) servers
 upstream dpla_portal {
@@ -159,6 +163,7 @@ server {
         rewrite ^/donate(/?|/.*)$ http://{{ frontend_hostname }}/info/donate$1 last;
     }
 
+{% if ingestion2 is not defined %}
     location /info {
         proxy_cache_valid 200 240m;
         proxy_cache_bypass        $http_cache_bypass $cookie_wordpress_logged_in;
@@ -277,6 +282,7 @@ server {
             proxy_pass http://dpla_omeka;
         }
     }
+{% endif %}
 
     location /wiki {
         proxy_set_header Host dev.dp.la;     

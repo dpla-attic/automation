@@ -28,8 +28,9 @@
         aws_secret_key: "{{ aws_secret_key }}"
         aws_region: "{{ aws_region }}"
         state: absent
-    # TODO:  when Ansible 1.8 is released, check for connnection draining
-    # with `wait_for ... state=drained'.
+    - name: Wait for connections to drain
+      wait_for: >-
+          host="{{ inventory_hostname }}" port="9200" state=drained timeout=60
     - name: Reboot
       command: /sbin/shutdown -r now
       async: 0

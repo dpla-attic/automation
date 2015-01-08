@@ -20,7 +20,7 @@ Please install the following tools as documented on their websites:
 * [VirtualBox](https://www.virtualbox.org/) (Version 4.3)
 * [Vagrant](http://www.vagrantup.com/) (Version 1.6)
 * [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest/) (`vagrant plugin install vagrant-vbguest`)
-* [Ansible](http://www.ansible.com/) (Version 1.7 or greater; [installation instructions](http://docs.ansible.com/intro_installation.html))
+* [Ansible](http://www.ansible.com/) (Version 1.8) [installation instructions](http://docs.ansible.com/intro_installation.html)
 * Additional dependencies described in the `pip` requirements file (see below)
 
 ### Steps

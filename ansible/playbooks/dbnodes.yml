@@ -35,6 +35,9 @@
       tags:
         - database
         - packages
+    - name: Wait for connections to drain
+      wait_for: >-
+          host="{{ inventory_hostname }}" port="5984" state=drained timeout=60
   post_tasks:
     - name: Register instance with loadbalancer again
       local_action: ec2_elb

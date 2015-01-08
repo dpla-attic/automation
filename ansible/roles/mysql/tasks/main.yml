@@ -79,10 +79,12 @@
   file: path=/backups state=directory owner=root group=root mode=0755
   tags:
     - mysql
+    - backups
 - name: Make sure that the PostgreSQL backups directory exists
   file: path=/backups/mysql state=directory owner=root group=root mode=0770
   tags:
     - mysql
+    - backups
 
 - name: Ensure state of crontab file
   template: >-
@@ -90,4 +92,5 @@
       owner=root group=root mode=0644
   tags:
     - mysql
+    - backups
 

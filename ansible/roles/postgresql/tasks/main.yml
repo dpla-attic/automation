@@ -86,10 +86,12 @@
   file: path=/backups state=directory owner=root group=root mode=0755
   tags:
     - postgresql
+    - backups
 - name: Make sure that the PostgreSQL backups directory exists
   file: path=/backups/postgresql state=directory owner=postgres group=postgres mode=0770
   tags:
     - postgresql
+    - backups
 
 - name: Ensure state of crontab file
   template: >-
@@ -97,3 +99,5 @@
       owner=root group=root mode=0644
   tags:
     - postgresql
+    - backups
+

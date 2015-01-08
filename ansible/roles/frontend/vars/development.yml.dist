@@ -1,5 +1,7 @@
 ---
 
-# Uncomment this to use your local working copy for the frontend (portal)
-# (See Vagrantfile)
+## Uncomment this to use your local working copy for the frontend (portal)
+## (See Vagrantfile)
 # frontend_use_local_source: true
+## Uncomment this to use DPLA private frontend assets
+# frontend_use_restricted_assets: true

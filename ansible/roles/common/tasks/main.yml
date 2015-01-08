@@ -37,6 +37,7 @@
     - curl
     - sysstat
     - python-httplib2
+    - python-psutil
     - ntp
     - munin-node
     - munin-plugins-extra

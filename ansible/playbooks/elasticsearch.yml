@@ -40,6 +40,9 @@
         aws_secret_key: "{{ aws_secret_key }}"
         aws_region: "{{ aws_region }}"
         state: absent
+    - name: Wait for connections to drain
+      wait_for: >-
+          host="{{ inventory_hostname }}" port="9200" state=drained timeout=60
   post_tasks:
     - name: Wait for ES node to come back up
       sudo: false

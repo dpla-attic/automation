@@ -21,6 +21,10 @@
 - name: Ensure that PostgreSQL and Ansible dependencies are installed
   apt: >
       pkg="{{ item }}" state=present
+  environment:
+    LANG: "{{ dpla_locale }}"
+    LC_CTYPE: "{{ dpla_locale }}"
+    LC_COLLATE: "{{ dpla_locale }}"
   with_items:
     - postgresql
     - libpq-dev
@@ -43,6 +47,13 @@
   tags:
     - postgresql
 
+- name: Make sure that PostgreSQL server environemnt variables are correct
+  template: src=environment.j2 dest=/etc/postgresql/9.1/main/environment
+  notify:
+    - restart postgresql
+  tags:
+    - postgresql
+
 - name: Ensure credentials of application PostgreSQL user
   postgresql_user: >
       name="{{ postgresql_user.name }}" password="{{ postgresql_user.password }}"
@@ -51,8 +62,13 @@
     - postgresql
 
 - name: Make sure our databases exist
-  postgresql_db: >
-      name={{ item }} encoding=UTF8 state=present template=template0
+  postgresql_db: >-
+      name={{ item }}
+      encoding=UTF8
+      lc_ctype={{ dpla_locale }}
+      lc_collate={{ dpla_locale }}
+      state=present
+      template=template0
   sudo_user: postgres
   with_items:
     - dpla_portal

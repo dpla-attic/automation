@@ -30,3 +30,5 @@ aws_secret_key: changeme
 
 # Not necessary in development:
 munin_master_ipaddr: CHANGEME
+
+dpla_locale: en_US.UTF-8

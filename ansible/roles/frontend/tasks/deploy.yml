@@ -97,7 +97,6 @@
       src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
       dest=/home/dpla/git_private_key
       owner=dpla group=dpla mode=0600
-  when: frontend_use_restricted_assets
   tags:
     - deployment
     - frontend
@@ -118,9 +117,8 @@
     - web
 
 - name: Build frontend app
-  script: >-
+  script: >
       build_frontend.sh {{ ruby_rbenv_version }}
-      {{ 'restricted' if frontend_use_restricted_assets else 'unrestricted' }}
   sudo_user: dpla
   tags:
     - deployment
@@ -158,7 +156,6 @@
 
 - name: Remove temporary private key for GitHub
   file: path=/home/dpla/git_private_key state=absent
-  when: frontend_use_restricted_assets
   tags:
     - deployment
     - frontend

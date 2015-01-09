@@ -129,7 +129,7 @@
 - name: Ensure existence of uploads directory
   file: >-
       path=/srv/www/frontend/public/uploads state=directory
-      owner=www-data group=www-data mode=0755
+      owner=dpla group=dpla mode=0755 recurse=yes
   tags:
     - deployment
     - frontend

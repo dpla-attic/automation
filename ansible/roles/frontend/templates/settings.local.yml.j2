@@ -52,3 +52,11 @@ widgets:
     twitter: https://twitter.com/{{ twitter_username }}
     tumblr: http://{{ tumblr_account_name }}.tumblr.com/
     rss: http://{{ frontend_hostname }}/info/feed
+fog:
+  credentials:
+    provider: AWS
+    region: {{ aws_region }}
+    aws_access_key_id: {{ aws_access_key }}
+    aws_secret_access_key: {{ aws_secret_key }}
+  directory: {{ frontend_s3_bucket }}
+  public: true

@@ -24,7 +24,7 @@
     - time
 
 - name: Ensure correct locale
-  copy: src=etc_default_locale dest=/etc/default/locale mode=0644
+  template: src=etc_default_locale.j2 dest=/etc/default/locale mode=0644
   tags:
     - packages
     - locale

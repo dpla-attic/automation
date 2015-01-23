@@ -13,7 +13,6 @@
   hosts:
     - ingestion
     - cms
-    - postgresql_dbs
   sudo: yes
   tasks:
     - name: Reboot

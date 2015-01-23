@@ -7,7 +7,7 @@
   template: >-
       src=etc_nginx_sites-available_monitoring.j2
       dest=/etc/nginx/sites-available/monitoring
-  notify: restart nginx   
+  notify: restart nginx
 
 - name: Make sure that Nginx default site is out of the way
   file: path=/etc/nginx/sites-enabled/default state=absent

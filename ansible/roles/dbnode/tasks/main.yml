@@ -5,6 +5,12 @@
   tags:
   - database
 
+- name: Make sure that our old Cloudant package list has been removed
+  file: path=/etc/apt/sources.list.d/cloudant.list state=absent
+  tags:
+    - packages
+    - database
+
 - name: Ensure that runit is installed
   apt: name=runit state=present
   tags:

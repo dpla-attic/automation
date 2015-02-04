@@ -1,6 +1,6 @@
 ---
 
-exhibitions_branch_or_tag: "v18.0.2"
+exhibitions_branch_or_tag: "master"
 exhibitions_api_key: "{{ api_key }}"
 
 # PHP-FPM tuning parameters

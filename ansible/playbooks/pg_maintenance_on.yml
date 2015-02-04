@@ -1,0 +1,23 @@
+---
+
+- name: Put frontend into maintenance mode
+  hosts: frontend
+  sudo: true
+  tasks:
+    - name: Deploy turnout maintenance.yml file
+      copy: >-
+        src=../files/turnout_postgres_maintenance.yml
+        dest=/srv/www/frontend/tmp/maintenance.yml
+        owner=root group=root mode=0644
+
+- name: Put API into maintenance mode
+  hosts: api
+  sudo: true
+  tasks:
+    - name: Deploy turnout maintenance.yml file
+      copy: >-
+        src=../files/turnout_postgres_maintenance.yml
+        dest=/srv/www/api/tmp/maintenance.yml
+        owner=root group=root mode=0644
+
+- include: clear_proxy_cache.yml

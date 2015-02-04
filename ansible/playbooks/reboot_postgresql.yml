@@ -1,24 +1,6 @@
 ---
 
-- name: Put frontend into maintenance mode
-  hosts: frontend
-  sudo: true
-  tasks:
-    - name: Deploy turnout maintenance.yml file
-      copy: >-
-        src=../files/turnout_postgres_maintenance.yml
-        dest=/srv/www/frontend/tmp/maintenance.yml
-        owner=root group=root mode=0644
-
-- name: Put API into maintenance mode
-  hosts: api
-  sudo: true
-  tasks:
-    - name: Deploy turnout maintenance.yml file
-      copy: >-
-        src=../files/turnout_postgres_maintenance.yml
-        dest=/srv/www/api/tmp/maintenance.yml
-        owner=root group=root mode=0644
+- include: pg_maintenance_on.yml
 
 - name: Reboot PostgreSQL server
   hosts: postgresql_dbs
@@ -35,20 +17,4 @@
         wait_for host="{{ inventory_hostname }}"
         port=5432 delay=40 timeout=600
 
-- name: Take API out of maintenance mode
-  hosts: api
-  sudo: true
-  tasks:
-    - name: Remove maintenance.yml file
-      file: >-
-        path=/srv/www/api/tmp/maintenance.yml
-        state=absent
-
-- name: Take frontend out of maintenance mode
-  hosts: frontend
-  sudo: true
-  tasks:
-    - name: Remove maintenance.yml file
-      file: >-
-        path=/srv/www/frontend/tmp/maintenance.yml
-        state=absent
+- include: pg_maintenance_off.yml

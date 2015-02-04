@@ -1,0 +1,21 @@
+---
+
+- name: Take API out of maintenance mode
+  hosts: api
+  sudo: true
+  tasks:
+    - name: Remove maintenance.yml file
+      file: >-
+        path=/srv/www/api/tmp/maintenance.yml
+        state=absent
+
+- name: Take frontend out of maintenance mode
+  hosts: frontend
+  sudo: true
+  tasks:
+    - name: Remove maintenance.yml file
+      file: >-
+        path=/srv/www/frontend/tmp/maintenance.yml
+        state=absent
+
+- include: clear_proxy_cache.yml

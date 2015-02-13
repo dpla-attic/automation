@@ -1,5 +1,7 @@
 
-1 3 * * * postgres ts=`date +'\%Y-\%m-\%d'`; fn="/backups/postgresql/api_$ts.sql"; pg_dump -c api > $fn
-2 3 * * * postgres ts=`date +'\%Y-\%m-\%d'`; fn="/backups/postgresql/dpla_portal_$ts.sql"; pg_dump -c dpla_portal > $fn
-3 3 * * * postgres ts=`date +'\%Y-\%m-\%d'`; fn="/backups/postgresql/postgres_$ts.sql"; pg_dump -c postgres > $fn
-5 3 * * * postgres find /backups/postgresql -type f -mtime +{{ pg_backup_keep_days }} -exec rm {} \\;
+1 3 * * * postgres ts=`date +'\%Y-\%m-\%d'`; fn="{{ backups_basedir }}/postgresql/api_$ts.sql"; pg_dump -c api > $fn
+2 3 * * * postgres ts=`date +'\%Y-\%m-\%d'`; fn="{{ backups_basedir }}/postgresql/dpla_portal_$ts.sql"; pg_dump -c dpla_portal > $fn
+3 3 * * * postgres ts=`date +'\%Y-\%m-\%d'`; fn="{{ backups_basedir }}/postgresql/postgres_$ts.sql"; pg_dump -c postgres > $fn
+4 3 * * * postgres ts=`date +'\%Y-\%m-\%d'`; fn="{{ backups_basedir }}/postgresql/ingestion_$ts.sql.gz"; pg_dump -c ingestion | gzip > $fn
+5 3 * * * postgres ts=`date +'\%Y-\%m-\%d'`; fn="{{ backups_basedir }}/postgresql/marmotta_$ts.sql.gz"; pg_dump -c marmotta | gzip > $fn
+10 3 * * * postgres find {{ backups_basedir }}/postgresql -type f -mtime +{{ pg_backup_keep_days }} -exec rm {} \\;

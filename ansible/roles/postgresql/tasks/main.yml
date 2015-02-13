@@ -4,6 +4,8 @@
   when: level is defined
   tags:
     - postgresql
+    - backups
+    - munin
 
 - name: Set kernel shared memory to be enough for PostgreSQL
   template: >-
@@ -73,38 +75,38 @@
   with_items:
     - dpla_portal
     - api
+    - ingestion
+    - marmotta
   tags:
     - postgresql
 
-- name: Ensure privileges on dpla_portal database
-  postgresql_privs: >
-      database=dpla_portal
-      roles={{ postgresql_user.name }}
+- name: Ensure privileges on databases
+  # Assumes these are all the same, and "all privileges" is safe, given the circumstances.
+  postgresql_privs: >-
+      database="{{ item }}"
+      roles="{{ postgresql_user.name }}"
       state=present
       type=database
       privs=ALL
   sudo_user: postgres
-  tags:
-    - postgresql
-
-- name: Ensure privileges on api database
-  postgresql_privs: >
-      database=api
-      roles={{ postgresql_user.name }}
-      state=present
-      type=database
-      privs=ALL
-  sudo_user: postgres
+  with_items:
+    - dpla_portal
+    - api
+    - ingestion
+    - marmotta
   tags:
     - postgresql
 
 - name: Make sure that the backups directory exists
-  file: path=/backups state=directory owner=root group=root mode=0755
+  file: >-
+    path="{{ backups_basedir }}" state=directory owner=root group=root mode=0755
   tags:
     - postgresql
     - backups
 - name: Make sure that the PostgreSQL backups directory exists
-  file: path=/backups/postgresql state=directory owner=postgres group=postgres mode=0770
+  file: >-
+    path="{{ backups_basedir }}/postgresql" state=directory
+    owner=postgres group=postgres mode=0770
   tags:
     - postgresql
     - backups
@@ -117,3 +119,66 @@
     - postgresql
     - backups
 
+
+## PostgreSQL Munin plugins
+#
+
+- name: Make sure Perl DBD::Pg module is installed
+  apt: pkg=libdbd-pg-perl state=present
+  tags:
+    - munin
+    - postgresql
+    - packages
+
+- name: Ensure state of configuration for Munin PostgreSQL plugin
+  template: >-
+      src=etc_munin_plugin_conf_d_zzz-postgresql.j2
+      dest=/etc/munin/plugin-conf.d/zzz-postgresql
+      owner=root group=root mode=0644
+  notify: restart munin-node
+  tags:
+    - munin
+    - postgresql
+
+- name: Symlink basic Munin PostgreSQL plugins
+  file: >-
+    src="/usr/share/munin/plugins/{{ item }}"
+    dest="/etc/munin/plugins/{{ item }}"
+    state=link
+  with_items:
+    - postgres_bgwriter
+    - postgres_checkpoints
+    - postgres_connections_db
+    - postgres_users
+    - postgres_xlog
+  tags:
+    - munin
+    - postgresql
+
+- file: >-
+    src="/usr/share/munin/plugins/postgres_{{ item }}_"
+    dest="/etc/munin/plugins/postgres_{{ item }}_ALL"
+    state=link
+  with_items:
+    - cache
+    - connections
+    - locks
+    - querylength
+    - size
+    - transactions
+  tags:
+    - munin
+    - postgresql
+
+# Munin PG tuples and scans plugins only want to run on one db at a time, so just
+# run them on the "marmotta" database:
+- file: >-
+    src="/usr/share/munin/plugins/postgres_{{ item }}_"
+    dest="/etc/munin/plugins/postgres_{{ item }}_marmotta"
+    state=link
+  with_items:
+    - scans
+    - tuples
+  tags:
+    - munin
+    - postgresql

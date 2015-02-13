@@ -47,6 +47,15 @@
     - packages
     - munin
 
+- name: Get rid of packages we don't want
+  apt: >-
+    pkg="{{ item }}" state=absent purge=yes
+  with_items:
+    - puppet
+    - puppet-common
+    - chef
+    - chef-zero
+
 - name: Disable default munin plugins that we don't need
   file: >
      path="/etc/munin/plugins/{{ item }}" state=absent

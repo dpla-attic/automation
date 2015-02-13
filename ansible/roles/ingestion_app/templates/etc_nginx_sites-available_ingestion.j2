@@ -1,0 +1,37 @@
+
+upstream ingestion_app_server {
+    server unix:/opt/heidrun/tmp/unicorn_heidrun.sock fail_timeout=0;
+}
+
+server {
+
+    listen {{ ingestion_app_port }};
+    server_name {{ ingestion_hostname }};
+    root /opt/heidrun/public;
+
+    location / {
+        try_files $uri $uri/index.html @ingestion_app_server;
+    }
+
+    {% if rails_env != 'development' %}
+
+    location /assets {
+        alias /opt/heidrun/public/assets;
+    }
+
+    {% endif %}
+
+    location @ingestion_app_server {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_pass http://ingestion_app_server;
+        proxy_pass_header Set-Cookie;
+    }
+
+    error_page 404 /opt/heidrun/public/404.html;
+    error_page 422 /opt/heidrun/public/422.html;
+    error_page 500 /opt/heidrun/public/500.html;
+
+}

@@ -16,6 +16,7 @@ defaults
 	timeout client 50s
 	timeout server 5m
 
+{% if ingestion2 is not defined %}
 
 ### Bigcouch
 
@@ -35,7 +36,6 @@ backend bigcouch-httpd
 	server dbnode1 192.168.50.4:5986 maxconn 500
 	server dbnode2 192.168.50.5:5986 maxconn 500
 
-
 ### Web
 
 frontend web-http-in
@@ -52,15 +52,6 @@ backend web-http
 backend web-https
 	server webapp1 192.168.50.6:443 maxconn 500
 
-### API
-
-frontend api-http-in
-	bind *:{{ api_port }}
-	default_backend api-http
-
-backend api-http
-	server webapp1 192.168.50.6:{{ api_app_port }}
-
 ### Elasticsearch
 
 frontend elasticsearch-in
@@ -70,3 +61,16 @@ frontend elasticsearch-in
 backend elasticsearch
 	server dbnode1 192.168.50.4:9200 maxconn 500
 	server dbnode2 192.168.50.4:9200 maxconn 500
+
+{% endif %}
+
+### API
+
+frontend api-http-in
+	bind *:{{ api_port }}
+	default_backend api-http
+
+backend api-http
+	{% set apihost = groups['api'][0] %}
+	server {{ apihost }} {{ hostvars[apihost][internal_network_interface]['ipv4']['address']}}:{{ api_app_port }}
+

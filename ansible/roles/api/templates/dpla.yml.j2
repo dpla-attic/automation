@@ -60,7 +60,11 @@ api_auth:
 
   # Set to true to *not* require an api_key param at all. This overrides allow_all_keys and
   # makes the API completely open. This is not recommended for actual production use.
+{% if ingestion2 is defined %}
+  skip_key_auth_completely: true
+{% else %}
   skip_key_auth_completely: false
+{% endif %}
 
 # Defaults to cache_results: false (which actually uses null_store behind the scenes)
 # Supported values for 'cache_results': true, false

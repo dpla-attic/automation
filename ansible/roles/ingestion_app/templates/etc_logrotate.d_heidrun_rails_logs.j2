@@ -1,0 +1,29 @@
+/opt/heidrun/log/{{ rails_env }}.log
+/opt/heidrun/log/unicorn.stderr.log
+/opt/heidrun/log/unicorn.stdout.log
+{
+    daily
+    missingok
+    rotate 60
+    compress
+    delaycompress
+    dateext
+    notifempty
+    create 0644 dpla dpla
+    sharedscripts
+    postrotate
+        service unicorn_heidrun reload
+    endscript
+}
+
+/opt/heidrun/log/worker.log
+{
+    daily
+    missingok
+    rotate 60
+    compress
+    delaycompress
+    dateext
+    notifempty
+    copytruncate
+}

@@ -79,6 +79,15 @@ host   all             all            {{ host }}             md5
 {% for host in groups['api'] %}
 host   all             all            {{ host }}             md5
 {% endfor %}
+{% for host in groups['ingestion_app'] %}
+host   all             all            {{ host }}             md5
+{% endfor %}
+{% for host in groups['worker'] %}
+host   all             all            {{ host }}             md5
+{% endfor %}
+{% for host in groups['marmotta'] %}
+host   all             all            {{ host }}             md5
+{% endfor %}
 
 # Deny access to postgresql user from other hosts
 host    all             postgres       0.0.0.0/0               reject

@@ -1,0 +1,22 @@
+---
+
+{# Assume one Redis server for now #}
+{% set redis_host = groups['redis'][0] %}
+
+redis:
+    host: {{ redis_host }}
+
+{% if marmotta_domain is defined %}
+{%   set marmotta_base = 'http://' + marmotta_domain %}
+{% else %}
+{%   set marmotta_base = 'http://' + groups['marmotta'][0] %}
+{% endif %}
+
+marmotta:
+  base: '{{ marmotta_base }}/'
+  ldp: '{{ marmotta_base }}/ldp'
+  record_container: '{{ marmotta_base }}/ldp/original_record'
+  item_container: '{{ marmotta_base }}/ldp/items'
+
+prov:
+  activity: 'activity'

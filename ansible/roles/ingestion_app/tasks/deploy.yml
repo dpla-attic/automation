@@ -1,0 +1,176 @@
+
+## Solr configuration
+#
+
+- name: Ensure that Solr schema file is current (network)
+  get_url: >-
+    url="https://raw.githubusercontent.com/dpla/heidrun/{{ heidrun_branch_or_tag }}/solr_conf/schema.xml"
+    dest=/opt/solr/dpla/solr/collection1/conf/schema.xml force=yes
+    mode=0644 owner=root group=root
+  delegate_to: "{{ item }}"
+  run_once: true
+  with_items: groups.solr
+  notify: restart tomcat
+  when: not ingestion_use_local_source
+
+- name: Ensure that Solr schema file is current (local)
+  # Only makes sense in development VM, and assumes /heidrun is mounted in
+  # Vagrantfile.
+  script: copy_local_solrconf.sh schema.xml
+  register: script_result
+  changed_when: "'changed' in script_result.stdout"
+  notify: restart tomcat
+  when: ingestion_use_local_source
+
+- name: Ensure the state of solrconfig.xml (network)
+  get_url: >-
+    url="https://raw.githubusercontent.com/dpla/heidrun/{{ heidrun_branch_or_tag }}/solr_conf/solrconfig.xml"
+    dest=/opt/solr/dpla/solr/collection1/conf/solrconfig.xml force=yes
+    mode=0644 owner=root group=root
+  delegate_to: "{{ item }}"
+  run_once: true
+  with_items: groups.solr
+  notify: restart tomcat
+  when: not ingestion_use_local_source
+
+- name: Ensure the state of solrconfig.xml (local)
+  # See above
+  script: copy_local_solrconf.sh solrconfig.xml
+  register: script_result
+  changed_when: "'changed' in script_result.stdout"
+  notify: restart tomcat
+  when: ingestion_use_local_source
+
+- name: Fix dataDir in solrconfig.xml
+  lineinfile: >-
+    dest=/opt/solr/dpla/solr/collection1/conf/solrconfig.xml
+    regexp=dataDir
+    line="  <dataDir>/v1/solrdata</dataDir>"
+  delegate_to: "{{ item }}"
+  run_once: true
+  with_items: groups.solr
+  notify: restart tomcat
+
+- name: Fix lib in solrconfig.xml for classpath loading
+  lineinfile: >-
+    dest=/opt/solr/dpla/solr/collection1/conf/solrconfig.xml
+    insertbefore=dataDir
+    line="  <lib dir=\"/opt/solr/lib\" />"
+  delegate_to: "{{ item }}"
+  run_once: true
+  with_items: groups.solr
+  notify: restart tomcat
+
+- meta: flush_handlers
+
+## Ingestion application
+#
+
+- name: Make sure rbenv and bundler are current
+  script: >-
+      ../../../files/install_ruby_tools.sh {{ ingestion_rbenv_version }}
+  sudo_user: dpla
+  tags:
+    - deployment
+
+# Copy files to build, network installation
+- name: Check out ingestion app from its repository (not using local source)
+  git: >-
+      repo=https://github.com/dpla/heidrun.git
+      dest=/home/dpla/heidrun
+      version={{ heidrun_branch_or_tag }}
+  sudo_user: dpla
+  when: not ingestion_use_local_source
+  tags:
+    - deployment
+
+# Copy files to build, local filesystem installation
+- name: Check out ingestion app from mounted directory (using local source)
+  script: copy_local_app.sh
+  sudo_user: dpla
+  when: ingestion_use_local_source
+  tags:
+    - deployment
+- name: Finesse Heidrun Gemfile to use local Krikri (using local source)
+  lineinfile: >-
+    dest=/home/dpla/heidrun/Gemfile
+    regexp="^gem 'krikri', github"
+    line="gem 'krikri', path: '/home/dpla/krikri'"
+  sudo_user: dpla
+  when: ingestion_use_local_source
+  tags:
+    - deployment
+
+- name: Remove Gemfile.lock
+  # In case of a change in local vs. network deployment
+  file: path=/home/dpla/heidrun/Gemfile.lock state=absent
+  tags:
+    - deployment
+
+- name: Update ingestion app configuration files
+  template: >-
+    src="{{ item }}.j2" dest="/home/dpla/heidrun/config/{{ item }}"
+    owner=dpla group=dpla mode=0640
+  with_items:
+    - database.yml
+    - secrets.yml
+    - solr.yml
+  tags:
+    - deployment
+
+- name: Update Redis settings in ingestion app
+  # See https://github.com/resque/resque#configuration
+  template: >-
+    src=config_settings.local.yml.j2
+    dest=/home/dpla/heidrun/config/settings.local.yml
+    owner=dpla group=dpla mode=0644
+  tags:
+    - deployment
+
+- name: Update unicorn.rb
+  template: >-
+      src=unicorn.rb.j2 dest=/home/dpla/heidrun/config/unicorn.rb
+      owner=dpla group=dpla mode=0644
+  when: >-
+    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+  tags:
+    - deployment
+
+- name: Ensure existence of live app directory
+  file: path=/opt/heidrun state=directory owner=dpla group=dpla mode=0755
+  tags:
+    - deployment
+
+- name: Stop Unicorn (gracefully)
+  # Unicorn is stopped completely, and later restarted, because we assume that
+  # preload_app is true, and this option means that a SIGHUP to reload Unicorn's
+  # configuration won't cause it to reload program code.
+  # We don't yet have a loadbalancer in front of the ingestion application, so this
+  # will take it offline briefly while the following tasks are performed.
+  service: name=unicorn_heidrun state=stopped
+  when: >-
+    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+  tags:
+    - deployment
+
+- name: Build web application (and copy to live directory)
+  script: >-
+    ../files/build_ingestion.sh {{ ingestion_rbenv_version }}
+    {{ hostvars[inventory_hostname]['group_names'] | join(',') }}
+  sudo_user: dpla
+  tags:
+    - deployment
+
+- name: Start Unicorn
+  service: name=unicorn_heidrun state=started
+  when: >-
+    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+  tags:
+    - deployment
+
+- name: Restart worker process manager
+  service: name=god_heidrun state=restarted
+  when: >-
+    'worker' in hostvars[inventory_hostname]['group_names']
+
+

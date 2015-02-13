@@ -1,0 +1,13 @@
+---
+
+- name: restart nginx
+  service: name=nginx state=restarted
+
+- name: restart god
+  service: name=god_heidrun state=restarted
+
+- name: restart tomcat
+  service: name=tomcat7 state=restarted
+  delegate_to: "{{ item }}"
+  with_items: groups.solr
+  run_once: true

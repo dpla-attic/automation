@@ -27,7 +27,7 @@ else
 fi
 
 bundler=`gem list bundler | grep bundler`
-if [ -z "$bundler"]; then
+if [ -z "$bundler" ]; then
     gem install bundler
 else
     gem update bundler

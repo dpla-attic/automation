@@ -24,6 +24,10 @@ Please install the following tools as documented on their websites:
 * Additional dependencies described in the `pip` requirements file (see below)
 
 ### Steps
+
+If you want to work with our new Ingestion2 system, please see
+[README-ingestion2.md](README-ingestion2.md).
+
 * Clone this project with Git or download the latest
   [zipfile](https://github.com/dpla/automation/archive/master.zip) and open it.  If
   you download the zipfile you won't be able to update it as easily when we issue

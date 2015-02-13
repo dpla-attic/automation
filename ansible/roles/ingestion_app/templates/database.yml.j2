@@ -1,0 +1,31 @@
+{# Assume there's just one db server. #}
+{% set db_host = groups['postgresql_dbs'][0] %}
+
+{# The "test" environment is not used yet. #}
+test:
+  adapter: postgresql
+  encoding: unicode
+  host: {{ db_host }}
+  database: ingestion_test
+  username: {{ postgresql_user['name'] }}
+  password: {{ postgresql_user['password'] }}
+  port: 5432
+
+development:
+  adapter: postgresql
+  encoding: unicode
+  host: {{ db_host }}
+  hostname: localhost
+  database: ingestion
+  username: {{ postgresql_user['name'] }}
+  password: {{ postgresql_user['password'] }}
+  port: 5432
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  host: {{ db_host }}
+  database: ingestion
+  username: {{ postgresql_user['name'] }}
+  password: {{ postgresql_user['password'] }}
+  port: 5432

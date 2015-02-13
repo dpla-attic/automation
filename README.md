@@ -1,6 +1,8 @@
 
 # DPLA Automation
 
+[![Build Status](https://travis-ci.org/dpla/automation.svg?branch=master)](https://travis-ci.org/dpla/automation)
+
 The intention of this project is to provide automated configuration management
 for production, development, and staging environments with the same set of
 files.

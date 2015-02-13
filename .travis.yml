@@ -1,0 +1,18 @@
+---
+language: python
+python: "2.7"
+sudo: false
+
+install:
+  # Install Ansible.
+  - pip install ansible ansible-lint
+  - pip install -r requirements.txt
+
+script:
+  - echo localhost > ansible/test_inventory
+  - cd ansible
+  - echo Checking syntax of all playbooks ...
+  - ansible-playbook -i test_inventory --syntax-check *_all.yml
+  - echo Running ansible-lint on all playbooks. Rule reference follows.
+  - ansible-lint -L
+  - ansible-lint -q *_all.yml | sort | uniq

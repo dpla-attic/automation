@@ -67,3 +67,5 @@ mysql_users:
 # You should set these manually in your environment.
 # slack_channel: "#channel"
 # slack_webhook_url: https://hooks.slack.com/services/XXXXX/YYYYY/ZZZZZZZZ
+
+marmotta_domain: ldp.local.dp.la

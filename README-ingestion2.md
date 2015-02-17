@@ -22,7 +22,7 @@ $ vagrant box add hashicorp/precise64
   operating system:
 ```
 192.168.50.7    dev1 local.dp.la
-192.168.50.8    dev2 ingestion2.local.dp.la
+192.168.50.8    dev2 ingestion2.local.dp.la ldp.local.dp.la
 ```
 If you have checked out this project before, be sure that only `dev1` is aliased
 to `local.dp.la`.
@@ -50,10 +50,10 @@ The various sites will be online at:
 
 * http://local.dp.la/
 * http://local.dp.la:8080/v2/items (the API)
-* http://ingestion2.local.dp.la/  (Heiðrún)
+* http://ingestion2.local.dp.la:8004/  (Heiðrún)
 * http://ingestion2.local.dp.la:8080/manager/html (Tomcat admin interface)
 * http://ingestion2.local.dp.la:8080/solr/#/ (Solr admin interface)
-* http://ingestion2.local.dp.la:8080/marmotta/ (Marmotta admin interface)
+* http://ldp.local.dp.la/ (Marmotta admin interface)
 
 
 There won't be any data ingested until you run an ingestion.

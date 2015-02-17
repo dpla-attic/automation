@@ -1,0 +1,18 @@
+---
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
+- name: Deploy Ingestion Application
+  hosts:
+    - ingestion_app
+    - worker
+  sudo: yes
+  tasks:
+    - include: ../roles/ingestion_app/tasks/deploy.yml
+  handlers:
+    - include: ../roles/ingestion_app/handlers/main.yml
+  vars_files:
+    - "../vars/{{ level }}.yml"
+    - "../roles/ingestion_app/defaults/main.yml"
+    - "../roles/ingestion_app/vars/{{ level }}.yml"

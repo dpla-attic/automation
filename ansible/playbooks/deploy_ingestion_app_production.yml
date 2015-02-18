@@ -1,0 +1,3 @@
+---
+
+- include: deploy_ingestion_app.yml level=production

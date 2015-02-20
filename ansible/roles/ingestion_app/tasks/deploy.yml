@@ -94,7 +94,7 @@
 - name: Finesse Heidrun Gemfile to use local Krikri (using local source)
   lineinfile: >-
     dest=/home/dpla/heidrun/Gemfile
-    regexp="^gem 'krikri', github"
+    regexp="^gem 'krikri'"
     line="gem 'krikri', path: '/home/dpla/krikri'"
   sudo_user: dpla
   when: ingestion_use_local_source

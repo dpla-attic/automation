@@ -13,7 +13,7 @@ if [ ! -d /home/dpla/frontend ]; then
 	mkdir /home/dpla/frontend
 fi
 
-rsync -ruptl --delete --checksum \
+rsync -rptl --delete --checksum \
     --exclude 'log' --exclude 'tmp' --exclude 'vendor/assets' \
     --exclude 'public/uploads' \
     /frontend_dev/ /home/dpla/frontend

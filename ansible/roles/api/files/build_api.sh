@@ -12,7 +12,7 @@ rbenv shell $USE_VERSION
 bundle install
 rbenv rehash
 
-/usr/bin/rsync -ruptolg --checksum --delete --delay-updates \
+/usr/bin/rsync -rptolg --checksum --delete --delay-updates \
     --exclude 'var/log' \
     --exclude 'tmp' \
     --exclude '.git' \

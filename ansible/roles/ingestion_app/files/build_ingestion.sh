@@ -18,7 +18,7 @@ rbenv global $use_version
 bundle install || exit 1
 rbenv rehash
 
-/usr/bin/rsync -ruptolg --checksum --delete --delay-updates \
+/usr/bin/rsync -rptolg --checksum --delete --delay-updates \
     --exclude 'log' \
     --exclude 'tmp' \
     --exclude '.git' \

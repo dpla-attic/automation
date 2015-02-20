@@ -21,7 +21,7 @@ bundle exec rake assets:precompile
 # Variable set above by ssh-agent
 kill $SSH_AGENT_PID
 
-/usr/bin/rsync -ruptolg --checksum --delete --delay-updates \
+/usr/bin/rsync -rptogl --checksum --delete --delay-updates \
     --exclude 'log' \
     --exclude 'tmp' \
     --exclude '.git' \

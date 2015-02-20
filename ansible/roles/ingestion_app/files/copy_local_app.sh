@@ -21,11 +21,11 @@ if [ ! -d /home/dpla/heidrun ]; then
     mkdir /home/dpla/heidrun
 fi
 
-rsync -ruptl --delete --checksum \
+rsync -rptl --delete --checksum \
     --exclude '.git*' /krikri/ /home/dpla/krikri \
     || exit 1
 
-rsync -ruptl --delete --checksum \
+rsync -rptl --delete --checksum \
     --exclude '.git*' --exclude 'log' \
     /heidrun/ /home/dpla/heidrun \
     || exit 1

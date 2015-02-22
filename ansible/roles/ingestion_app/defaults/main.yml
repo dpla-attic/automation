@@ -3,6 +3,7 @@
 ingestion_rbenv_version: 2.1.3
 ingestion_use_local_source: false
 heidrun_branch_or_tag: develop
+heidrun_mappings_branch_or_tag: master
 rails_env: development
 
 ingestion_secret_key_base: 227577a6f5b650eee5e30d2519872b0163a4b3112449ff4876cf9b5d7bf3edae86935d7dea2b59466ea435617116f9c2dafa6fa19e078e05017693a2a330cebc

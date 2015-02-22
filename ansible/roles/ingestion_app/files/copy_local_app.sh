@@ -14,11 +14,20 @@ if [ ! -d /heidrun ]; then
     exit 1
 fi
 
+if [ ! -d /heidrun-mappings ]; then
+    >&2 echo "Local directory /heidrun-mappings does not exist"
+    exit 1
+fi
+
 if [ ! -d /home/dpla/krikri ]; then
     mkdir /home/dpla/krikri
 fi
 if [ ! -d /home/dpla/heidrun ]; then
     mkdir /home/dpla/heidrun
+fi
+
+if [ ! -d /home/dpla/heidrun-mappings ]; then
+    mkdir /home/dpla/heidrun-mappings
 fi
 
 rsync -rptl --delete --checksum \
@@ -30,4 +39,7 @@ rsync -rptl --delete --checksum \
     /heidrun/ /home/dpla/heidrun \
     || exit 1
 
-
+rsync -rptl --delete --checksum \
+    --exclude '.git*' --exclude 'README.md' --exclude 'LICENSE' \
+    /heidrun-mappings/ /home/dpla/heidrun-mappings \
+    || exit 1

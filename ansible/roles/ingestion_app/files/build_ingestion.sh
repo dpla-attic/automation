@@ -27,6 +27,17 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Don't delete "extraneous" files in the destination directory, unlike the
+# other two rsync calls
+/usr/bin/rsync -rptolg --checksum --delay-updates \
+    --exclude 'README.md' \
+    --exclude 'LICENSE' \
+    --exclude '.git*' \
+    /home/dpla/heidrun-mappings/ /opt/heidrun/vendor/mappings
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
 # Log and temporary directories
 dirs_to_check='/opt/heidrun/log /opt/heidrun/tmp'
 for dir in $dirs_to_check; do

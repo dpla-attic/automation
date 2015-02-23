@@ -30,6 +30,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Ingestion2
   config.vm.define :dev2 do |dev2|
+    # Note: this uses a different base box by design!
     dev2.vm.box = 'ubuntu/trusty64'  # Ubuntu 14.04 LTS
     dev2.vm.network :private_network, ip: '192.168.50.8'
     dev2.vm.provider :virtualbox do |vb|
@@ -39,6 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # As above, change the path to the local diretory.
     # dev2.vm.synced_folder "../krikri", "/krikri"
     # dev2.vm.synced_folder "../heidrun", "/heidrun"
+    # dev2.vm.synced_folder "../heidrun-mappings", "/heidrun-mappings"
   end
 
 end

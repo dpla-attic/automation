@@ -84,6 +84,16 @@
   tags:
     - deployment
 
+- name: Check out mappings from their repository (not using local source)
+  git: >-
+      repo=https://github.com/dpla/heidrun-mappings.git
+      dest=/home/dpla/heidrun-mappings
+      version={{ heidrun_mappings_branch_or_tag }}
+  sudo_user: dpla
+  when: not ingestion_use_local_source
+  tags:
+    - deployment
+
 # Copy files to build, local filesystem installation
 - name: Check out ingestion app from mounted directory (using local source)
   script: copy_local_app.sh

@@ -8,11 +8,13 @@
     - deployment
     - web
 
+# Clear these out prior to copying and symlinking below
+- file: path=/home/dpla/api state=absent
 
-- name: Check out api (platform) app from its repository
+- name: Check out api (platform) app from its repository (git)
   git: >
       repo=https://github.com/dpla/platform.git
-      dest=/home/dpla/api
+      dest=/home/dpla/api-git
       version={{ api_branch_or_tag | default("master") }}
   sudo_user: dpla
   when: not api_use_local_source
@@ -22,7 +24,12 @@
     - api_deployment
     - web
 
-- name: Check out api (platform) app from mounted directory
+# Symlink to the build directory, to allow local and git builds to coexist neatly
+# 1. Git deployment ...
+- file: src=/home/dpla/api-git dest=/home/dpla/api state=link
+  when: not api_use_local_source
+
+- name: Check out api (platform) app from mounted directory (local)
   script: copy_local_app.sh
   when: api_use_local_source
   tags:
@@ -30,6 +37,11 @@
     - api
     - api_deployment
     - web
+
+# Symlink, as above
+# 2. Local filesystem deployment ...
+- file: src=/home/dpla/api-local dest=/home/dpla/api state=link
+  when: api_use_local_source
 
 - name: Update api app database configuration
   template: >

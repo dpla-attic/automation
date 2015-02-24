@@ -22,12 +22,12 @@ fi
 if [ ! -d /home/dpla/krikri ]; then
     mkdir /home/dpla/krikri
 fi
-if [ ! -d /home/dpla/heidrun ]; then
-    mkdir /home/dpla/heidrun
+if [ ! -d /home/dpla/heidrun-local ]; then
+    mkdir /home/dpla/heidrun-local
 fi
 
-if [ ! -d /home/dpla/heidrun-mappings ]; then
-    mkdir /home/dpla/heidrun-mappings
+if [ ! -d /home/dpla/heidrun-mappings-local ]; then
+    mkdir /home/dpla/heidrun-mappings-local
 fi
 
 rsync -rptl --delete --checksum \
@@ -36,10 +36,10 @@ rsync -rptl --delete --checksum \
 
 rsync -rptl --delete --checksum \
     --exclude '.git*' --exclude 'log' \
-    /heidrun/ /home/dpla/heidrun \
+    /heidrun/ /home/dpla/heidrun-local \
     || exit 1
 
 rsync -rptl --delete --checksum \
     --exclude '.git*' --exclude 'README.md' --exclude 'LICENSE' \
-    /heidrun-mappings/ /home/dpla/heidrun-mappings \
+    /heidrun-mappings/ /home/dpla/heidrun-mappings-local \
     || exit 1

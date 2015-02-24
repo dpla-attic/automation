@@ -8,10 +8,13 @@
     - frontend_deployment
     - web
 
+# Clear this out prior to copying and symlinking below
+- file: path=/home/dpla/frontend state=absent
+
 - name: Check out frontend app from its repository
   git: >
       repo=https://github.com/dpla/frontend.git
-      dest=/home/dpla/frontend
+      dest=/home/dpla/frontend-git
       version={{ frontend_branch_or_tag }}
   sudo_user: dpla
   when: not frontend_use_local_source
@@ -21,6 +24,11 @@
     - frontend_deployment
     - web
 
+# Symlink to the build directory, to allow local and git builds to coexist neatly
+# 1. For a git deployment ...
+- file: src=/home/dpla/frontend-git dest=/home/dpla/frontend state=link
+  when: not frontend_use_local_source
+
 - name: Check out frontend app from mounted directory
   script: copy_local_app.sh
   when: frontend_use_local_source
@@ -29,6 +37,11 @@
     - frontend
     - frontend_deployment
     - web
+
+# Symlink (see above)
+# 2. For a local deployment ...
+- file: src=/home/dpla/frontend-local dest=/home/dpla/frontend state=link
+  when: frontend_use_local_source
 
 - name: Update frontend app database configuration
   template: >

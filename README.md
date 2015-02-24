@@ -7,7 +7,7 @@ The intention of this project is to provide automated configuration management
 for production, development, and staging environments with the same set of
 files.
 
-[Release Notes](https://github.com/dpla/automation/wiki/Release-Notes)
+[Release Notes](https://github.com/dpla/automation/releases)
 
 ## Installation, VM setup:
 

@@ -143,7 +143,6 @@
   with_items:
     - database.yml
     - secrets.yml
-    - solr.yml
   tags:
     - deployment
 

@@ -20,3 +20,8 @@ marmotta:
 
 prov:
   activity: 'activity'
+
+{# for now, we just assume that there is one Solr server #}
+{% set solr_host = groups['solr'][0] %}
+solr:
+  url: "http://{{ solr_host }}:8080/solr"

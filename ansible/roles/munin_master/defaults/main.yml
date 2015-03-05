@@ -1,0 +1,8 @@
+---
+
+# `munin_always_send' governs whether to send repeated, redundant alert
+# messages even if the alert's state has not changed.
+munin_always_send: false
+# `munin_alert_priorities' governs which sorts of alert messages to send
+# if you want `munin_always_send' to be true.
+munin_always_send_priorities: "warning critical"

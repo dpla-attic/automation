@@ -18,6 +18,10 @@ marmotta:
   record_container: '{{ marmotta_base }}/ldp/original_record'
   item_container: '{{ marmotta_base }}/ldp/items'
 
+elasticsearch:
+  host: '{{ es_cluster_loadbal }}:9200'
+  index_name: 'dpla_alias'
+
 prov:
   activity: 'activity'
 

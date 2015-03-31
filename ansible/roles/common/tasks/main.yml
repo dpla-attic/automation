@@ -1,5 +1,14 @@
 ---
 
+- name: Ensure correct kernel overcommitment settings
+  template: >-
+    src=etc_sysctl.d_60-overcommit.conf.j2 dest=/etc/sysctl.d/60-overcommit.conf
+    mode=0644 owner=root group=root
+  notify:
+    - start procps
+  tags:
+    - kernel
+
 - name: Set hostname
   hostname: name={{ inventory_hostname }}
   tags:

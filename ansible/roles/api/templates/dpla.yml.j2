@@ -71,15 +71,16 @@ api_auth:
 # Supported values for 'store': null_store, file_store, dalli_store
 caching:
   cache_results: true
+{% if level != "contentqa" %}
   store: dalli_store
   memcache_servers:
-{% if level != "contentqa" %}
 {% for h in groups['memcached'] %}
     - {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}
 {% endfor %}
 {% else %}
-    - {{ hostvars[inventory_hostname][internal_network_interface]['ipv4']['address'] }}
-    {% endif %}
+  # file_store directory is tmp/api-cache under the app root
+  store: file_store
+{% endif %}
 
 field_boosts:
   item:

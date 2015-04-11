@@ -39,6 +39,13 @@
       owner=root group=root mode=0644
   notify: restart nginx
 
+- name: Make sure nginx logs get rotated
+  template: >-
+      src="etc_logrotate.d_nginx.j2" dest="/etc/logrotate.d/nginx"
+      owner=root group=root mode=0644
+  tags:
+    - logrotate
+
 - name: Symlink webserver virtual host for Marmotta
   file: >-
       src="/etc/nginx/sites-available/marmotta"

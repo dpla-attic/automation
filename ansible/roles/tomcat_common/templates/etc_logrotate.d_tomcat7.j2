@@ -1,0 +1,8 @@
+/var/log/tomcat7/catalina.out {
+  copytruncate
+  daily
+  rotate {{ tomcat_catalina_log_age }}
+  compress
+  missingok
+  create 640 tomcat7 adm
+}

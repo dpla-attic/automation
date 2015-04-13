@@ -1,0 +1,2 @@
+
+1 0 * * * tomcat7 find /var/log/tomcat7 -name \*localhost_access_log\* -mtime +{{ tomcat_accesslogvalve_log_age }} -exec rm {} \\;

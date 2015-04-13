@@ -31,3 +31,17 @@
     - server.xml
     - web.xml
   notify: restart tomcat
+
+- name: Ensure that Tomcat "catalina" logs are rotated correctly
+  template: >-
+    src=etc_logrotate.d_tomcat7.j2 dest=/etc/logrotate.d/tomcat7
+    mode=0644 owner=root group=root
+  tags:
+    - logs
+
+- name: Ensure that Tomcat AccessLogValve logs are pruned
+  template: >-
+    src=etc_cron.d_prune-tomcat-access-logs.j2 dest=/etc/cron.d/prune-tomcat-access-logs
+    mode=0644 owner=root group=root
+  tags:
+    - logs

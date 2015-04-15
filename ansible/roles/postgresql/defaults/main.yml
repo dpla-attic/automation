@@ -5,5 +5,5 @@ pg_max_connections: 50
 pg_shared_buffers: 24MB
 pg_effective_cache_size: 128MB
 pg_work_mem: 1MB
-pg_backup_keep_days: 30
+pg_backup_keep_days: 7
 backups_basedir: /backups

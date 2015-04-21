@@ -152,11 +152,15 @@ server {
         rewrite ^/about/map /info/map last;
         rewrite ^/about/schema /info/schema last;
         rewrite ^/platform /info/developers/codex last;
-        rewrite ^/api(.*)$ http://{{ api_hostname }}$1 last;
         rewrite ^/lists(.*)$ http://lists.dp.la$1 last;
         {% if sitemap_host is defined %}
         rewrite ^/sitemap.xml$ http://{{ sitemap_host }}/all_item_urls.xml last;
         {% endif %}
+    }
+
+    location ~ ^/api/(.*)$ {
+         add_header 'Access-Control-Allow-Origin' '*';
+         rewrite ^/api/(.*)$ http://{{ api_hostname }}/$1 last;
     }
 
     location ~ ^/donate(/?|/.*)$ {

@@ -14,5 +14,6 @@
   vars:
     level: production
   vars_files:
-    - "../vars/production.yml"
     - "../roles/omeka/defaults/main.yml"
+    - "../vars/production.yml"
+    - "../roles/omeka/vars/production.yml"

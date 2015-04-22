@@ -14,5 +14,6 @@
   vars:
     level: development
   vars_files:
-    - "../vars/development.yml"
     - "../roles/omeka/defaults/main.yml"
+    - "../vars/development.yml"
+    - "../roles/omeka/vars/development.yml"

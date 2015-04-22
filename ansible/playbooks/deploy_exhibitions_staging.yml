@@ -14,5 +14,6 @@
   vars:
     level: staging
   vars_files:
-    - "../vars/staging.yml"
     - "../roles/omeka/defaults/main.yml"
+    - "../vars/staging.yml"
+    - "../roles/omeka/vars/staging.yml"

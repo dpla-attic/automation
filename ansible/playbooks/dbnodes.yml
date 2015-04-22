@@ -36,6 +36,7 @@
         - database
         - packages
     - name: Wait for connections to drain
+      when: level == 'production' or level == 'staging'
       wait_for: >-
           host="{{ inventory_hostname }}" port="5984" state=drained timeout=60
   post_tasks:

@@ -79,15 +79,28 @@ host   all             all            {{ host }}             md5
 {% for host in groups['api'] %}
 host   all             all            {{ host }}             md5
 {% endfor %}
+
+{# The following hosts are for the new Ingestion 2 system. #}
+{# TODO:  Remove the `if' statements when we do away with the legacy #}
+{#        ingestion system. #}
+
+{% if groups['ingestion_app'] is defined %}
 {% for host in groups['ingestion_app'] %}
 host   all             all            {{ host }}             md5
 {% endfor %}
+{% endif %}
+
+{% if groups['worker'] is defined %}
 {% for host in groups['worker'] %}
 host   all             all            {{ host }}             md5
 {% endfor %}
+{% endif %}
+
+{% if groups['marmotta'] is defined %}
 {% for host in groups['marmotta'] %}
 host   all             all            {{ host }}             md5
 {% endfor %}
+{% endif %}
 
 # Deny access to postgresql user from other hosts
 host    all             postgres       0.0.0.0/0               reject

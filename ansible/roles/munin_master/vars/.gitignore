@@ -1,3 +1,4 @@
-staging.yml
-contentqa.yml
-production.yml
+*
+!.gitignore
+!example.yml
+!main.yml

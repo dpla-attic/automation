@@ -1,4 +1,4 @@
-development.yml
-staging.yml
-production.yml
-contentqa.yml
+*
+!.gitignore
+!defaults.yml
+!*.dist

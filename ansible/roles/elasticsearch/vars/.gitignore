@@ -1,3 +1,6 @@
-production.yml
-staging.yml
-development.yml
+*
+!.gitignore
+!main.yml
+!sample.yml
+!vagrant.yml
+!*.dist

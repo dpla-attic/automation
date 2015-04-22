@@ -1,5 +1,2 @@
-staging
-production
-contentqa
-central
+local
 host_vars

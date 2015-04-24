@@ -8,6 +8,10 @@ server {
     # media file uploads.  Also see the siteproxy configuration.
     client_max_body_size 25m;
 
+    location ~ ^/$ {
+        return 301 http://$host/exhibitions/;
+    }
+
     location /exhibitions {
 
         root /srv/www;

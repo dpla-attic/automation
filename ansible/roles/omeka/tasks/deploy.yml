@@ -131,6 +131,7 @@
   command: find /var/cache/nginx -type f -delete
   delegate_to: "{{ item }}"
   with_items: groups.site_proxies
+  when: not skip_site_proxy_cache
   tags:
     - deployment
     - omeka

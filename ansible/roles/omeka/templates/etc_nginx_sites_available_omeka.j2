@@ -57,7 +57,6 @@ server {
         location ~* ^/exhibitions/(.+)\.(css|doc|docx|flv|gif|htm|ico|jpeg|jpg|js|m4v|mov|mp3|mp4|pdf|png|ppt|pptx|swf|svg|svgz|tif|ttf|wav|xls|xlsx)$ {
             alias /srv/www/exhibitions;
             try_files /$1.$2 =404;
-            expires max;
         }
 
     }

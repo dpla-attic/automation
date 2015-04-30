@@ -249,19 +249,21 @@ server {
 
     location /exhibitions {
 
-        proxy_cache_valid 200 240m;
-        proxy_cache_bypass        $http_cache_bypass $do_not_cache $cookie__dpla_no_cache;
-        proxy_no_cache            $http_cache_bypass $do_not_cache $cookie__dpla_no_cache;
+        proxy_pass          http://dpla_omeka;
 
-        # Ignore cache-disabling headers set by Omeka
-    	  proxy_ignore_headers Cache-Control Set-Cookie Expires;
+        # Do not cache HTML, but cache static files
+        proxy_cache off;
+        location ~* \.(css|doc|docx|flv|gif|htm|ico|jpeg|jpg|js|m4v|mov|mp3|mp4|pdf|png|ppt|pptx|swf|svg|svgz|tif|ttf|wav|xls|xlsx)$ {
+            proxy_cache_valid 200 360m;
+            expires 864000;
+            proxy_pass http://dpla_omeka;
+        }
 
         # Up to 10 simultaneous page requests per IP
         limit_conn pageconnzone 10;
         # Up to 20 requests / sec for pages.
         limit_req zone=pagereqzone burst=20;
 
-        proxy_pass          http://dpla_omeka;
         # For client_max_body_size, see the Omeka role's NGINX virtual host
         # configuration.
         # (ansible/roles/omeka/templates/etc_nginx_sites_available_omeka.j2)
@@ -274,17 +276,6 @@ server {
         #
         rewrite ^/exhibitions/(activism|boston-sports-temples|history-of-survivance|this-land|new-deal|breadandroses|spirits) /exhibitions/exhibits/show/$1 permanent;
 
-        location /exhibitions/admin {
-            set $do_not_cache 1;
-            proxy_pass http://dpla_omeka;
-        }
-
-        location ~* \.(css|doc|docx|flv|gif|htm|ico|jpeg|jpg|js|m4v|mov|mp3|mp4|pdf|png|ppt|pptx|svg|svgz|swf|tif|ttf|wav|xls|xlsx)$ {
-            # Cache static-looking files for 120 minutes, setting a 10 day expiry time.
-            proxy_cache_valid 200 360m;
-            expires 864000;
-            proxy_pass http://dpla_omeka;
-        }
     }
 {% endif %}
 

@@ -9,3 +9,8 @@ rails_env: development
 ingestion_secret_key_base: 227577a6f5b650eee5e30d2519872b0163a4b3112449ff4876cf9b5d7bf3edae86935d7dea2b59466ea435617116f9c2dafa6fa19e078e05017693a2a330cebc
 
 unicorn_worker_processes: 2
+
+# fast_deployment skips various tasks and is useful if you've already deployed
+# and are performing iterative changes in development that only affect application
+# code.  It skips things like database migration and updating the bundle.
+fast_deployment: false

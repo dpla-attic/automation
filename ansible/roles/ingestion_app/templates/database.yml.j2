@@ -6,10 +6,10 @@ test:
   adapter: postgresql
   encoding: unicode
   host: {{ db_host }}
-  database: ingestion_test
-  username: {{ postgresql_user['name'] }}
-  password: {{ postgresql_user['password'] }}
-  port: 5432
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+  database: db/test.sqlite3
 
 development:
   adapter: postgresql

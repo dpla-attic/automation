@@ -71,3 +71,20 @@ infrastructure.
 
 Example:
 `ansible-playbook -u mb -i ingestion playbooks/deploy_ingestion_app_development.yml --extra-vars="fast_deployment=true"`
+
+### When to use this and other DPLA project VMs
+
+There are Vagrantfiles in the `krikri` and `heidrun` projects, too.  Why should
+you use the VMs created above when there are simpler ones available for working
+specifically with those projects?
+
+This set of VMs is best when you need a reasonably accurate representation of
+the whole stack as it will function in production, with mostly the same moving
+parts.  If you are working on the frontend or want to see how Heiðrún and Krikri
+interact with Elasticsearch, NGINX, Solr, and Marmotta, this gives you the best
+picture.  This setup is best for trying things out in the console.
+
+It is not as convenient for making quick iterative developments to the code and
+re-running the test suites.  For that, you might want to go over to the
+`heidrun` or `krikri` project and follow the directions in either location for
+using the included Vagrantfile.

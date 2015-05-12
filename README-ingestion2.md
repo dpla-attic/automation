@@ -55,7 +55,19 @@ The various sites will be online at:
 * http://ingestion2.local.dp.la:8080/solr/#/ (Solr admin interface)
 * http://ldp.local.dp.la/ (Marmotta admin interface)
 
-
 There won't be any data ingested until you run an ingestion.
 
 See the rest of the main [README.md](README.md) file for more information.
+
+## Tips
+
+### Heiðrún deployment
+
+After you do a full deployment, you can deploy just the application files with
+`--extra-vars "fast_deployment=true"`, in order to save time.  This is useful if
+you are developing `heidrun` or `krikri` and are iterating over quick changes to the
+application code, and don't need to provision or configure all of the supporting
+infrastructure.
+
+Example:
+`ansible-playbook -u mb -i ingestion playbooks/deploy_ingestion_app_development.yml --extra-vars="fast_deployment=true"`

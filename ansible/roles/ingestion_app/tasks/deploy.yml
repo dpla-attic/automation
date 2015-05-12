@@ -142,6 +142,13 @@
     dest=/home/dpla/heidrun/config/settings.local.yml
     owner=dpla group=dpla mode=0644
 
+- name: Update configuration for test environment
+  # On overriding settings:  https://github.com/railsconfig/rails_config#common-config-file
+  template: >-
+    src=config_environments_test.local.yml.j2
+    dest=/home/dpla/heidrun/config/environments/test.local.yml
+    owner=dpla group=dpla mode=0644
+
 - name: Update unicorn.rb
   template: >-
       src=unicorn.rb.j2 dest=/home/dpla/heidrun/config/unicorn.rb

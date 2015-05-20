@@ -52,3 +52,10 @@
       dest="/etc/nginx/sites-enabled/marmotta"
       state=link owner=root group=root
   notify: restart nginx
+
+- name: Tune the 'marmotta' database for our usage patterns
+  script: tunedb.sh
+  sudo_user: postgres
+  delegate_to: "{{ groups.postgresql_dbs[0] }}"
+  tags:
+    - tuning

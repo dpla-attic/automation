@@ -78,6 +78,20 @@
   tags:
     - munin
 
+- name: Ensure that certain Munin plugins are enabled
+  # Munin enables a lot of plugins by default, but these are just ones
+  # that we want to ensure are running regardless of the defaults.
+  file: >-
+      src=/usr/share/munin/plugins/{{ item }}
+      dest=/etc/munin/plugins/{{ item }}
+      state=link owner=root group=root
+  with_items:
+    - netstat
+    - tcp
+  notify: restart munin node
+  tags:
+    - munin
+
 - name: Ensure state of munin node configuration file
   template: src=munin-node.conf.j2 dest=/etc/munin/munin-node.conf owner=root group=root mode=0644
   notify: restart munin node

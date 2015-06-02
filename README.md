@@ -51,7 +51,6 @@ If you want to work with our new Ingestion2 system, please see
   * `ansible/roles/postgresql/vars/development.yml.dist`
   * `ansible/roles/frontend/vars/development.yml.dist`
     * Optional.  For the frontend app, as above.  See `Vagrantfile`.
-  * `ansible/roles/elasticsearch/vars/development.yml.dist`
 * Optionally, copy and update any other `ansible/roles/*/development.yml.dist`
   files in a similar fashion.  There are defaults that will take effect if you don't
   make any changes.

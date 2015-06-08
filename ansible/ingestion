@@ -40,5 +40,5 @@ dev2
 [worker]
 dev2
 [worker:vars]
-worker_queues=[{'name': 'harvest', 'num_workers': 2}]
+worker_queues=[{'name': 'harvest', 'num_workers': 1}, {'name': 'mapping', 'num_workers': 1}, {'name': 'enrichment', 'num_workers': 1}, {'name': 'indexing', 'num_workers': 1}]
 

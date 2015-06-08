@@ -44,7 +44,7 @@ rbenv global $use_version
 echo "installing bundle ..." >> $LOGFILE
 
 if [ $fast == 0 ]; then
-    bundle install || exit 1
+    bundle update || exit 1
     rbenv rehash
 fi
 

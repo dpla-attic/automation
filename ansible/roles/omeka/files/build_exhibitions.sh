@@ -5,7 +5,7 @@
     --exclude 'application/logs' \
     --exclude 'files' \
     --exclude 'plugins/Dropbox/files' \
-    /home/dpla/exhibitions /srv/www
+    /home/dpla/exhibitions/ /srv/www/exhibitions
 
 if [ $? -ne 0 ]; then
 	exit 1

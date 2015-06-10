@@ -1,5 +1,6 @@
 ---
 
+exhibitions_use_local_source: false
 exhibitions_branch_or_tag: "master"
 exhibitions_api_key: "{{ api_key }}"
 

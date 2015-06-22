@@ -64,6 +64,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # webapp.vm.synced_folder "../frontend", "/frontend_dev"
         # webapp.vm.synced_folder "../platform", "/api_dev"
         # webapp.vm.synced_folder "../frontend-wp", "/wordpress_dev"
+        # webapp.vm.synced_folder "../exhibitions", "/exhibitions_dev"
     end
 
 end

@@ -2,6 +2,9 @@
 
 USE_VERSION=$1
 export PATH=$HOME/.rbenv/bin:$PATH
+LOGFILE=/tmp/build_api.log
+
+echo "starting" > $LOGFILE
 
 eval "`rbenv init -`"
 
@@ -9,8 +12,12 @@ cd /home/dpla/api
 
 rbenv shell $USE_VERSION
 
+echo "installing bundle ..." >> $LOGFILE
+
 bundle install
 rbenv rehash
+
+echo "rsync from home to /srv/www/api ..." >> $LOGFILE
 
 /usr/bin/rsync -rptolg --checksum --delete --delay-updates \
     --exclude 'var/log' \
@@ -21,6 +28,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "checking log and tmp directories ..." >> $LOGFILE
+
 # Log and temporary directories
 dirs_to_check='/srv/www/api/var/log /srv/www/api/tmp'
 for dir in $dirs_to_check; do
@@ -30,6 +39,8 @@ for dir in $dirs_to_check; do
             && chmod 0775 $dir
     fi
 done
+
+echo "running rake tasks ..." >> $LOGFILE
 
 # Clear out the job queue, caches, and temporary files.
 # Is it OK to do this here in one place, or will there be

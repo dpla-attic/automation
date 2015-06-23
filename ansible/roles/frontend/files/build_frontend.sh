@@ -2,6 +2,9 @@
 
 USE_VERSION=$1
 export PATH=$HOME/.rbenv/bin:$PATH
+LOGFILE=/tmp/build_frontend.log
+
+echo "starting" > $LOGFILE
 
 eval "`rbenv init -`"
 # Start ssh-agent and set environment variables.
@@ -13,14 +16,20 @@ cd $HOME/frontend
 
 rbenv shell $USE_VERSION
 
+echo "installing bundle ..." >> $LOGFILE
+
 bundle install
 bundle update dpla_frontend_assets
 rbenv rehash
+
+echo "precompiling assets ..." >> $LOGFILE
 bundle exec rake assets:precompile
 
+echo "killing ssh_agent ..." >> $LOGFILE
 # Variable set above by ssh-agent
 kill $SSH_AGENT_PID
 
+echo "rsync home to /srv/www ..." >> $LOGFILE
 /usr/bin/rsync -rptogl --checksum --delete --delay-updates \
     --exclude 'log' \
     --exclude 'tmp' \
@@ -31,8 +40,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "migrate database ..." >> $LOGFILE
 cd /srv/www/frontend
 bundle exec rake db:migrate
+
+echo "check logfile directory ..." >> $LOGFILE
 
 logdir='/srv/www/frontend/log'
 if [ ! -d $logdir ]; then

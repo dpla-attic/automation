@@ -9,4 +9,7 @@ pg_work_mem: 1MB
 # Decrease it if you're using SSD drives.  1.5 might be a good value.
 pg_random_page_cost: 4.0
 pg_backup_keep_days: 7
+pg_log_min_duration_statement: 100
 backups_basedir: /backups
+log_rotation_interval: daily
+log_rotation_count: 14

@@ -356,7 +356,7 @@ effective_cache_size = {{ pg_effective_cache_size }}
 					#   fatal
 					#   panic (effectively off)
 
-#log_min_duration_statement = -1	# -1 is disabled, 0 logs all statements
+log_min_duration_statement = {{ pg_log_min_duration_statement }}	# -1 is disabled, 0 logs all statements
 					# and their durations, > 0 logs only
 					# statements running at least this number
 					# of milliseconds

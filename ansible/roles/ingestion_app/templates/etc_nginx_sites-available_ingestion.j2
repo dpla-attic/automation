@@ -9,6 +9,12 @@ server {
     server_name {{ ingestion_hostname }};
     root /opt/heidrun/public;
 
+    # For the following timeouts, note whatever timeouts are in effect for
+    # Marmotta and Solr.  The values here should be higher.  If we stop
+    # querying Marmotta, then these should be lowered.
+    proxy_read_timeout 601s;
+    proxy_send_timeout 601s;
+
     location / {
         try_files $uri $uri/index.html @ingestion_app_server;
     }

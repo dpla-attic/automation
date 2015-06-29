@@ -27,8 +27,11 @@ working_directory "/opt/heidrun" # available in 0.94.0+
 listen "/opt/heidrun/tmp/unicorn_heidrun.sock", :backlog => 64
 #listen 8080, :tcp_nopush => true
 
-# nuke workers after 30 seconds instead of 60 seconds (the default)
-timeout 30
+# Kill worker processes after this many seconds
+# This needs to be kept in sync with the other services that our
+# application relies upon.  If we make requests to Marmotta and Solr, our
+# timeout should be higher than theirs.
+timeout 601
 
 # This must match the pidfile used in etc_init.d_unicorn_api.j2
 pid "/opt/heidrun/tmp/unicorn_heidrun.pid"

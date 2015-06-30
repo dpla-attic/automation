@@ -1,4 +1,9 @@
 ---
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - web
+    - site_proxy
 
 - name: Ensure existence of cache directory
   file: >

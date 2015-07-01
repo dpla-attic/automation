@@ -18,7 +18,7 @@ rbenv shell $USE_VERSION
 
 echo "installing bundle ..." >> $LOGFILE
 
-bundle install
+bundle update
 bundle update dpla_frontend_assets
 rbenv rehash
 

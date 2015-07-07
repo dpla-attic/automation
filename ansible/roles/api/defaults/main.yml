@@ -7,3 +7,6 @@ rails_env: development
 qa_app_username: qa
 # password is "changeme"
 qa_app_md5_password: "$apr1$bTHb7fKA$glS0Kk6zI6ny0GW0hPerk/"
+
+nginx_real_ip_from_addrs:
+    - 192.168.50.0/24

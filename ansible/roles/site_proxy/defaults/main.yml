@@ -3,3 +3,6 @@
 siteproxy_503_message: >-
   This part of the site is temporarily unavailable.  Please check back
   in a few minutes!
+
+nginx_real_ip_from_addrs:
+    - 192.168.50.0/24

@@ -38,6 +38,8 @@
       dest="/etc/nginx/sites-available/marmotta"
       owner=root group=root mode=0644
   notify: restart nginx
+  tags:
+    - nginx
 
 - name: Make sure nginx logs get rotated
   template: >-

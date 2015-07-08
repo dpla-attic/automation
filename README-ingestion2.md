@@ -82,12 +82,6 @@ records yourself.  This is not automated yet, and will have to be done in the
 Rails console, per this example:
 https://digitalpubliclibraryofamerica.atlassian.net/wiki/display/TECH/Queue+an+Indexing
 
-It seems that a first-time indexing run after the schema is changed, the
-index is deleted, and the Solr core is restarted requires a reload of the
-core again for the added documents to show up.  You can reload the Solr
-core at http://ingestion2.local.dp.la:8080/solr/#/~cores/collection1
-
-
 ### When to use this and other DPLA project VMs
 
 There are Vagrantfiles in the `krikri` and `heidrun` projects, too.  Why should

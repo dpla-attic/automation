@@ -10,7 +10,10 @@
   delegate_to: "{{ item }}"
   run_once: true
   with_items: groups.solr
-  notify: restart tomcat
+  notify:
+    - clear solr index
+    - commit solr index
+    - reload solr core
   when: not ingestion_use_local_source and not fast_deployment
 
 - name: Ensure that Solr schema file is current (local)
@@ -19,7 +22,10 @@
   script: copy_local_solrconf.sh schema.xml
   register: script_result
   changed_when: "'changed' in script_result.stdout"
-  notify: restart tomcat
+  notify:
+    - clear solr index
+    - commit solr index
+    - reload solr core
   when: ingestion_use_local_source and not fast_deployment
 
 - name: Ensure the state of solrconfig.xml (network)
@@ -30,7 +36,7 @@
   delegate_to: "{{ item }}"
   run_once: true
   with_items: groups.solr
-  notify: restart tomcat
+  notify: reload solr core
   when: not ingestion_use_local_source and not fast_deployment
 
 - name: Ensure the state of solrconfig.xml (local)
@@ -38,7 +44,7 @@
   script: copy_local_solrconf.sh solrconfig.xml
   register: script_result
   changed_when: "'changed' in script_result.stdout"
-  notify: restart tomcat
+  notify: reload solr core
   when: ingestion_use_local_source and not fast_deployment
 
 - name: Fix dataDir in solrconfig.xml
@@ -49,7 +55,7 @@
   delegate_to: "{{ item }}"
   run_once: true
   with_items: groups.solr
-  notify: restart tomcat
+  notify: reload solr core
   when: not fast_deployment
 
 - name: Fix lib in solrconfig.xml for classpath loading
@@ -60,7 +66,7 @@
   delegate_to: "{{ item }}"
   run_once: true
   with_items: groups.solr
-  notify: restart tomcat
+  notify: reload solr core
   when: not fast_deployment
 
 - meta: flush_handlers
@@ -140,6 +146,12 @@
   template: >-
     src=config_settings.local.yml.j2
     dest=/home/dpla/heidrun/config/settings.local.yml
+    owner=dpla group=dpla mode=0644
+
+- name: Update solr.yml file in ingestion app
+  template: >-
+    src=config_solr.yml.j2
+    dest=/home/dpla/heidrun/config/solr.yml
     owner=dpla group=dpla mode=0644
 
 - name: Update configuration for test environment

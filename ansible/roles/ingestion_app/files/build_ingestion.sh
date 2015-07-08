@@ -6,6 +6,10 @@
 #     if you're making iterative changes to application code.
 # ... and all switches (e.g. -f) must come before other arguments.
 
+LOGFILE=/tmp/build_ingestion.log
+
+echo "starting." > $LOGFILE
+
 fast=0
 while getopts :f opt; do
     case $opt in
@@ -23,6 +27,9 @@ shift $((OPTIND-1))  # Remove getopts switches from args
 use_version=$1
 inventory_groups=`echo $2 | sed 's/,/ /g'`
 
+echo "use_version: $use_version" >> $LOGFILE
+echo "inventory groups: $inventory_groups" >> $LOGFILE
+
 echo $inventory_groups | grep ingestion_app > /dev/null \
     && do_webapp=1 || do_webapp=0
 echo $inventory_groups | grep '\<worker\>' > /dev/null \
@@ -34,10 +41,14 @@ eval "`rbenv init -`"
 cd /home/dpla/heidrun || exit 1
 rbenv global $use_version
 
+echo "installing bundle ..." >> $LOGFILE
+
 if [ $fast == 0 ]; then
-    bundle install || exit 1
+    bundle update || exit 1
     rbenv rehash
 fi
+
+echo "rsyncing to /opt/heidrun ..." >> $LOGFILE
 
 /usr/bin/rsync -rptolg --checksum --delete --delay-updates \
     --exclude 'log' \
@@ -47,6 +58,8 @@ fi
 if [ $? -ne 0 ]; then
     exit 1
 fi
+
+echo "rsyncing mappings ..." >> $LOGFILE
 
 # Don't delete "extraneous" files in the destination directory, unlike the
 # other two rsync calls
@@ -59,6 +72,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "checking directories ... " >> $LOGFILE
+
 # Log and temporary directories
 dirs_to_check='/opt/heidrun/log /opt/heidrun/tmp'
 for dir in $dirs_to_check; do
@@ -69,6 +84,8 @@ for dir in $dirs_to_check; do
     fi
 done
 
+echo "running rake ..." >> $LOGFILE
+
 cd /opt/heidrun
 if [ $do_webapp -eq 1 ]; then
     bundle exec rake assets:precompile || exit 1
@@ -77,4 +94,8 @@ if [ $do_webapp -eq 1 ]; then
     fi
 fi
 
+echo "clearing tmp directory ..." >> $LOGFILE
+
 bundle exec rake tmp:clear || exit 1
+
+echo "done." >> $LOGFILE

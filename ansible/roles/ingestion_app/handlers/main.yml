@@ -11,3 +11,29 @@
   delegate_to: "{{ item }}"
   with_items: groups.solr
   run_once: true
+
+- name: clear solr index
+  uri:
+    method: POST
+    url: "http://{{ groups['solr'][0] }}:8080/solr/update"
+    HEADER_Content-type: "text/xml; charset=utf-8"
+    body_format: raw
+    body: "<delete><query>*:*</query></delete>"
+  delegate_to: 127.0.0.1
+  sudo: no
+
+- name: commit solr index
+  uri:
+    method: POST
+    url: "http://{{ groups['solr'][0] }}:8080/solr/update"
+    HEADER_Content-type: "text/xml; charset=utf-8"
+    body_format: raw
+    body: "<commit/>"
+  delegate_to: 127.0.0.1
+  sudo: no
+
+- name: reload solr core
+  uri:
+    url: "http://{{ groups['solr'][0] }}:8080/solr/admin/cores?action=RELOAD&core=collection1"
+  delegate_to: 127.0.0.1
+  sudo: no

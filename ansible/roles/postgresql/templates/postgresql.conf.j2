@@ -116,7 +116,7 @@ shared_buffers = {{ pg_shared_buffers}}				# min 128kB
 # It is not advisable to set max_prepared_transactions nonzero unless you
 # actively intend to use prepared transactions.
 work_mem = {{ pg_work_mem }}						# min 64kB
-#maintenance_work_mem = 16MB		# min 1MB
+maintenance_work_mem = {{ pg_maintenance_work_mem }}		# min 1MB
 #max_stack_depth = 2MB				# min 100kB
 
 # - Kernel Resource Usage -
@@ -153,7 +153,7 @@ work_mem = {{ pg_work_mem }}						# min 64kB
 #wal_level = minimal			# minimal, archive, or hot_standby
 								# (change requires restart)
 #fsync = on						# turns forced synchronization on or off
-#synchronous_commit = on		# synchronization level; on, off, or local
+synchronous_commit = off		# synchronization level; on, off, or local
 #wal_sync_method = fsync		# the default is the first option
 								# supported by the operating system:
 								#   open_datasync
@@ -240,8 +240,8 @@ checkpoint_completion_target = 0.9	# checkpoint target duration, 0.0 - 1.0
 
 # - Planner Cost Constants -
 
-#seq_page_cost = 1.0			# measured on an arbitrary scale
-#random_page_cost = 4.0			# same scale as above
+seq_page_cost = 1.0			# measured on an arbitrary scale
+random_page_cost = {{ pg_random_page_cost }}  # same scale as above
 #cpu_tuple_cost = 0.01			# same scale as above
 #cpu_index_tuple_cost = 0.005	# same scale as above
 #cpu_operator_cost = 0.0025		# same scale as above
@@ -356,7 +356,7 @@ effective_cache_size = {{ pg_effective_cache_size }}
 					#   fatal
 					#   panic (effectively off)
 
-#log_min_duration_statement = -1	# -1 is disabled, 0 logs all statements
+log_min_duration_statement = {{ pg_log_min_duration_statement }}	# -1 is disabled, 0 logs all statements
 					# and their durations, > 0 logs only
 					# statements running at least this number
 					# of milliseconds
@@ -396,7 +396,7 @@ log_line_prefix = '%t '			# special values:
 								# e.g. '<%u%%%d> '
 #log_lock_waits = off			# log lock waits >= deadlock_timeout
 #log_statement = 'none'			# none, ddl, mod, all
-#log_temp_files = -1			# log temporary files equal or larger
+log_temp_files = 0				# log temporary files equal or larger
 								# than the specified size in kilobytes;
 								# -1 disables, 0 logs all temp files
 #log_timezone = '(defaults to server environment setting)'

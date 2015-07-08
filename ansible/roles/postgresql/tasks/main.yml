@@ -138,6 +138,13 @@
     - postgresql
     - backups
 
+- name: Ensure that logfiles are rotated correctly
+  template: >-
+    src=etc_logrotate.d_postgresql-common.j2 dest=/etc/logrotate.d/postgresql-common
+    owner=root group=root mode=0644
+  tags:
+    - postgresql
+    - logrotate
 
 ## PostgreSQL Munin plugins
 #

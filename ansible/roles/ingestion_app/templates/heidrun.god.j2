@@ -14,7 +14,8 @@
     w.env      = {
       'PATH' => '/home/dpla/.rbenv/shims:/home/dpla/.rbenv/bin:/usr/local/bin:/usr/bin:/bin',
       'QUEUE' => '{{ queue.name }}',
-      'RAILS_ENV' => '{{ rails_env }}'
+      'RAILS_ENV' => '{{ rails_env }}',
+      'HOME' => '/home/dpla'
     }
     w.start    = "bundle exec rake environment resque:work"
     w.log      = '/opt/heidrun/log/worker.log'

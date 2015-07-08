@@ -5,5 +5,12 @@ pg_max_connections: 50
 pg_shared_buffers: 24MB
 pg_effective_cache_size: 128MB
 pg_work_mem: 1MB
+pg_maintenance_work_mem: 16MB
+# The default random_page_cost of 4.0 assumes you're using disks.
+# Decrease it if you're using SSD drives.  1.5 might be a good value.
+pg_random_page_cost: 4.0
 pg_backup_keep_days: 7
+pg_log_min_duration_statement: 100
 backups_basedir: /backups
+log_rotation_interval: daily
+log_rotation_count: 14

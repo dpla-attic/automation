@@ -12,6 +12,9 @@
 VAGRANTFILE_API_VERSION = '2'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # Use the default insecure_private_key so ansible doesn't need to
+  # know about all the generated ones.
+  config.ssh.insert_key = false
 
   # Frontend, web, ElasticSearch
   config.vm.define :dev1 do |dev1|

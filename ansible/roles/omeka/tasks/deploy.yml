@@ -1,16 +1,47 @@
 ---
 
-- name: Check out exhibitions app
-  git: >
-      repo=https://github.com/dpla/exhibitions.git
-      dest=/home/dpla/exhibitions
-      version={{ exhibitions_branch_or_tag | default("master") }}
-  sudo_user: dpla
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
   tags:
     - deployment
     - omeka
     - omeka_deployment
     - web
+
+# Clear this out prior to copying and symlinking below
+- file: path=/home/dpla/exhibitions state=absent
+
+- name: Check out exhibitions app from its repository (git)
+  git: >
+      repo=https://github.com/dpla/exhibitions.git
+      dest=/home/dpla/exhibitions-git
+      version={{ exhibitions_branch_or_tag | default("master") }}
+  sudo_user: dpla
+  when: not exhibitions_use_local_source
+  tags:
+    - deployment
+    - omeka
+    - omeka_deployment
+    - web
+
+# Symlink to the build directory, to allow local and git builds to coexist neatly
+# 1. For a git deployment ...
+- file: src=/home/dpla/exhibitions-git dest=/home/dpla/exhibitions state=link
+  when: not exhibitions_use_local_source
+
+- name: Check out exhibitions app from mounted directory
+  script: copy_local_app.sh
+  when: exhibitions_use_local_source
+  tags:
+    - deployment
+    - omeka
+    - omeka_deployment
+    - web
+
+# Symlink (see above)
+# 2. For a local deployment ...
+- file: src=/home/dpla/exhibitions-local dest=/home/dpla/exhibitions state=link
+  when: exhibitions_use_local_source
 
 - name: Update exhibitions app database configuration file
   template: >

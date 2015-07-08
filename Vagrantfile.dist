@@ -19,8 +19,11 @@ dbnodes = {
 }
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    # Use the default insecure_private_key so ansible doesn't need to 
+    # know about all the generated ones.
+    config.ssh.insert_key = false
 
-	# All boxes are hashicorp/precise64, which is Ubuntu 12.04 LTS
+    # All boxes are hashicorp/precise64, which is Ubuntu 12.04 LTS
 
     # BigCouch and ElasticSearch servers.
     # Necessary in all cases.
@@ -61,6 +64,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # webapp.vm.synced_folder "../frontend", "/frontend_dev"
         # webapp.vm.synced_folder "../platform", "/api_dev"
         # webapp.vm.synced_folder "../frontend-wp", "/wordpress_dev"
+        # webapp.vm.synced_folder "../exhibitions", "/exhibitions_dev"
     end
 
 end

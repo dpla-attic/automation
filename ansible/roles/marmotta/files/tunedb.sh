@@ -51,9 +51,9 @@ create_index_if_absent() {
 }
 
 set_column_statistics triples context 5000
-set_column_statistics triples subject 300
+set_column_statistics triples subject 5000
 set_column_statistics triples predicate 300
-set_column_statistics triples object 300
+set_column_statistics triples object 500
 
 query 'ALTER TABLESPACE marmotta_1 SET (seq_page_cost = 2)'
 

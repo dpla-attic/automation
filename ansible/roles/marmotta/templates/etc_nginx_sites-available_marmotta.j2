@@ -9,6 +9,16 @@ server {
     server_name {{ inventory_hostname }};
 {% endif %}
 
+    # Maximum request body size.  (Controls maximum size of
+    # a PUT or POST to Marmotta.)
+    # It's not clear whether this is sufficient, or if there's something
+    # that should also be set in Tomcat, e.g. maxPostSize (which, if you
+    # take it literally, does not apply to PUT) or
+    # //servlet/multipart-config/max-request-size inside of a web.xml file.
+    # The web.xml contained inside of marmotta.war does not have a
+    # //servlet element that would pertain.
+    client_max_body_size 8m;
+
     location / {
         # Proxy everything to Marmotta.
         # E.g. http://ldp.somedomain.org/ --> http://thishost:8080/

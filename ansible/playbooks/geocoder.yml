@@ -1,0 +1,13 @@
+---
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
+- name: Geocoder (twofishes)
+  hosts: geocoder
+  sudo: yes
+  roles:
+    - geocoder
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+

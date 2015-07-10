@@ -1,0 +1,6 @@
+---
+
+twofishes_version: "0.84.9"
+twofishes_jar_name: "server-assembly-{{ twofishes_version }}.jar"
+twofishes_index_base: "2015-03-05"
+twofishes_index_archive: "{{ twofishes_index_base }}.zip"

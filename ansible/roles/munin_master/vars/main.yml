@@ -28,3 +28,4 @@ munin_groups:
         Marmotta: marmotta_prod
         Solr: solr_prod
         Worker: worker_prod
+        Geocoder: geocoder_prod

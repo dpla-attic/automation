@@ -1,0 +1,4 @@
+---
+
+- name: restart twofishes
+  service: name=twofishes state=restarted

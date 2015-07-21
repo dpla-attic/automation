@@ -197,7 +197,7 @@ server {
         # For client_max_body_size, see the Wordpress role's NGINX virtual host
         # configuration.
         # (ansible/roles/wordpress/templates/etc_nginx_sites_available_wordpress.j2)
-        client_max_body_size 8m;
+        client_max_body_size 50m;
 
         # misc rewrites in the top level dir
         #
@@ -272,7 +272,7 @@ server {
         # For client_max_body_size, see the Omeka role's NGINX virtual host
         # configuration.
         # (ansible/roles/omeka/templates/etc_nginx_sites_available_omeka.j2)
-        client_max_body_size 25M;
+        client_max_body_size 50M;
 
         # See above, in /info.
         error_page 502 503 504 =503 /503.html;

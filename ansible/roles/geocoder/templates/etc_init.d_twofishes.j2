@@ -1,0 +1,67 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides: twofishes
+# Required-Start: $all
+# Required-Stop: $network $local_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start/stop Twofishes
+# Description: Start/stop Twofishes
+### END INIT INFO
+
+set -u
+set -e
+
+. /lib/lsb/init-functions
+
+
+JAR={{ twofishes_jar_name }}
+INDEX_DIR={{ index_dir_name_result.stdout_lines.0 }}
+JAVA_OPTS=""
+CMD_OPTS="$JAVA_OPTS -jar /opt/twofishes/$JAR --hfile_basepath $INDEX_DIR"
+PIDFILE=/opt/twofishes/twofishes.pid
+
+usage() {
+    echo >&2 "Usage: $0 <start|stop|restart|reload|status|usage>"
+}
+
+start() {
+    log_daemon_msg "Starting twofishes" "twofishes"
+    start-stop-daemon --start --quiet --oknodo -c geocoder \
+        --pidfile $PIDFILE -m -b \
+        --startas /bin/bash \
+        -- -c "exec /usr/bin/java $CMD_OPTS >> /opt/twofishes/log/twofishes.log 2>&1"
+    # Because it's backgrounded with -b, this will probably always return
+    # a success status.  See start-stop-daemon (8).
+    log_end_msg $?
+}
+
+stop() {
+    log_daemon_msg "Stopping twofishes" "twofishes"
+    start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE -R 4
+    log_end_msg $?
+    rm -f $PIDFILE
+}
+
+case $1 in
+start)
+    start
+    ;;
+stop)
+    stop
+    ;;
+restart|reload)
+    stop && start
+    ;;
+status)
+    status_of_proc -p $PIDFILE /usr/bin/java twofishes && exit 0 || exit $?
+    ;;
+usage)
+    usage
+    exit 0
+    ;;
+*)
+    usage
+    exit 1
+    ;;
+esac

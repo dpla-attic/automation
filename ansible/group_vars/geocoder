@@ -1,0 +1,2 @@
+# See roles/common/defaults/main.yml
+kernel_vm_overcommit_memory: 2

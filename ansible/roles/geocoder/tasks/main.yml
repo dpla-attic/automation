@@ -1,0 +1,103 @@
+---
+
+- name: Ensure existence of necessary packages
+  apt: >-
+      pkg="{{ item }}" state=present
+  with_items:
+    - zip
+    - default-jre
+  tags:
+    - packages
+
+- name: Ensure existence of the "geocoder" account
+  user: >-
+      name=geocoder comment="Twofishes privsep user"
+      home=/home/geocoder shell=/bin/bash state=present
+  tags:
+    - users
+
+- name: Ensure state of twofishes directory
+  file: >-
+    path=/opt/twofishes state=directory
+    owner=root group=root mode=0755
+
+- name: Check the twofishes index directory
+  file: >-
+    path=/opt/twofishes/index state=directory
+    owner=root group=root mode=0755
+
+- name: Check the twofishes log directory
+  file: >-
+    path=/opt/twofishes/log state=directory
+    owner=geocoder group=geocoder mode=0755
+
+- name: Check whether twofishes is installed
+  stat: >-
+    path="/opt/twofishes/{{ twofishes_jar_name }}"
+  register: twofishes_jar
+
+# TODO:  With Ansible 2.0, we might want to use the `find` module to
+# search for a directory-name pattern, but this may still be more direct.
+- name: Check whether twofishes index exists
+  shell: "test -d /opt/twofishes/index/{{ twofishes_index_base }}*"
+  register: index_test_result
+  ignore_errors: true
+
+- name: "Download twofishes, if necessary"
+  get_url: >-
+    url="http://twofishes.net/binaries/{{ twofishes_jar_name }}"
+    dest="/opt/twofishes/{{ twofishes_jar_name }}"
+  when: not twofishes_jar.stat.exists
+  notify: restart twofishes
+
+# TODO:  With Ansible 2.0, we should be able to use `unarchive` for both the
+# download and extraction, below.
+
+- name: "Download index, if necessary"
+  when: index_test_result.rc == 1
+  get_url: >-
+    url="http://twofishes.net/indexes/revgeo/{{ twofishes_index_archive }}"
+    dest="/opt/twofishes/index"
+
+- name: "Extract index, if necessary"
+  when: index_test_result.rc == 1
+  unarchive: >-
+    copy=false
+    src="/opt/twofishes/index/{{ twofishes_index_archive }}"
+    dest="/opt/twofishes/index"
+
+- name: Remove index archive file
+  file: >-
+    path="/opt/twofishes/index/{{ twofishes_index_archive }}" state=absent
+
+# This may seem like extra work, but the name of the extracted index directory
+# is different than the base name of the archive file, and this avoids having
+# too many Ansible variables to manage.
+- name: Find the name of the index directory for the init script template
+  shell: >-
+    find /opt/twofishes/index -type d -name '{{ twofishes_index_base }}*' -prune
+  register: index_dir_name_result
+
+- name: Make sure that the twofishes init script is up-to-date
+  template: >-
+    src=etc_init.d_twofishes.j2 dest=/etc/init.d/twofishes
+    owner=root group=root mode=0755
+  notify: restart twofishes
+
+- name: Clear init script runlevels in case of a change
+  command: update-rc.d -f twofishes remove
+  tags:
+    - initscripts
+
+- name: Ensure init script run levels
+  command: update-rc.d twofishes defaults
+  tags:
+    - initscripts
+
+- name: Ensure state of logrotate configuration
+  copy: >-
+    src=etc_logrotate.d_twofishes dest=/etc/logrotate.d/twofishes
+    owner=root group=root mode=0644
+  tags:
+    - logrotate
+

@@ -64,9 +64,6 @@ map $http_content_type $do_not_cache {
 geo $whitelisted {
     default 1;
     127.0.0.1/32 0;
-    140.247.0.0/16 0; #harvard
-    23.22.230.215/32 0;
-    23.23.40.181/32 0;
 }
 
 map $whitelisted $addr_to_limit {

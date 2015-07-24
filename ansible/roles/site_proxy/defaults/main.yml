@@ -27,7 +27,7 @@ nginx_bookshelf_max_conn: 2
 # Default maximum request rate, where rate-limiting is performed
 nginx_default_req_rate: 10r/s
 # Maximum request rates for specific areas of the site:
-nginx_bookshelf_req_rate: 2r/s
+nginx_bookshelf_req_rate: 1r/s
 
 # Default number of requests that are delayed for serving if a client's
 # requests per second goes over its threshold.

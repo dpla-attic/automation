@@ -6,3 +6,19 @@ siteproxy_503_message: >-
 
 nginx_real_ip_from_addrs:
     - 192.168.50.0/24
+
+# Sizes of NGINX shared memory zones for storing states of requests and
+# connections, for rate limiting.
+# See:
+# http://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_zone
+# http://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_zone
+nginx_conn_zone_size: 10m
+nginx_req_zone_size: 10m
+
+# Default requests per second, where rate-limiting is performed
+nginx_default_req_sec: 10
+
+# Default number of requests that are delayed for serving if a client's
+# requests per second goes over its threshold.
+# See http://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req
+nginx_default_req_burst_size: 20

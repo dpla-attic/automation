@@ -60,22 +60,31 @@ map $http_content_type $do_not_cache {
     "application/json"      1;  
 }
 
+# Addresses that are not subject to rate or connection limiting
 geo $whitelisted {
     default 1;
     127.0.0.1/32 0;
-    140.247.0.0/16 0; #harvard
-    23.22.230.215/32 0;
-    23.23.40.181/32 0;
 }
 
-map $whitelisted $limit {
+map $whitelisted $addr_to_limit {
     1 $binary_remote_addr;
     0 "";
 }
 
-# Zone Size is 10m, each session is 32 bytes, which is 327680 total session capacity.
-limit_conn_zone $limit zone=pageconnzone:10m;
-limit_req_zone  $limit zone=pagereqzone:10m rate=10r/s;
+# Default connection and request zones.
+# See above for definition of $addr_to_limit.
+# For memory usage explanation, see:
+#  http://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_zone
+limit_conn_zone $addr_to_limit zone=defaultconnzone:{{ nginx_conn_zone_size }};
+limit_req_zone  $addr_to_limit zone=defaultreqzone:{{ nginx_req_zone_size }} rate={{ nginx_default_req_rate }};
+
+# Connection and request zones for locations defined below.
+limit_req_zone $addr_to_limit zone=bookshelfreq:{{ nginx_bookshelf_req_zone_size }} rate={{ nginx_bookshelf_req_rate }};
+limit_conn_zone $addr_to_limit zone=bookshelfconn:{{ nginx_bookshelf_conn_zone_size }};
+
+# Connection and rate-limiting log levels
+limit_conn_log_level {{ nginx_limit_conn_log_level }};
+limit_req_log_level {{ nginx_limit_req_log_level }};
 
 {% if ingestion2 is not defined %}
 
@@ -134,9 +143,9 @@ server {
         proxy_ignore_headers Cache-Control Set-Cookie;
 
         # Up to 10 simultaneous page requests per IP 
-        limit_conn pageconnzone 10;
+        limit_conn defaultconnzone {{ nginx_default_max_conn }};
         # Up to 20 requests / sec for pages.
-        limit_req zone=pagereqzone burst=20;
+        limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
     
         proxy_pass          http://dpla_portal;
 
@@ -163,6 +172,17 @@ server {
         {% endif %}
     }
 
+    location = /bookshelf {
+        # These proxy-related directives must appear here although they seem
+        # redundant with `location /` above.
+        proxy_cache_valid 200 240m;
+        proxy_ignore_headers Cache-Control Set-Cookie;
+        proxy_pass http://dpla_portal;
+
+        limit_req zone=bookshelfreq burst={{ nginx_default_req_burst_size }};
+        limit_conn bookshelfconn {{ nginx_bookshelf_max_conn }};
+    }
+
     location ~ ^/api/(.*)$ {
          add_header 'Access-Control-Allow-Origin' '*';
          rewrite ^/api/(.*)$ http://{{ api_hostname }}/$1 last;
@@ -179,9 +199,9 @@ server {
         proxy_no_cache            $http_cache_bypass $cookie_wordpress_logged_in;
 
         # Up to 10 simultaneous page requests per IP
-        limit_conn pageconnzone 10;
+        limit_conn defaultconnzone {{ nginx_default_max_conn }};
         # Up to 20 requests / sec for pages.
-        limit_req zone=pagereqzone burst=20;
+        limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
         if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
             set $do_not_cache 1;
         }
@@ -233,8 +253,8 @@ server {
 
         location ~* \/[^\/]+\/(feed|\.xml)\/? {
             proxy_cache_valid 200 240m;
-            limit_conn pageconnzone 3;
-            limit_req zone=pagereqzone burst=16;
+            limit_conn defaultconnzone 3;
+            limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
             if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
                 set $do_not_cache 1;
             }
@@ -265,9 +285,9 @@ server {
         }
 
         # Up to 10 simultaneous page requests per IP
-        limit_conn pageconnzone 10;
+        limit_conn defaultconnzone {{ nginx_default_max_conn }};
         # Up to 20 requests / sec for pages.
-        limit_req zone=pagereqzone burst=20;
+        limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
 
         # For client_max_body_size, see the Omeka role's NGINX virtual host
         # configuration.

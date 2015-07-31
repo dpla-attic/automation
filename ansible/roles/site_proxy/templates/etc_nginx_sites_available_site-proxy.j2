@@ -173,10 +173,13 @@ server {
     }
 
     location = /bookshelf {
-        # These proxy-related directives must appear here although they seem
+        # Any proxy-related directives must appear here although they may seem
         # redundant with `location /` above.
-        proxy_cache_valid 200 240m;
-        proxy_ignore_headers Cache-Control Set-Cookie;
+        proxy_cache off;
+        # TODO:  consider selective caching, but watch out for Content-Type
+        # proxy_cache_valid 200 240m;
+        # proxy_ignore_headers Cache-Control Set-Cookie;
+        # proxy_cache_key       "$request_uri$http_content_type";
         proxy_pass http://dpla_portal;
 
         limit_req zone=bookshelfreq burst={{ nginx_default_req_burst_size }};

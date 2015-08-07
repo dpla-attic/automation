@@ -5,6 +5,7 @@
 
 - name: Frontend (portal) site
   hosts: frontend
+  serial: 1
   sudo: yes
   roles:
     - frontend

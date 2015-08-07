@@ -1,7 +1,10 @@
 ---
 
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
 - name: Frontend (portal) site
-  hosts: webapps
+  hosts: frontend
   sudo: yes
   roles:
     - frontend

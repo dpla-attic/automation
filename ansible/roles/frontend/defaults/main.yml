@@ -4,3 +4,4 @@ rails_env: development
 unicorn_worker_processes: 2
 frontend_use_local_source: false
 frontend_branch_or_tag: master
+bookshelf_max_pages: 100

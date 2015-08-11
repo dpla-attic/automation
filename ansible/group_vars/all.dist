@@ -13,7 +13,13 @@ iana_timezone: US/Eastern
 
 # Path to the private key file (your private key file), which is associated
 # with a GitHub account that has access to private repositories.  This defaults
-# to ~/.ssh/id_rsa
+# to '~/.ssh/id_rsa'.  Changing this variable in this file would define an
+# organization-wide policy for the private key file name.  If you want to use
+# a specific file as an individual user, you can specify it on the command line
+# using ansible-playbook's '-e' or '--extra-vars' option.  An easy way to do this
+# is to set an alias for the ansible-playbook command, such as:
+#   $ alias ansible-playbook='ansible-playbook \
+#     -e "github_private_key_path=~/.ssh/id_rsa_github'
 # github_private_key_path: ~/.ssh/id_rsa
 
 ## The following variables are only relevant if you're using Amazon SES for mail

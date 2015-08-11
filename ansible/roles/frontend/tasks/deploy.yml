@@ -133,6 +133,7 @@
   script: >
       build_frontend.sh {{ ruby_rbenv_version }}
   sudo_user: dpla
+  notify: restart memcached
   tags:
     - deployment
     - frontend

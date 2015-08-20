@@ -12,10 +12,11 @@
 - file: path=/home/dpla/exhibitions state=absent
 
 - name: Check out exhibitions app from its repository (git)
-  git: >
+  git: >-
       repo=https://github.com/dpla/exhibitions.git
       dest=/home/dpla/exhibitions-git
       version={{ exhibitions_branch_or_tag | default("master") }}
+      force=true
   sudo_user: dpla
   when: not exhibitions_use_local_source
   tags:
@@ -78,10 +79,11 @@
     - web
 
 - name: Check out exhibitions assets
-  git: >
+  git: >-
        repo=https://github.com/dpla/exhibitions-assets.git
        dest="/home/dpla/exhibitions-assets"
        version=master
+       force=true
   sudo_user: dpla
   tags:
     - deployment

@@ -13,7 +13,7 @@ if [ ! -d /home/dpla/api-local ]; then
 	mkdir /home/dpla/api-local
 fi
 
-rsync -rptl --delete --checksum \
+rsync -rIptl --delete --checksum \
     --exclude 'var/log' --exclude 'tmp' --exclude 'vendor/bundle' \
     /api_dev/ /home/dpla/api-local
 if [ $? -ne 0 ]; then

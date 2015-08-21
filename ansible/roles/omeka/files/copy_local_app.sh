@@ -13,7 +13,7 @@ if [ ! -d /home/dpla/exhibitions-local ]; then
   mkdir /home/dpla/exhibitions-local
 fi
 
-rsync -rptl --delete --checksum \
+rsync -rIptl --delete --checksum \
     --exclude 'application/logs' \
     /exhibitions_dev/ /home/dpla/exhibitions-local
 if [ $? -ne 0 ]; then

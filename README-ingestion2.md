@@ -32,7 +32,8 @@ $ cd /dir/with/Vagrantfile
 $ vagrant up
 $ cd ansible
 ```
-An initial run to add your admin shell account to the VMs:
+An initial run to add your admin shell account to the VMs, noting the tip about
+`$HOME/.ssh/known_hosts` in [README.md](README.md):
 ```
 $ ansible-playbook -i ingestion -u vagrant \
   --private-key=$HOME/.vagrant.d/insecure_private_key dev_ingestion_all.yml \
@@ -42,8 +43,10 @@ Then some more invocations to configure everything:
 ```
 $ ansible-playbook -i ingestion -u <your username in group_vars/all> \
   playbooks/package_upgrade.yml
+$ vagrant reload
 $ ansible-playbook -i ingestion -u <your username in group_vars/all> \
   dev_ingestion_all.yml --extra-vars "initial_run=true"
+$ vagrant reload
 ```
 
 The various sites will be online at:

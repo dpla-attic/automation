@@ -68,7 +68,7 @@ echo "rsyncing mappings ..." >> $LOGFILE
     --exclude 'README.md' \
     --exclude 'LICENSE' \
     --exclude '.git*' \
-    /home/dpla/heidrun-mappings/ /opt/heidrun/vendor/mappings
+    /home/dpla/heidrun-mappings/heidrun /opt/heidrun/vendor/mappings
 if [ $? -ne 0 ]; then
     exit 1
 fi

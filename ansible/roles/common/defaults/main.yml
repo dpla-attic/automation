@@ -1,8 +1,5 @@
 ---
 
-# This default value is for development:
-munin_master_ipaddr: 192.168.50.6
-
 # Linux kernel parameters
 kernel_vm_overcommit_memory: 0
 kernel_vm_overcommit_ratio: 90

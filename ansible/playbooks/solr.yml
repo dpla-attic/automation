@@ -12,5 +12,3 @@
   sudo: yes
   roles:
     - { role: solr, tags: ['solr']}
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

@@ -40,8 +40,6 @@
     - pss
   vars:
     level: staging
-  vars_files:
-    - ["vars/staging.yml", "vars/defaults.yml"]
 
 - name: Frontend (portal) site
   hosts: frontend
@@ -51,8 +49,6 @@
     - frontend
   vars:
     level: staging
-  vars_files:
-    - ["vars/staging.yml", "vars/defaults.yml"]
 
 - include: playbooks/api.yml level=staging
 

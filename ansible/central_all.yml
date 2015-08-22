@@ -24,8 +24,6 @@
   vars:
     production_munin_master: true
     level: production
-  vars_files:
-    - ["vars/production.yml"]
 
 - name: Install rbenv/bundler/extra gems to central
   hosts: central
@@ -34,16 +32,14 @@
   tasks:
     - name: Make sure rbenv and bundler are current
       script: >
-          files/install_ruby_tools.sh {{ ruby_rbenv_version }}
+          files/install_ruby_tools.sh {{ central_rbenv_version }}
       tags:
         - scripts
     - name: Ensure gems are present for BigCouch restore script
       script: >
-          files/install_couchdb_restore_gems.sh {{ ruby_rbenv_version }}
+          files/install_couchdb_restore_gems.sh {{ central_rbenv_version }}
       tags:
         - scripts
-  vars_files:
-    - ["vars/production.yml"]
 
 - name: Install scripts to central
   hosts: central
@@ -75,5 +71,3 @@
         owner=root group=root mode=755
       tags:
         - scripts
-  vars_files:
-    - ["vars/production.yml"]

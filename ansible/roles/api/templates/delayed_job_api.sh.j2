@@ -3,9 +3,9 @@
 USERNAME="dpla"
 APP_ROOT="/srv/www/api"
 
-export RBENV_VERSION="{{ ruby_rbenv_version }}"
+export RBENV_VERSION="{{ api_rbenv_version }}"
 export RBENV_SHELL=bash
 export PATH=/home/$USERNAME/.rbenv/shims:$PATH
 cd $APP_ROOT
 /home/$USERNAME/.rbenv/libexec/rbenv-sh-rehash 2>/dev/null
-RAILS_ENV={{ rails_env }} script/delayed_job $1
+RAILS_ENV={{ api_rails_env }} script/delayed_job $1

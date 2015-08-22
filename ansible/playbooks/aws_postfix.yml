@@ -11,5 +11,3 @@
   sudo: yes
   roles:
     - aws_postfix
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

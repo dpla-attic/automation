@@ -1,94 +1,69 @@
 ---
 
-
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-  tags:
-    - wordpress
-    - wordpress_install
-    - wordpress_deployment
-    - php
-    - web
-
 - name: Prep for build with private repo (git)
-  when: do_wordpress and not wp_theme_use_local_source
+  when: do_wordpress and do_deployment and not wp_theme_use_local_source
   copy: >
       src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
       dest=/home/dpla/git_private_key
       owner=dpla group=dpla mode=0600
   tags:
-    - wordpress
-    - wordpress_install
-    - wordpress_deployment
+    - web
 
 - name: Build Wordpress (local)
-  when: do_wordpress and wp_theme_use_local_source
+  when: do_wordpress and do_deployment and wp_theme_use_local_source
   sudo_user: dpla
   script: build_wordpress_local.sh
   tags:
-    - wordpress
-    - wordpress_install
-    - wordpress_deployment
+    - web
 
 - name: Build Wordpress (remote)
-  when: do_wordpress and not wp_theme_use_local_source
+  when: do_wordpress and do_deployment and not wp_theme_use_local_source
   sudo_user: dpla
   script: >-
       build_wordpress_remote.sh "{{ wp_branch_or_tag }}"
   tags:
-    - wordpress
-    - wordpress_install
-    - wordpress_deployment
+    - web
 
 - name: Remove private key file
-  when: do_wordpress and not wp_theme_use_local_source
+  when: do_wordpress and do_deployment and not wp_theme_use_local_source
   file: path=/home/dpla/git_private_key state=absent
   tags:
-    - wordpress
-    - wordpress_install
-    - wordpress_deployment
+    - web
 
 - name: Ensure existence of site root
   file: path=/srv/www/wordpress state=directory owner=dpla group=dpla mode=0755
+  when: do_wordpress and do_deployment
   tags:
-    - wordpress
-    - wordpress_install
-    - wordpress_deployment
+    - web
 
 - name: Sync installation to site root
   script: sync_to_siteroot.sh
   sudo_user: dpla
-  when: do_wordpress
+  when: do_wordpress and do_deployment
   notify:
     - clear site proxy cache
     - reload php5-fpm
   tags:
-    - wordpress
-    - wordpress_install
-    - wordpress_deployment
+    - web
 
 - name: Ensure state of uploads directory
   file: >
       path=/srv/www/wordpress/wp-content/uploads state=directory
       owner=www-data group=www-data mode=0755
-  when: do_wordpress
+  when: do_wordpress and do_deployment
   tags:
-    - wordpress
-    - wordpress_install
-    - wordpress_deployment
+    - web
 
 - name: Ensure state of Wordpress configuration file
   template: >
       src=wp-config.php.j2 dest=/srv/www/wordpress/wp-config.php
       owner=dpla group=www-data mode=0640
-  when: do_wordpress
+  when: do_wordpress and do_deployment
   notify:
     - reload php5-fpm
     - clear site proxy cache
   tags:
-    - wordpress
-    - wordpress_install
-    - wordpress_deployment
+    - web
 
 - name: Update php-fpm pool for Wordpress
   template: >
@@ -96,8 +71,8 @@
       dest=/etc/php5/fpm/pool.d/wp.conf
       owner=root group=root mode=0644
   notify: reload php5-fpm
+  when: do_wordpress and not skip_configuration
   tags:
-    - wordpress
     - php
     - web
 
@@ -109,8 +84,8 @@
   notify:
     - restart nginx
     - clear site proxy cache
+  when: do_wordpress and not skip_configuration
   tags:
-    - wordpress
     - nginx
     - web
 
@@ -122,7 +97,7 @@
   notify:
     - restart nginx
     - clear site proxy cache
+  when: do_wordpress and not skip_configuration
   tags:
-    - wordpress
     - nginx
     - web

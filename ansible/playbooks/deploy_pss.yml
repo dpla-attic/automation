@@ -7,11 +7,8 @@
   hosts:
     - pss
   sudo: yes
-  tasks:
-    - include: ../roles/pss/tasks/deploy.yml
-  handlers:
-    - include: ../roles/pss/handlers/main.yml
-  vars_files:
-    - "../vars/{{ level }}.yml"
-    - "../roles/pss/defaults/main.yml"
-    - "../roles/pss/vars/{{ level }}.yml"
+  roles:
+    - pss
+  vars:
+    do_deployment: true
+    skip_configuration: true

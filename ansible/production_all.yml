@@ -41,8 +41,6 @@
     - pss
   vars:
     level: production
-  vars_files:
-    - ["vars/production.yml", "vars/defaults.yml"]
 
 - name: Frontend (portal) site
   hosts: frontend
@@ -52,8 +50,6 @@
     - frontend
   vars:
     level: production
-  vars_files:
-    - ["vars/production.yml", "vars/defaults.yml"]
 
 - include: playbooks/api.yml level=production
 

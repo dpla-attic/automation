@@ -5,5 +5,3 @@
   sudo: yes
   roles:
     - memcached
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

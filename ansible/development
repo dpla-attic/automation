@@ -41,3 +41,8 @@ webapps
 [elasticsearch:children]
 dbnodes
 
+[development]
+loadbal
+dbnode1
+dbnode2
+webapp1

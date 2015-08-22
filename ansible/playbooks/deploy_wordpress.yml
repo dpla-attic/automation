@@ -3,13 +3,12 @@
 - name: Gather inventory facts in case playbook is run standalone
   hosts: all
 
-- name: Deploy Ingestion Application
-  hosts:
-    - ingestion_app
-    - worker
+- name: Deploy Wordpress
+  hosts: wordpress
   sudo: yes
+  serial: 1
   roles:
-    - ingestion_app
+    - wordpress
   vars:
     do_deployment: true
     skip_configuration: true

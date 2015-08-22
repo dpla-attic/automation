@@ -1,0 +1,7 @@
+---
+
+# fast_deployment skips various tasks and is useful if you've already deployed
+# and are performing iterative changes in development that only affect
+# application code.  It skips things like database migration and updating the
+# bundle.
+fast_deployment: false

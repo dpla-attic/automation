@@ -19,5 +19,3 @@
       local_action: >-
           wait_for host="{{ inventory_hostname }}"
           port="{{ frontend_app_port }}" delay=60 timeout=600
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

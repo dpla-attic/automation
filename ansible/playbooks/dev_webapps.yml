@@ -1,26 +1,26 @@
 ---
 
-- include: postgresql.yml
+- include: postgresql.yml level=development
 
-- include: mysql.yml
+- include: mysql.yml level=development
 
-- include: memcached.yml
+- include: memcached.yml level=development
 
 - name: Common httpd configuration
   hosts: webapps
   sudo: yes
   roles:
     - common_web
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+  vars:
+    level: development
 
 - name: Common PHP configuration
   hosts: webapps
   sudo: yes
   roles:
     - common_php
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+  vars:
+    level: development
 
 - name: Content-management and exhibitions services
   hosts: webapps
@@ -31,15 +31,19 @@
     - omeka
     - wordpress
     - pss
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+  vars:
+    level: development
+    do_deployment: true
+    skip_configuration: false
 
 - name: Frontend (portal) site
   hosts: webapps
   sudo: yes
   roles:
     - frontend
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+  vars:
+    level: development
+    do_deployment: true
+    skip_configuration: false
 
-- include: api.yml
+- include: api.yml level=development

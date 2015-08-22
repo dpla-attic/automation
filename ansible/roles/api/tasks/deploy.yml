@@ -1,13 +1,5 @@
 ---
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-  tags:
-    - api
-    - api_deployment
-    - deployment
-    - web
-
 # Clear these out prior to copying and symlinking below
 - file: path=/home/dpla/api state=absent
 
@@ -19,11 +11,6 @@
       force=true
   sudo_user: dpla
   when: not api_use_local_source
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 # Symlink to the build directory, to allow local and git builds to coexist neatly
 # 1. Git deployment ...
@@ -33,11 +20,6 @@
 - name: Check out api (platform) app from mounted directory (local)
   script: copy_local_app.sh
   when: api_use_local_source
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 # Symlink, as above
 # 2. Local filesystem deployment ...
@@ -49,50 +31,25 @@
       src=database.yml.j2 dest=/home/dpla/api/config/database.yml
       owner=dpla group=webapp mode=0640
   when: not api_use_local_source
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 - name: Update api app settings in v1
   template: >
       src=dpla.yml.j2 dest=/home/dpla/api/v1/config/dpla.yml
       owner=dpla group=webapp mode=0640
   when: not api_use_local_source
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 - name: Update api unicorn.rb
   template: >
       src=unicorn.rb.j2 dest=/home/dpla/api/config/unicorn.rb
       owner=dpla group=dpla mode=0644
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 - name: Make sure rbenv and bundler are current
   script: >
-      ../../../files/install_ruby_tools.sh {{ ruby_rbenv_version }}
+      ../../../files/install_ruby_tools.sh {{ api_rbenv_version }}
   sudo_user: dpla
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 - name: Ensure existence of live app directory
   file: path=/srv/www/api state=directory owner=dpla group=dpla mode=0755
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 - name: Stop Unicorn (gracefully)
   # Unicorn is stopped completely, and later restarted, because we assume that
@@ -101,11 +58,6 @@
   # development, the loadbalancer in front of the API node will be routing requests
   # to the other servers in the same pool.
   service: name=unicorn_api state=stopped
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 - name: Assert that Unicorn pid and socket files are absent
   # These could have been left behind by an earlier failure or termination
@@ -114,39 +66,19 @@
   with_items:
     - pid
     - sock
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 - name: Build api app
   script: >
-      build_api.sh {{ ruby_rbenv_version }}
+      build_api.sh {{ api_rbenv_version }}
   sudo_user: dpla
   notify:
     - restart delayed job
     - restart memcached
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 - name: Clear site proxy cache
   command: find /var/cache/nginx -type f -delete
   delegate_to: "{{ item }}"
   with_items: groups.site_proxies
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web
 
 - name: Start Unicorn
   service: name=unicorn_api state=started
-  tags:
-    - deployment
-    - api
-    - api_deployment
-    - web

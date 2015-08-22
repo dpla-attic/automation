@@ -19,7 +19,7 @@ server {
         try_files $uri $uri/index.html @ingestion_app_server;
     }
 
-    {% if rails_env != 'development' %}
+    {% if ingestion_app_rails_env != 'development' %}
 
     location /assets {
         alias /opt/heidrun/public/assets;

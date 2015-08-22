@@ -17,5 +17,3 @@
       vars:
           delay: 60
           timeout: 600
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

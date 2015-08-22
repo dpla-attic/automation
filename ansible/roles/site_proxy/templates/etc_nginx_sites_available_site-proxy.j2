@@ -75,16 +75,16 @@ map $whitelisted $addr_to_limit {
 # See above for definition of $addr_to_limit.
 # For memory usage explanation, see:
 #  http://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_zone
-limit_conn_zone $addr_to_limit zone=defaultconnzone:{{ nginx_conn_zone_size }};
-limit_req_zone  $addr_to_limit zone=defaultreqzone:{{ nginx_req_zone_size }} rate={{ nginx_default_req_rate }};
+limit_conn_zone $addr_to_limit zone=defaultconnzone:{{ siteproxy_nginx_conn_zone_size }};
+limit_req_zone  $addr_to_limit zone=defaultreqzone:{{ siteproxy_nginx_req_zone_size }} rate={{ siteproxy_nginx_default_req_rate }};
 
 # Connection and request zones for locations defined below.
-limit_req_zone $addr_to_limit zone=bookshelfreq:{{ nginx_bookshelf_req_zone_size }} rate={{ nginx_bookshelf_req_rate }};
-limit_conn_zone $addr_to_limit zone=bookshelfconn:{{ nginx_bookshelf_conn_zone_size }};
+limit_req_zone $addr_to_limit zone=bookshelfreq:{{ siteproxy_bookshelf_req_zone_size }} rate={{ siteproxy_bookshelf_req_rate }};
+limit_conn_zone $addr_to_limit zone=bookshelfconn:{{ siteproxy_bookshelf_conn_zone_size }};
 
 # Connection and rate-limiting log levels
-limit_conn_log_level {{ nginx_limit_conn_log_level }};
-limit_req_log_level {{ nginx_limit_req_log_level }};
+limit_conn_log_level {{ siteproxy_nginx_limit_conn_log_level }};
+limit_req_log_level {{ siteproxy_nginx_limit_req_log_level }};
 
 {% if groups['cms'] is defined %}
 ### CMS group
@@ -151,9 +151,9 @@ server {
         proxy_ignore_headers Cache-Control Set-Cookie;
 
         # Up to 10 simultaneous page requests per IP 
-        limit_conn defaultconnzone {{ nginx_default_max_conn }};
+        limit_conn defaultconnzone {{ siteproxy_nginx_default_max_conn }};
         # Up to 20 requests / sec for pages.
-        limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
+        limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
     
         proxy_pass          http://dpla_portal;
 
@@ -190,8 +190,8 @@ server {
         # proxy_cache_key       "$request_uri$http_content_type";
         proxy_pass http://dpla_portal;
 
-        limit_req zone=bookshelfreq burst={{ nginx_default_req_burst_size }};
-        limit_conn bookshelfconn {{ nginx_bookshelf_max_conn }};
+        limit_req zone=bookshelfreq burst={{ siteproxy_nginx_default_req_burst }};
+        limit_conn bookshelfconn {{ siteproxy_bookshelf_max_conn }};
     }
 
     location ~ ^/api/(.*)$ {
@@ -210,9 +210,9 @@ server {
         proxy_no_cache            $http_cache_bypass $cookie_wordpress_logged_in;
 
         # Up to 10 simultaneous page requests per IP
-        limit_conn defaultconnzone {{ nginx_default_max_conn }};
+        limit_conn defaultconnzone {{ siteproxy_nginx_default_max_conn }};
         # Up to 20 requests / sec for pages.
-        limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
+        limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
         if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
             set $do_not_cache 1;
         }
@@ -265,7 +265,7 @@ server {
         location ~* \/[^\/]+\/(feed|\.xml)\/? {
             proxy_cache_valid 200 240m;
             limit_conn defaultconnzone 3;
-            limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
+            limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
             if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
                 set $do_not_cache 1;
             }
@@ -296,9 +296,9 @@ server {
         }
 
         # Up to 10 simultaneous page requests per IP
-        limit_conn defaultconnzone {{ nginx_default_max_conn }};
+        limit_conn defaultconnzone {{ siteproxy_nginx_default_max_conn }};
         # Up to 20 requests / sec for pages.
-        limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
+        limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
 
         # For client_max_body_size, see the Omeka role's NGINX virtual host
         # configuration.
@@ -326,9 +326,9 @@ server {
         }
 
         # Up to 10 simultaneous page requests per IP
-        limit_conn defaultconnzone {{ nginx_default_max_conn }};
+        limit_conn defaultconnzone {{ siteproxy_nginx_default_max_conn }};
         # Up to 20 requests / sec for pages.
-        limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
+        limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
 
         # For client_max_body_size, see the pss role's NGINX virtual host
         # configuration.

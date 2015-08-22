@@ -7,16 +7,12 @@
   sudo: yes
   roles:
     - contentqa_proxy
-  vars_files:
-    - ["vars/contentqa.yml", "vars/defaults.yml"]
 
 - name: Mail
   hosts: all
   sudo: yes
   roles:
     - aws_postfix
-  vars_files:
-    - ["vars/contentqa.yml", "vars/defaults.yml"]
 
 - include: playbooks/dbnodes.yml level=contentqa
 
@@ -37,5 +33,3 @@
       tags:
         - api
         - api_auth
-  vars_files:
-    - ["vars/contentqa.yml", "vars/defaults.yml"]

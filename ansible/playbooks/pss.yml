@@ -12,7 +12,8 @@
   hosts:
     - pss
   sudo: yes
+  vars:
+    do_deployment: true
+    skip_configuration: false
   roles:
     - { role: pss, tags: ['pss']}
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

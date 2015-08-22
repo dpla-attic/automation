@@ -1,10 +1,5 @@
 ---
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-  tags:
-    - munin
-
 - name: Make sure that the Tomcat packages are installed
   apt: name={{ item }} state=present
   with_items:

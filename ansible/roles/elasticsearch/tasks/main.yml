@@ -1,16 +1,13 @@
 ---
 # Elasticsearch Ansible Tasks
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-
 # Configure timezone
 # - name: Configuring timezone
 #   shell: echo {{ elasticsearch_timezone }} > /etc/timezone; dpkg-reconfigure --frontend noninteractive tzdata
 
 # Update repos
 - name: Install python-software-properties
-  apt: pkg=python-software-properties state=present update_cache=yes cache_valid_time={{apt_cache_valid_time}}
+  apt: pkg=python-software-properties state=present update_cache=yes cache_valid_time={{elasticsearch_apt_cache_valid_time}}
 - name: Update repositories
   apt_repository: repo={{ item }} state=present update_cache=yes
   with_items: elasticsearch_apt_repos

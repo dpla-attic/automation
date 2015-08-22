@@ -1,6 +1,6 @@
 /var/log/postgresql/*.log {
-       {{ log_rotation_interval }}
-       rotate {{ log_rotation_count }}
+       {{ pg_log_rotation_interval }}
+       rotate {{ pg_log_rotation_count }}
        copytruncate
        delaycompress
        compress

@@ -12,10 +12,11 @@
 - file: path=/home/dpla/frontend state=absent
 
 - name: Check out frontend app from its repository
-  git: >
+  git: >-
       repo=https://github.com/dpla/frontend.git
       dest=/home/dpla/frontend-git
       version={{ frontend_branch_or_tag }}
+      force=true
   sudo_user: dpla
   when: not frontend_use_local_source
   tags:

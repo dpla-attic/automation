@@ -22,7 +22,7 @@ Please install the following tools as documented on their websites:
 * [VirtualBox](https://www.virtualbox.org/) (Version 4.3)
 * [Vagrant](http://www.vagrantup.com/) (Version 1.6)
 * [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest/) (`vagrant plugin install vagrant-vbguest`)
-* [Ansible](http://www.ansible.com/) (Version 1.8) [installation instructions](http://docs.ansible.com/intro_installation.html)
+* [Ansible](http://www.ansible.com/) (Version 1.9) [installation instructions](http://docs.ansible.com/intro_installation.html)
 * Additional dependencies described in the `pip` requirements file (see below)
 
 ### Steps
@@ -87,8 +87,10 @@ Then some more invocations to configure everything:
 ```
 $ ansible-playbook -i development -u <your username in group_vars/all> \
   playbooks/package_upgrade.yml
+$ vagrant reload
 $ ansible-playbook -i development -u <your username in group_vars/all> \
   dev_all.yml --extra-vars "initial_run=true"
+$ vagrant reload
 ```
 
 The various sites will be online at:
@@ -96,6 +98,7 @@ The various sites will be online at:
 * http://local.dp.la/
 * http://local.dp.la/exhibitions/
 * http://local.dp.la:8080/v2/items (the API)
+* http://webapp1:8004/munin/  (resource monitoring graphs)
 
 
 However, there won't be any data ingested until you run an ingestion with
@@ -189,6 +192,13 @@ might use Docker, keeping in mind our need to represent our network setup.
 * The first time you create a VM, it has to do an extensive package upgrade
   of the the software in the base image, after which you should restart the VM
   with "vagrant reload".
+* If you notice that your VirtualBox processes on your host computer are using a
+  lot of CPU after creating new VMs, this is probably becuase the Munin resource
+  monitoring tool's statistics gatherer (`munin-node`) is running endlessly.  We
+  have not diagnosed what cuases this, but the easy solution is to make sure you
+  have run `vagrant reload` as suggested above in Installation > Steps.
+  Restarting the `munin-node` service on each host or rebooting the VMs seems to
+  fix the problem.
 * You probably want to exclude `$HOME/VirtualBox VMs/` from any backup jobs that
   you have going on.  The VMs can be recreated at any time, as long as you
   aren't storing data that can't be regenerated.

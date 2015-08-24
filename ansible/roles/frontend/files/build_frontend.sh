@@ -30,7 +30,7 @@ echo "killing ssh_agent ..." >> $LOGFILE
 kill $SSH_AGENT_PID
 
 echo "rsync home to /srv/www ..." >> $LOGFILE
-/usr/bin/rsync -rptogl --checksum --delete --delay-updates \
+/usr/bin/rsync -rIptogl --checksum --delete --delay-updates \
     --exclude 'log' \
     --exclude 'tmp' \
     --exclude '.git' \

@@ -6,7 +6,7 @@ rsync=/usr/bin/rsync
 
 cd $HOME
 
-$rsync -rptl --delete --checksum \
+$rsync -rIptl --delete --checksum \
     --exclude '.git' \
     --exclude 'wp-config.php' \
     --exclude 'wp-content/uploads' \

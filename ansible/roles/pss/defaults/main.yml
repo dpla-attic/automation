@@ -1,0 +1,8 @@
+---
+
+unicorn_worker_processes: 2
+pss_use_local_source: false
+pss_branch_or_tag: master
+rails_env: development
+nginx_real_ip_from_addrs:
+    - 192.168.50.0/24

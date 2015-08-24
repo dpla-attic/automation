@@ -30,6 +30,7 @@
     - site_proxy
     - omeka
     - wordpress
+    - pss
   vars_files:
     - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 

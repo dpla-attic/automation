@@ -1,0 +1,3 @@
+---
+
+- include: deploy_pss.yml level=staging

@@ -1,0 +1,179 @@
+---
+
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+# Clear this out prior to copying and symlinking below
+- file: path=/home/dpla/pss state=absent
+
+- name: Check out primary-source-sets app from its repository
+  git: >-
+      repo=https://github.com/dpla/primary-source-sets.git
+      dest=/home/dpla/pss-git
+      version={{ pss_branch_or_tag }}
+      force=true
+  sudo_user: dpla
+  when: not pss_use_local_source
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+## Symlink to the build directory, to allow local and git builds to coexist
+# neatly ...
+
+# 1. For a git deployment ...
+- file: src=/home/dpla/pss-git dest=/home/dpla/pss state=link
+  when: not pss_use_local_source
+
+- name: Check out primary source sets app from mounted directory
+  script: copy_local_app.sh
+  when: pss_use_local_source
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+# 2. For a local deployment ...
+- file: src=/home/dpla/pss-local dest=/home/dpla/pss state=link
+  when: pss_use_local_source
+
+- name: Update primary-source-sets app database configuration
+  template: >-
+      src=database.yml.j2 dest=/home/dpla/pss/config/database.yml
+      owner=dpla group=webapp mode=0640
+  when: not pss_use_local_source
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Update primary-source-sets app settings
+  template: >-
+      src=settings.local.yml.j2
+      dest=/home/dpla/pss/config/settings.local.yml
+      owner=dpla group=webapp mode=0640
+  when: not pss_use_local_source
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Update primary-source-sets unicorn.rb
+  template: >-
+      src=unicorn.rb.j2 dest=/home/dpla/pss/config/unicorn.rb
+      owner=dpla group=dpla mode=0644
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Make sure that rbenv and bundler are current
+  script: >-
+      ../../../files/install_ruby_tools.sh {{ ruby_rbenv_version }}
+  sudo_user: dpla
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Ensure the existence and permissions of necessary directories
+  file: >-
+    path="{{ item }}" state=directory owner=dpla group=dpla mode=0755
+  with_items:
+    - /srv/www/pss
+    - /srv/www/pss/tmp
+    - /srv/www/pss/log
+
+# Krazy hijinx ensue to get around having a private GitHub repo for the pss
+# assets gem...
+
+- name: Temporarily copy private key for GitHub
+  # This will be used by build_pss.sh
+  copy: >-
+      src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
+      dest=/home/dpla/git_private_key
+      owner=dpla group=dpla mode=0600
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Stop Unicorn (gracefully)
+  # Unicorn is stopped completely, and later restarted, because we assume that
+  # preload_app is true, and this option means that a SIGHUP to reload Unicorn's
+  # configuration won't cause it to reload program code.  In a setting other than
+  # development, the NGINX reverse-proxy in front of Unicorn will be routing requests
+  # to the other servers in the same pool.
+  service: name=unicorn_pss state=stopped
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Assert that Unicorn pid and socket files are not present
+  # A prior failure may have left them behind.
+  file: >-
+    path="{{ item }}" state=absent
+  with_items:
+    - /srv/www/pss/tmp/unicorn_pss.pid
+    - /srv/www/pss/tmp/unicorn_pss.sock
+
+- name: Build primary-source-sets app
+  script: >-
+    build_pss.sh "{{ ruby_rbenv_version }}"
+  sudo_user: dpla
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Ensure existence of uploads directory
+  file: >-
+      path=/srv/www/pss/public/uploads state=directory
+      owner=dpla group=dpla mode=0755 recurse=yes
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Clear site proxy cache
+  command: find /var/cache/nginx -type f -delete
+  delegate_to: "{{ item }}"
+  with_items: groups.site_proxies
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Start Unicorn
+  service: name=unicorn_pss state=started
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web
+
+- name: Remove temporary private key for GitHub
+  file: path=/home/dpla/git_private_key state=absent
+  tags:
+    - deployment
+    - pss
+    - pss_deployment
+    - web

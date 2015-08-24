@@ -1,0 +1,82 @@
+---
+
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - pss
+    - web
+    - nginx
+    - logrotate
+
+- name: Ensure existence of necessary packages
+  apt: >-
+    pkg="{{ item }}" state=present
+  with_items:
+    - postgresql-common
+    - postgresql-client
+    - libpq-dev
+  tags:
+    - packages
+    - pss
+
+- name: Ensure state of Unicorn init script
+  template: >-
+      src=etc_init.d_unicorn_pss.j2 dest=/etc/init.d/unicorn_pss
+      owner=root group=root mode=0755
+  tags:
+    - pss
+    - web
+    - initscripts
+
+- name: Ensure state of Unicorn startup script
+  template: >-
+      src=start_unicorn_pss.sh.j2
+      dest=/usr/local/sbin/start_unicorn_pss.sh
+      owner=root group=root mode=0755
+  tags:
+    - pss
+    - web
+    - scripts
+    - initscripts
+
+- name: Ensure that Unicorn init script starts and stops on boot/shutdown
+  command: update-rc.d unicorn_pss defaults
+  tags:
+    - pss
+    - web
+    - initscripts
+
+- name: Update webserver virtual host for primary-source-sets app
+  template: >-
+      src="etc_nginx_sites-available_pss.j2"
+      dest="/etc/nginx/sites-available/pss"
+      owner=root group=root mode=0644
+  notify: restart nginx
+  tags:
+    - pss
+    - nginx
+    - web
+
+- name: Symlink webserver virtual host for pss app
+  file: >-
+      src="/etc/nginx/sites-available/pss"
+      dest="/etc/nginx/sites-enabled/pss"
+      state=link owner=root group=root
+  notify: restart nginx
+  tags:
+    - pss
+    - nginx
+    - web
+
+- name: Make sure that pss app logs get rotated
+  template: >-
+      src=etc_logrotate.d_pss_rails_logs.j2
+      dest=/etc/logrotate.d/pss_rails_logs
+      owner=root group=root mode=0644
+  tags:
+    - pss
+    - web
+    - logrotate
+
+
+- include: deploy.yml

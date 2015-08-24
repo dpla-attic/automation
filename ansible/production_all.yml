@@ -31,14 +31,14 @@
 
 - name: Content management systems
   hosts:
-    - wordpress
-    - exhibitions
+    - cms
   sudo: yes
   roles:
     - common_php
     - common_sitenode
     - omeka
     - wordpress
+    - pss
   vars:
     level: production
   vars_files:

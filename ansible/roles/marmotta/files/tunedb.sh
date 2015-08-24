@@ -55,6 +55,8 @@ set_column_statistics triples subject 5000
 set_column_statistics triples predicate 300
 set_column_statistics triples object 500
 
+# FIXME:  this is not one-size-fits-all.  The tablespace names
+# need to be gathered and iterated over.
 query 'ALTER TABLESPACE marmotta_1 SET (seq_page_cost = 2)'
 
 create_index_if_absent idx_triples_c triples context

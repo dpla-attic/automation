@@ -2,6 +2,8 @@
 
 tomcat_admin_username: tcadmin
 tomcat_admin_password: changeme
+tomcat_munin_username: tcmunin
+tomcat_munin_password: changememunin
 tomcat_max_mem_mb: 256
 tomcat_init_mem_mb: 256
 

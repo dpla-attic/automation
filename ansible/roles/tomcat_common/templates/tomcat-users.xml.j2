@@ -6,4 +6,6 @@
   <role rolename="manager-gui" />
   <user username="{{ tomcat_admin_username }}" password="{{ tomcat_admin_password }}"
         roles="manager-gui,admin-gui,manager,admin" />
+  <user username="{{ tomcat_munin_username }}" password="{{ tomcat_munin_password }}"
+        roles="manager-status,manager" />
 </tomcat-users>

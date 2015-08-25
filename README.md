@@ -171,6 +171,11 @@ $ ansible-playbook -u <your username> -i development \
 
 Repeat 2 and 3.
 
+Please note that, if you're using `*_use_local_source: true` for any
+application, you'll be responsible for managing the state of your configuration
+files in your local directories, which will get deployed to the VM.  Variables
+will not be substituted, e.g. for database users and passwords.  This is a
+feature, to let you experiment with changes to those files.
 
 ## Design considerations
 

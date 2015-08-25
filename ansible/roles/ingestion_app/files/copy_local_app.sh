@@ -30,16 +30,16 @@ if [ ! -d /home/dpla/heidrun-mappings-local ]; then
     mkdir /home/dpla/heidrun-mappings-local
 fi
 
-rsync -rptl --delete --checksum \
+rsync -rIptl --delete --checksum \
     --exclude '.git*' /krikri/ /home/dpla/krikri \
     || exit 1
 
-rsync -rptl --delete --checksum \
+rsync -rIptl --delete --checksum \
     --exclude '.git*' --exclude 'log' \
     /heidrun/ /home/dpla/heidrun-local \
     || exit 1
 
-rsync -rptl --delete --checksum \
+rsync -rIptl --delete --checksum \
     --exclude '.git*' --exclude 'README.md' --exclude 'LICENSE' \
     /heidrun-mappings/ /home/dpla/heidrun-mappings-local \
     || exit 1

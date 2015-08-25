@@ -90,6 +90,7 @@
       repo=https://github.com/dpla/heidrun.git
       dest=/home/dpla/heidrun-git
       version={{ heidrun_branch_or_tag }}
+      force=true
   sudo_user: dpla
   when: not ingestion_use_local_source
 
@@ -98,6 +99,7 @@
       repo=https://github.com/dpla/heidrun-mappings.git
       dest=/home/dpla/heidrun-mappings-git
       version={{ heidrun_mappings_branch_or_tag }}
+      force=true
   sudo_user: dpla
   when: not ingestion_use_local_source
 

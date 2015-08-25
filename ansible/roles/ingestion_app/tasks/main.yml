@@ -31,6 +31,14 @@
   tags:
     - users
 
+- name: Ensure that dpla user has correct RAILS_ENV
+  lineinfile: >-
+    dest=/home/dpla/.bashrc
+    regexp='RAILS_ENV='
+    line="export RAILS_ENV={{ rails_env }}"
+  tags:
+   - users
+
 - name: Ensure that the 'god' gem is installed for worker process management
   gem: >-
     name=god state=latest user_install=no

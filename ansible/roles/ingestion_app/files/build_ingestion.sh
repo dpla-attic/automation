@@ -50,7 +50,7 @@ fi
 
 echo "rsyncing to /opt/heidrun ..." >> $LOGFILE
 
-/usr/bin/rsync -rptolg --checksum --delete --delay-updates \
+/usr/bin/rsync -rIptolg --checksum --delete --delay-updates \
     --exclude 'log' \
     --exclude 'tmp' \
     --exclude '.git' \
@@ -63,7 +63,7 @@ echo "rsyncing mappings ..." >> $LOGFILE
 
 # Don't delete "extraneous" files in the destination directory, unlike the
 # other two rsync calls
-/usr/bin/rsync -rptolg --checksum --delay-updates \
+/usr/bin/rsync -rIptolg --checksum --delay-updates \
     --exclude 'README.md' \
     --exclude 'LICENSE' \
     --exclude '.git*' \

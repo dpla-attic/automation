@@ -12,10 +12,11 @@
 - file: path=/home/dpla/api state=absent
 
 - name: Check out api (platform) app from its repository (git)
-  git: >
+  git: >-
       repo=https://github.com/dpla/platform.git
       dest=/home/dpla/api-git
       version={{ api_branch_or_tag | default("master") }}
+      force=true
   sudo_user: dpla
   when: not api_use_local_source
   tags:

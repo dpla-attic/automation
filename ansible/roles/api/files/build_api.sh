@@ -19,7 +19,7 @@ rbenv rehash
 
 echo "rsync from home to /srv/www/api ..." >> $LOGFILE
 
-/usr/bin/rsync -rptolg --checksum --delete --delay-updates \
+/usr/bin/rsync -rIptolg --checksum --delete --delay-updates \
     --exclude 'var/log' \
     --exclude 'tmp' \
     --exclude '.git' \

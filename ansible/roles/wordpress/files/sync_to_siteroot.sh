@@ -3,7 +3,7 @@
 
 rsync=/usr/bin/rsync
 
-$rsync -rptogl --checksum --delete --delay-updates \
+$rsync -rIptogl --checksum --delete --delay-updates \
     --exclude 'wp-content/uploads' \
     --exclude 'wp-config.php' \
     --exclude '.git' \

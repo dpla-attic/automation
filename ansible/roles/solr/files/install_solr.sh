@@ -42,7 +42,7 @@ test -z "$VERSION" && usage 1
 
 if solr_home_absent; then
     tarfile_name="$solrversion.tgz"
-    dl_base="http://mirrors.ibiblio.org/apache/lucene/solr/$VERSION"
+    dl_base="http://archive.apache.org/dist/lucene/solr/$VERSION"
     dl_url="$dl_base/$tarfile_name"
     cd /var/tmp
     wget -q $dl_url || err_exit "Could not get $dl_url"

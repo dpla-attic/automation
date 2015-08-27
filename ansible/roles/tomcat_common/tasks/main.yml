@@ -2,6 +2,8 @@
 
 - include_vars: "../vars/{{ level }}.yml"
   when: level is defined
+  tags:
+    - munin
 
 - name: Make sure that the Tomcat packages are installed
   apt: name={{ item }} state=present
@@ -45,3 +47,34 @@
     mode=0644 owner=root group=root
   tags:
     - logs
+
+## Tomcat Munin plugins
+#
+
+- name: Make sure Perl XML::Simple module is installed
+  apt: pkg=libxml-simple-perl state=present
+  tags:
+    - munin
+    - packages
+
+- name: Ensure state of configuration for Munin Tomcat plugin
+  template: >-
+      src=etc_munin_plugin_conf_d_zzz-tomcat.j2
+      dest=/etc/munin/plugin-conf.d/zzz-tomcat
+      owner=root group=root mode=0644
+  notify: restart munin-node
+  tags:
+    - munin
+
+- name: Symlink basic Munin Tomcat plugins
+  file: >-
+    src="/usr/share/munin/plugins/{{ item }}"
+    dest="/etc/munin/plugins/{{ item }}"
+    state=link
+  with_items:
+    - tomcat_access
+    - tomcat_jvm
+    - tomcat_threads
+    - tomcat_volume
+  tags:
+    - munin

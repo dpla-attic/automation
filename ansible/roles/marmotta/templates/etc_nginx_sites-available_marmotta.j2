@@ -1,14 +1,4 @@
 
-upstream marmotta {
-    server {{ inventory_hostname }}:8080 max_conns=200;
-
-    # Is this good?  How many connections will Tomcat support?
-    # What is the best keepalive value?
-    # See https://tomcat.apache.org/tomcat-7.0-doc/config/http.html
-    # See http://java.dzone.com/articles/understanding-tomcat-nio
-    keepalive 100;
-}
-
 server {
 
     listen 80;
@@ -36,7 +26,7 @@ server {
         proxy_set_header X-Forwarded-Proto http;
         proxy_set_header Host $http_host;
         proxy_pass_header Set-Cookie;
-        proxy_pass http://marmotta;
+        proxy_pass http://{{ inventory_hostname }}:8080/;
         proxy_redirect default;
         proxy_read_timeout 600s;
         proxy_send_timeout 600s;

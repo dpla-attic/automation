@@ -183,6 +183,14 @@
   when: >-
     'ingestion_app' in hostvars[inventory_hostname]['group_names']
 
+- name: Assert that Unicorn pid and socket files are absent
+  # These could have been left behind by an earlier failure or termination
+  file: >-
+    path="/opt/heidrun/tmp/unicorn_heidrun.{{ item }}" state=absent
+  with_items:
+    - pid
+    - sock
+
 - name: Build web application (and copy to live directory)
   script: >-
     ../files/build_ingestion.sh "{{ '-f' if fast_deployment else '' }}" {{ ingestion_rbenv_version }}

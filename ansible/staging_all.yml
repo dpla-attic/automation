@@ -30,13 +30,14 @@
 
 - name: Content management systems
   hosts:
-    - cms-stg
+    - cms
   sudo: yes
   roles:
     - common_php
     - common_sitenode
     - omeka
     - wordpress
+    - pss
   vars:
     level: staging
   vars_files:

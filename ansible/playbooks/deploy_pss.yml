@@ -1,0 +1,17 @@
+---
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
+- name: Deploy Primary Source Sets Application
+  hosts:
+    - pss
+  sudo: yes
+  tasks:
+    - include: ../roles/pss/tasks/deploy.yml
+  handlers:
+    - include: ../roles/pss/handlers/main.yml
+  vars_files:
+    - "../vars/{{ level }}.yml"
+    - "../roles/pss/defaults/main.yml"
+    - "../roles/pss/vars/{{ level }}.yml"

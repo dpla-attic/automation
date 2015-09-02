@@ -107,6 +107,19 @@
     - api_deployment
     - web
 
+- name: Assert that Unicorn pid and socket files are absent
+  # These could have been left behind by an earlier failure or termination
+  file: >-
+    path="/srv/www/api/tmp/unicorn_api.{{ item }}" state=absent
+  with_items:
+    - pid
+    - sock
+  tags:
+    - deployment
+    - api
+    - api_deployment
+    - web
+
 - name: Build api app
   script: >
       build_api.sh {{ ruby_rbenv_version }}

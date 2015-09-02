@@ -130,6 +130,19 @@
     - frontend_deployment
     - web
 
+- name: Assert that Unicorn pid and socket files are absent
+  # These could have been left behind by an earlier failure or termination
+  file: >-
+    path="/srv/www/frontend/tmp/unicorn_frontend.{{ item }}" state=absent
+  with_items:
+    - pid
+    - sock
+  tags:
+    - deployment
+    - frontend
+    - frontend_deployment
+    - web
+
 - name: Build frontend app
   script: >
       build_frontend.sh {{ ruby_rbenv_version }}

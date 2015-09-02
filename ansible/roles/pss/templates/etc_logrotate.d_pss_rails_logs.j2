@@ -1,0 +1,18 @@
+/srv/www/pss/log/{{ rails_env }}.log
+/srv/www/pss/log/unicorn.stderr.log
+/srv/www/pss/log/unicorn.stdout.log
+{
+    daily
+    missingok
+    rotate 30
+    compress
+    delaycompress
+    dateext
+    notifempty
+    create 0644 dpla dpla
+    sharedscripts
+    postrotate
+        service unicorn_pss reload
+    endscript
+
+}

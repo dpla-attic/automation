@@ -111,6 +111,13 @@ upstream dpla_portal {
 {% endfor %}
 }
 
+# Primary Source Sets servers
+upstream dpla_pss {
+{% for h in groups['pss'] %}
+    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ pss_app_port }} fail_timeout=120s;  # {{ h }}
+{% endfor %}
+}
+
 # Old wiki
 upstream dpla_berkman {
   server 128.103.64.94:80 weight=1 fail_timeout=120s;
@@ -305,6 +312,30 @@ server {
         rewrite ^/exhibitions/(activism|boston-sports-temples|history-of-survivance|this-land|new-deal|breadandroses|spirits) /exhibitions/exhibits/show/$1 permanent;
 
     }
+
+    location /primary-source-sets {
+
+        proxy_pass http://dpla_pss;
+        proxy_cache off;
+
+        location ~* \.(css|png|js|jpe?g|ico|mov|mp3|mp4|pdf)$ {
+            proxy_cache_valid 200 360m;
+            expires 864000;
+            proxy_pass http://dpla_pss;
+        }
+
+        # Up to 10 simultaneous page requests per IP
+        limit_conn defaultconnzone {{ nginx_default_max_conn }};
+        # Up to 20 requests / sec for pages.
+        limit_req zone=defaultreqzone burst={{ nginx_default_req_burst_size }};
+
+        # For client_max_body_size, see the pss role's NGINX virtual host
+        # configuration.
+        # (ansible/roles/pss/templates/etc_nginx_sites_available_omeka.j2)
+        client_max_body_size 50M;
+
+    }
+
 {% endif %}
 
     location /wiki {

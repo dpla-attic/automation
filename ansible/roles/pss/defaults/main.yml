@@ -1,0 +1,10 @@
+---
+
+unicorn_worker_processes: 2
+pss_use_local_source: false
+pss_branch_or_tag: master
+rails_env: development
+nginx_real_ip_from_addrs:
+    - 192.168.50.0/24
+pss_rbenv_version: 2.1.3
+pss_secret_key_base: 9d0c334e9aa3d80e27ff0f9a370c21611cbbf80db7206ed19c48081d8bc782c84fc7bb5ae2fad6ef86220da672177c3660d92bff93d816875781b02155e47315

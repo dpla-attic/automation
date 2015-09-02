@@ -10,4 +10,5 @@ wordpress_app_port: 8001
 frontend_app_port: 8002
 api_app_port: 8003
 ingestion_app_port: 8004
+pss_app_port: 8006
 

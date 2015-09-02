@@ -77,6 +77,7 @@
     - api
     - ingestion
     - marmotta
+    - pss
   tags:
     - postgresql
 
@@ -92,6 +93,7 @@
   with_items:
     - dpla_portal
     - api
+    - pss
   tags:
     - postgresql
 

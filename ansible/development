@@ -35,6 +35,9 @@ webapps
 [memcached:children]
 webapps
 
+[pss:children]
+webapps
+
 [elasticsearch:children]
 dbnodes
 

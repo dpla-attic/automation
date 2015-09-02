@@ -1,0 +1,18 @@
+---
+
+# To run standalone, specify
+# --extra-vars "level=<development|staging|production>"
+# ... or see one of the convenience playbooks that includes this one with the
+#     correct value.
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
+- name: Primary Source Sets App
+  hosts:
+    - pss
+  sudo: yes
+  roles:
+    - { role: pss, tags: ['pss']}
+  vars_files:
+    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

@@ -15,6 +15,10 @@
     - postgresql-common
     - postgresql-client
     - libpq-dev
+    - libsqlite3-dev
+    - build-essential
+    - libreadline6
+    - libreadline6-dev
   tags:
     - packages
     - pss

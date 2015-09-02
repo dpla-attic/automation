@@ -45,10 +45,13 @@
 - file: src=/home/dpla/pss-local dest=/home/dpla/pss state=link
   when: pss_use_local_source
 
-- name: Update primary-source-sets app database configuration
+- name: Update primary-source-sets app configuration files
   template: >-
-      src=database.yml.j2 dest=/home/dpla/pss/config/database.yml
-      owner=dpla group=webapp mode=0640
+    src="{{ item }}.j2" dest="/home/dpla/pss/config/{{ item }}"
+    owner=dpla group=dpla mode=0640
+  with_items:
+    - database.yml
+    - secrets.yml
   when: not pss_use_local_source
   tags:
     - deployment
@@ -80,7 +83,7 @@
 
 - name: Make sure that rbenv and bundler are current
   script: >-
-      ../../../files/install_ruby_tools.sh {{ ruby_rbenv_version }}
+      ../../../files/install_ruby_tools.sh {{ pss_rbenv_version }}
   sudo_user: dpla
   tags:
     - deployment
@@ -134,7 +137,7 @@
 
 - name: Build primary-source-sets app
   script: >-
-    build_pss.sh "{{ ruby_rbenv_version }}"
+    build_pss.sh "{{ pss_rbenv_version }}"
   sudo_user: dpla
   tags:
     - deployment

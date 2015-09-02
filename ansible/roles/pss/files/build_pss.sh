@@ -12,14 +12,15 @@ cd /home/dpla/pss
 
 rbenv shell $USE_VERSION
 
+echo "using version ${USE_VERSION} ..." >> $LOGFILE
 echo "installing bundle ..." >> $LOGFILE
 
 rm -f Gemfile.lock
-bundle update
-rbenv rehash
+bundle update >> $LOGFILE 2>&1
+rbenv rehash >> $LOGFILE 2>&1
 
 echo "precompiling assets ..." >> $LOGFILE
-bundle exec rake assets:precompile
+bundle exec rake assets:precompile >> $LOGFILE 2>&1
 
 echo "killing ssh_agent ..." >> $LOGFILE
 # Variable set above by ssh-agent
@@ -41,4 +42,4 @@ cd /srv/www/pss
 
 echo "migrate database ..." >> $LOGFILE
 cd /srv/www/pss
-bundle exec rake db:migrate
+bundle exec rake db:migrate >> $LOGFILE 2>&1

@@ -17,13 +17,14 @@ server {
     # To accommodate large file uploads:
     client_max_body_size 50m;
 
-    location / {
+    location /primary-source-sets {
         root /srv/www/pss/public;
         try_files $uri $uri/index.html @pss_app_server;
     }
 
-    location /assets {
-        alias /srv/www/pss/public/assets;
+    location /primary-source-sets/ {
+        alias /srv/www/pss/public/;
+        try_files $uri $uri/index.html @pss_app_server;
     }
 
     location @pss_app_server {

@@ -79,6 +79,10 @@ host   all             all            {{ host }}             md5
 {% for host in groups['api'] %}
 host   all             all            {{ host }}             md5
 {% endfor %}
+{# the `cms` group needs access because of the pss app #}
+{% for host in groups['cms'] %}
+host   all             all            {{ host }}             md5
+{% endfor %}
 
 {# The following hosts are for the new Ingestion 2 system. #}
 {# TODO:  Remove the `if' statements when we do away with the legacy #}

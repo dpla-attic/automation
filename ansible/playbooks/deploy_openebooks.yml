@@ -1,0 +1,15 @@
+---
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
+- name: Deploy OpenEbooks.net
+  hosts:
+    - openebooks
+  sudo: yes
+  tasks:
+    - include: ../roles/openebooks/tasks/deploy.yml
+  vars_files:
+    - "../vars/{{ level }}.yml"
+    - "../roles/openebooks/defaults/main.yml"
+    - "../roles/openebooks/vars/{{ level }}.yml"

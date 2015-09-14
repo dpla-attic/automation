@@ -135,9 +135,9 @@ maintenance_work_mem = {{ pg_maintenance_work_mem }}		# min 1MB
 
 # - Background Writer -
 
-#bgwriter_delay = 200ms				# 10-10000ms between rounds
-#bgwriter_lru_maxpages = 100		# 0-1000 max buffers written/round
-#bgwriter_lru_multiplier = 2.0		# 0-10.0 multipler on buffers scanned/round
+bgwriter_delay = {{ pg_bgwriter_delay }}				# 10-10000ms between rounds
+bgwriter_lru_maxpages = {{ pg_bgwriter_lru_maxpages }}		# 0-1000 max buffers written/round
+bgwriter_lru_multiplier = {{ pg_bgwriter_lru_multiplier }}		# 0-10.0 multipler on buffers scanned/round
 
 # - Asynchronous Behavior -
 
@@ -171,9 +171,9 @@ wal_writer_delay = 500ms		# 1-10000 milliseconds
 
 # - Checkpoints -
 
-checkpoint_segments = 32		# in logfile segments, min 1, 16MB each
-#checkpoint_timeout = 5min		# range 30s-1h
-checkpoint_completion_target = 0.9	# checkpoint target duration, 0.0 - 1.0
+checkpoint_segments = {{ pg_checkpoint_segments }}		# in logfile segments, min 1, 16MB each
+checkpoint_timeout = {{ pg_checkpoint_timeout }}		# range 30s-1h
+checkpoint_completion_target = {{ pg_checkpoint_completion_target }}	# checkpoint target duration, 0.0 - 1.0
 #checkpoint_warning = 30s		# 0 disables
 
 # - Archiving -
@@ -368,7 +368,7 @@ log_min_duration_statement = {{ pg_log_min_duration_statement }}	# -1 is disable
 #debug_print_rewritten = off
 #debug_print_plan = off
 #debug_pretty_print = on
-#log_checkpoints = off
+log_checkpoints = on
 #log_connections = off
 #log_disconnections = off
 #log_duration = off
@@ -394,7 +394,7 @@ log_line_prefix = '%t '			# special values:
 								#        processes
 								#   %% = '%'
 								# e.g. '<%u%%%d> '
-#log_lock_waits = off			# log lock waits >= deadlock_timeout
+log_lock_waits = on 			# log lock waits >= deadlock_timeout
 #log_statement = 'none'			# none, ddl, mod, all
 log_temp_files = 0				# log temporary files equal or larger
 								# than the specified size in kilobytes;
@@ -430,7 +430,7 @@ log_temp_files = 0				# log temporary files equal or larger
 
 #autovacuum = on						# Enable autovacuum subprocess?  'on'
 										# requires track_counts to also be on.
-#log_autovacuum_min_duration = -1		# -1 disables, 0 logs all actions and
+log_autovacuum_min_duration = 0			# -1 disables, 0 logs all actions and
 										# their durations, > 0 logs only
 										# actions running at least this number
 										# of milliseconds.
@@ -448,7 +448,7 @@ log_temp_files = 0				# log temporary files equal or larger
 #autovacuum_vacuum_cost_delay = 20ms	# default vacuum cost delay for
 										# autovacuum, in milliseconds;
 										# -1 means use vacuum_cost_delay
-#autovacuum_vacuum_cost_limit = -1		# default vacuum cost limit for
+autovacuum_vacuum_cost_limit = 150		# default vacuum cost limit for
 										# autovacuum, -1 means use
 										# vacuum_cost_limit
 
@@ -511,7 +511,7 @@ default_text_search_config = 'pg_catalog.english'
 # LOCK MANAGEMENT
 #------------------------------------------------------------------------------
 
-#deadlock_timeout = 1s
+deadlock_timeout = 8s
 #max_locks_per_transaction = 64			# min 10
 										# (change requires restart)
 # Note:  Each lock table slot uses ~270 bytes of shared memory, and there are

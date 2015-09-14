@@ -86,7 +86,8 @@ limit_conn_zone $addr_to_limit zone=bookshelfconn:{{ nginx_bookshelf_conn_zone_s
 limit_conn_log_level {{ nginx_limit_conn_log_level }};
 limit_req_log_level {{ nginx_limit_req_log_level }};
 
-{% if ingestion2 is not defined %}
+{% if groups['cms'] is defined %}
+### CMS group
 
 # Wordpress servers
 upstream dpla_wp {
@@ -102,19 +103,19 @@ upstream dpla_omeka {
 {% endfor %}
 }
 
+# Primary Source Sets servers
+upstream dpla_pss {
+{% for h in groups['pss'] %}
+    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ pss_app_port }} fail_timeout=120s;  # {{ h }}
+{% endfor %}
+}
+
 {% endif %}
 
 # Frontend (portal) servers
 upstream dpla_portal {
 {% for h in groups['frontend'] %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ frontend_app_port }} fail_timeout=120s;  # {{ h }}
-{% endfor %}
-}
-
-# Primary Source Sets servers
-upstream dpla_pss {
-{% for h in groups['pss'] %}
-    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ pss_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
 }
 
@@ -202,7 +203,7 @@ server {
         rewrite ^/donate(/?|/.*)$ http://{{ frontend_hostname }}/info/donate$1 last;
     }
 
-{% if ingestion2 is not defined %}
+{% if groups['cms'] is defined %}
     location /info {
         proxy_cache_valid 200 240m;
         proxy_cache_bypass        $http_cache_bypass $cookie_wordpress_logged_in;

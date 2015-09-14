@@ -14,7 +14,8 @@ rbenv shell $USE_VERSION
 
 echo "installing bundle ..." >> $LOGFILE
 
-bundle update
+rm -f Gemfile.lock
+bundle install
 rbenv rehash
 
 echo "rsync from home to /srv/www/api ..." >> $LOGFILE

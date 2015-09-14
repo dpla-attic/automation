@@ -16,7 +16,7 @@ echo "using version ${USE_VERSION} ..." >> $LOGFILE
 echo "installing bundle ..." >> $LOGFILE
 
 rm -f Gemfile.lock
-bundle update >> $LOGFILE 2>&1
+bundle install >> $LOGFILE 2>&1
 rbenv rehash >> $LOGFILE 2>&1
 
 echo "precompiling assets ..." >> $LOGFILE

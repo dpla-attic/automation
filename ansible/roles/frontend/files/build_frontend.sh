@@ -18,7 +18,8 @@ rbenv shell $USE_VERSION
 
 echo "installing bundle ..." >> $LOGFILE
 
-bundle update
+rm -f Gemfile.lock
+bundle install
 bundle update dpla_frontend_assets
 rbenv rehash
 

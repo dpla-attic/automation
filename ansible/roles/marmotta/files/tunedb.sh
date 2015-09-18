@@ -60,3 +60,11 @@ set_column_statistics triples object 500
 query 'ALTER TABLESPACE marmotta_1 SET (seq_page_cost = 2)'
 
 create_index_if_absent idx_triples_c triples context
+
+# TODO: issue the following queries dependent upon the row count of the tables.
+# This should be something you can re-run as the tables grow.
+#
+# query 'alter table triples set (autovacuum_vacuum_scale_factor = 0.05)'
+# query 'alter table triples set (autovacuum_analyze_scale_factor=0.025);'
+# query 'alter table nodes set (autovacuum_vacuum_scale_factor = 0.05)'
+# query 'alter table nodes set (autovacuum_analyze_scale_factor=0.025);'

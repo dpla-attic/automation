@@ -7,6 +7,10 @@ LOGFILE=/tmp/build_pss.log
 echo "starting" > $LOGFILE
 
 eval "`rbenv init -`"
+# Start ssh-agent and set environment variables.
+# Work-around for private GitHub repository in Gemfile.
+eval `ssh-agent`
+ssh-add $HOME/git_private_key
 
 cd /home/dpla/pss
 

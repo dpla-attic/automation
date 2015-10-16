@@ -1,6 +1,0 @@
-*
-!.gitignore
-!main.yml
-!sample.yml
-!vagrant.yml
-!*.dist

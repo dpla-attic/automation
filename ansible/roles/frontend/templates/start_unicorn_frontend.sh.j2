@@ -2,10 +2,10 @@
 
 USERNAME="dpla"
 APP_ROOT="/srv/www/frontend"
-ENV={{ rails_env }}
+ENV={{ frontend_rails_env }}
 UNICORN_OPTS="-D -E $ENV -c $APP_ROOT/config/unicorn.rb"
 
-export RBENV_VERSION="{{ ruby_rbenv_version }}"
+export RBENV_VERSION="{{ frontend_rbenv_version }}"
 export RBENV_SHELL=bash
 export PATH=/home/$USERNAME/.rbenv/shims:$PATH
 cd $APP_ROOT

@@ -1,13 +1,5 @@
 ---
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-  tags:
-    - frontend
-    - web
-    - nginx
-    - logrotate
-
 - name: Ensure existence of necessary packages
   apt: >
       pkg="{{ item }}" state=present
@@ -19,16 +11,16 @@
     - libmagickwand-dev
     - libreadline6
     - libreadline6-dev
+  when: not skip_configuration
   tags:
     - packages
-    - frontend
 
 - name: Ensure state of Unicorn init script
   template: >
       src=etc_init.d_unicorn_frontend.j2 dest=/etc/init.d/unicorn_frontend
       owner=root group=root mode=0755
+  when: not skip_configuration
   tags:
-    - frontend
     - web
     - initscripts
 
@@ -36,16 +28,16 @@
   template: >
       src=start_unicorn_frontend.sh.j2 dest=/usr/local/sbin/start_unicorn_frontend.sh
       owner=root group=root mode=0755
+  when: not skip_configuration
   tags:
-    - frontend
     - web
     - scripts
     - initscripts
 
 - name: Ensure that Unicorn init script starts and stops on boot/shutdown
   command: update-rc.d unicorn_frontend defaults
+  when: not skip_configuration
   tags:
-    - frontend
     - web
     - initscripts
 
@@ -55,8 +47,8 @@
       dest="/etc/nginx/sites-available/frontend"
       owner=root group=root mode=0644
   notify: restart nginx
+  when: not skip_configuration
   tags:
-    - frontend
     - nginx
     - web
 
@@ -66,8 +58,8 @@
       dest="/etc/nginx/sites-enabled/frontend"
       state=link owner=root group=root
   notify: restart nginx
+  when: not skip_configuration
   tags:
-    - frontend
     - nginx
     - web
 
@@ -76,10 +68,11 @@
       src=etc_logrotate.d_frontend_rails_logs.j2
       dest=/etc/logrotate.d/frontend_rails_logs
       owner=root group=root mode=0644
+  when: not skip_configuration
   tags:
-    - frontend
     - web
     - logrotate
 
 
-- include: deploy.yml
+- include: deploy.yml tags=web
+  when: do_deployment

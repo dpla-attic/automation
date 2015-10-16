@@ -54,5 +54,3 @@
       tags:
         - database
         - packages
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

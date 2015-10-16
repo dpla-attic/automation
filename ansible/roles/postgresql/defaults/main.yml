@@ -25,6 +25,6 @@ pg_checkpoint_completion_target: 0.9
 
 pg_backup_keep_days: 7
 pg_log_min_duration_statement: 100
-backups_basedir: /backups
-log_rotation_interval: daily
-log_rotation_count: 14
+pg_backups_basedir: /backups
+pg_log_rotation_interval: daily
+pg_log_rotation_count: 14

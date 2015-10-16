@@ -3,13 +3,12 @@
 - name: Gather inventory facts in case playbook is run standalone
   hosts: all
 
-- name: Deploy Ingestion Application
-  hosts:
-    - ingestion_app
-    - worker
+- name: Exhibitions
+  hosts: exhibitions
   sudo: yes
+  serial: 1
   roles:
-    - ingestion_app
+    - omeka
   vars:
+    skip_configuration: false
     do_deployment: true
-    skip_configuration: true

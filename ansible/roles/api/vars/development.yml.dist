@@ -1,8 +1,0 @@
-
-# Uncomment this to use your local working copy for the API
-# (See Vagrantfile)
-# api_use_local_source: true
-
-# Uncomment this and update it to change the branch to follow
-# for the API app:
-# api_branch_or_tag: develop

@@ -14,5 +14,3 @@
   sudo: yes
   roles:
     - postgresql
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

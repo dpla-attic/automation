@@ -12,5 +12,3 @@
   sudo: yes
   roles:
     - { role: marmotta, tags: ['marmotta']}
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

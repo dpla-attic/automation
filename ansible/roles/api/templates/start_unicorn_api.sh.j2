@@ -2,9 +2,9 @@
 
 USERNAME="dpla"
 APP_ROOT="/srv/www/api"
-UNICORN_OPTS="-D -E {{ rails_env }} -c $APP_ROOT/config/unicorn.rb"
+UNICORN_OPTS="-D -E {{ api_rails_env }} -c $APP_ROOT/config/unicorn.rb"
 
-export RBENV_VERSION="{{ ruby_rbenv_version }}"
+export RBENV_VERSION="{{ api_rbenv_version }}"
 export RBENV_SHELL=bash
 export PATH=/home/$USERNAME/.rbenv/shims:$PATH
 cd $APP_ROOT

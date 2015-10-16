@@ -1,17 +1,9 @@
 ---
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-  tags:
-    - omeka
-    - php
-    - web
-    - nginx
-
 - name: Ensure full installation of Imagemagick
   apt: pkg=imagemagick state=present
+  when: not skip_configuration
   tags:
-    - omeka
     - php
     - web
 
@@ -21,8 +13,8 @@
       dest=/etc/php5/fpm/pool.d/omeka.conf
       owner=root group=root mode=0644
   notify: restart php5-fpm
+  when: not skip_configuration
   tags:
-    - omeka
     - php
     - web
 
@@ -32,8 +24,8 @@
       dest="/etc/nginx/sites-available/omeka"
       owner=root group=root mode=0644
   notify: restart nginx
+  when: not skip_configuration
   tags:
-    - omeka
     - nginx
     - web
 
@@ -43,9 +35,10 @@
       dest="/etc/nginx/sites-enabled/omeka"
       state=link owner=root group=root
   notify: restart nginx
+  when: not skip_configuration
   tags:
-    - omeka
     - nginx
     - web
 
 - include: deploy.yml
+  when: do_deployment

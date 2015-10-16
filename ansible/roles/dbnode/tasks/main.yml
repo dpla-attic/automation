@@ -1,10 +1,5 @@
 ---
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-  tags:
-  - database
-
 - name: Make sure that our old Cloudant package list has been removed
   file: path=/etc/apt/sources.list.d/cloudant.list state=absent
   tags:

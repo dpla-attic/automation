@@ -13,5 +13,3 @@
   sudo: yes
   roles:
     - { role: redis, tags: ['redis']}
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

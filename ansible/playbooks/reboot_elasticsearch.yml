@@ -7,8 +7,6 @@
     - name: Turn off shard replica allocation
       local_action: >-
           script ../files/set-allocation.sh off "{{ es_cluster_loadbal }}"
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 
 - name: Reboot search instances
   hosts:
@@ -53,8 +51,6 @@
         aws_secret_key: "{{ aws_secret_key }}"
         aws_region: "{{ aws_region }}"
         state: present
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 
 - hosts: 127.0.0.1
   connection: local
@@ -63,5 +59,3 @@
     - name: Turn shard replica allocation back on
       local_action: >-
           script ../files/set-allocation.sh on "{{ es_cluster_loadbal }}"
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

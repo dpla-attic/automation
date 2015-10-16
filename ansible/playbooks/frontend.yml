@@ -9,5 +9,6 @@
   sudo: yes
   roles:
     - frontend
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+  vars:
+    do_deployment: true
+    skip_configuration: false

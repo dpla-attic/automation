@@ -2,7 +2,7 @@
 
 USERNAME="dpla"
 APP_ROOT="/srv/www/pss"
-ENV={{ rails_env }}
+ENV={{ pss_rails_env }}
 UNICORN_OPTS="-D -E $ENV -c $APP_ROOT/config/unicorn.rb"
 
 export RBENV_VERSION="{{ pss_rbenv_version }}"

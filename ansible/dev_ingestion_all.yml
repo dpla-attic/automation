@@ -18,15 +18,11 @@
   vars:
     level: development
     ingestion2: true
-  vars_files:
-    - [ "./vars/development.yml" ]
   sudo: yes
 
 - include: playbooks/dev_loadbalancer.yml ingestion2=true
 
-- include: >-
-    playbooks/elasticsearch.yml level=development ingestion2=true
-    es_cluster_loadbal=192.168.50.7
+- include: playbooks/elasticsearch.yml level=development ingestion2=true
 
 - include: playbooks/postgresql.yml level=development
 
@@ -43,8 +39,8 @@
   vars:
     level: development
     ingestion2: true
-  vars_files:
-    - ["vars/development.yml", "vars/defaults.yml"]
+    skip_configuration: false
+    do_deployment: true
 
 - name: Web Configuration (ingestion app and marmotta)
   # Technically, it's not necessary to specify marmotta because ingestion_app and
@@ -58,12 +54,9 @@
   vars:
     level: development
     ingestion2: true
-  vars_files:
-    - ["vars/development.yml", "vars/defaults.yml"]
 
 - include: >-
     playbooks/api.yml level=development ingestion2=true
-    es_cluster_loadbal=192.168.50.7
 
 - include: playbooks/redis.yml level=development
 

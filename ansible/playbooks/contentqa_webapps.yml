@@ -15,7 +15,5 @@
     - common_web
   vars:
     level: contentqa
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 
 - include: api.yml

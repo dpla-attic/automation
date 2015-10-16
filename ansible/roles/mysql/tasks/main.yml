@@ -1,12 +1,5 @@
 ---
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-  tags:
-    - mysql
-    - mysql_user
-
-
 - name: Ensure that MySQL server is installed
   apt: pkg={{ item }} state=present force=yes
   with_items:
@@ -77,13 +70,13 @@
 
 - name: Make sure that the backups directory exists
   file: >-
-    path="{{ backups_basedir }}" state=directory owner=root group=root mode=0755
+    path="{{ mysql_backups_basedir }}" state=directory owner=root group=root mode=0755
   tags:
     - mysql
     - backups
 - name: Make sure that the MySQL backups directory exists
   file: >-
-    path="{{ backups_basedir }}/mysql" state=directory owner=root group=root mode=0770
+    path="{{ mysql_backups_basedir }}/mysql" state=directory owner=root group=root mode=0770
   tags:
     - mysql
     - backups

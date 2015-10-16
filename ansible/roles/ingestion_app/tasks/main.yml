@@ -1,8 +1,5 @@
 ---
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-
 - name: Ensure that necessary packages are installed
   apt: >-
     pkg="{{ item }}" state=present
@@ -17,6 +14,7 @@
     - sqlite3
     - libsqlite3-dev
     - ruby1.9.1-dev
+  when: not skip_configuration
   tags:
     - packages
 
@@ -28,6 +26,7 @@
   user: >-
       name=dpla comment="DPLA application user"
       home=/home/dpla shell=/bin/bash state=present
+  when: not skip_configuration
   tags:
     - users
 
@@ -35,7 +34,8 @@
   lineinfile: >-
     dest=/home/dpla/.bashrc
     regexp='RAILS_ENV='
-    line="export RAILS_ENV={{ rails_env }}"
+    line="export RAILS_ENV={{ ingestion_app_rails_env }}"
+  when: not skip_configuration
   tags:
    - users
 
@@ -43,7 +43,8 @@
   gem: >-
     name=god state=latest user_install=no
   when: >-
-    'worker' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'worker' in hostvars[inventory_hostname]['group_names']
   tags:
     - packages
 
@@ -53,7 +54,8 @@
     owner=root group=root mode=0644
   notify: restart god
   when: >-
-    'worker' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'worker' in hostvars[inventory_hostname]['group_names']
 
 - name: Install god init script
   template: >-
@@ -61,21 +63,24 @@
     owner=root group=root mode=0755
   notify: restart god
   when: >-
-    'worker' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'worker' in hostvars[inventory_hostname]['group_names']
   tags:
     - initscripts
 
 - name: Clear existing god init script run levels in case of change
   command: update-rc.d -f god_heidrun remove
   when: >-
-    'worker' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'worker' in hostvars[inventory_hostname]['group_names']
   tags:
     - initscripts
 
 - name: Ensure god init script run levels
   command: update-rc.d god_heidrun defaults
   when: >-
-    'worker' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'worker' in hostvars[inventory_hostname]['group_names']
   tags:
     - initscripts
 
@@ -84,28 +89,32 @@
       src=start_unicorn_heidrun.sh.j2 dest=/usr/local/sbin/start_unicorn_heidrun.sh
       owner=root group=root mode=0755
   when: >-
-    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'ingestion_app' in hostvars[inventory_hostname]['group_names']
 
 - name: Ensure state of Unicorn init script
   template: >-
       src=etc_init.d_unicorn_heidrun.j2 dest=/etc/init.d/unicorn_heidrun
       owner=root group=root mode=0755
   when: >-
-    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'ingestion_app' in hostvars[inventory_hostname]['group_names']
   tags:
     - initscripts
 
 - name: Clear existing unicorn init script run levels in case of change
   command: update-rc.d -f unicorn_heidrun remove
   when: >-
-    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'ingestion_app' in hostvars[inventory_hostname]['group_names']
   tags:
     - initscripts
 
 - name: Ensure Unicorn init script run levels
   command: update-rc.d unicorn_heidrun defaults
   when: >-
-    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'ingestion_app' in hostvars[inventory_hostname]['group_names']
   tags:
     - initscripts
 
@@ -116,7 +125,8 @@
       owner=root group=root mode=0644
   notify: restart nginx
   when: >-
-    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'ingestion_app' in hostvars[inventory_hostname]['group_names']
   tags:
     - nginx
 
@@ -127,7 +137,8 @@
     state=link
   notify: restart nginx
   when: >-
-    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'ingestion_app' in hostvars[inventory_hostname]['group_names']
   tags:
     - nginx
 
@@ -137,7 +148,8 @@
       dest=/etc/logrotate.d/heidrun_rails_logs
       owner=root group=root mode=0644
   when: >-
-    'ingestion_app' in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'ingestion_app' in hostvars[inventory_hostname]['group_names']
   tags:
     - logrotate
 
@@ -147,10 +159,11 @@
       dest=/etc/logrotate.d/heidrun_worker_logs
       owner=root group=root mode=0644
   when: >-
-    'worker' in hostvars[inventory_hostname]['group_names'] and
-    'ingestion_app' not in hostvars[inventory_hostname]['group_names']
+    not skip_configuration
+    and 'worker' in hostvars[inventory_hostname]['group_names']
+    and 'ingestion_app' not in hostvars[inventory_hostname]['group_names']
   tags:
     - logrotate
 
 - include: deploy.yml
-
+  when: do_deployment

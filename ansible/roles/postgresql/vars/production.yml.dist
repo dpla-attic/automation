@@ -1,6 +1,0 @@
----
-
-pg_max_connections: 512
-# kernel.shmmax is 200 Mb
-# This is related to the number of pg_max_connections.
-kernel_shmmax: 209715200

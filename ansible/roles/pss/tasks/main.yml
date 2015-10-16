@@ -11,6 +11,7 @@
     - build-essential
     - libreadline6
     - libreadline6-dev
+    - libfontconfig1-dev
   when: not skip_configuration
   tags:
     - packages

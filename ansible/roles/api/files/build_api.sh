@@ -10,12 +10,12 @@ eval "`rbenv init -`"
 
 cd /home/dpla/api
 
-rbenv shell $USE_VERSION
+rbenv shell $USE_VERSION >> $LOGFILE 2>&1
 
 echo "installing bundle ..." >> $LOGFILE
 
 rm -f Gemfile.lock
-bundle install
+bundle install >> $LOGFILE 2>&1
 rbenv rehash
 
 echo "rsync from home to /srv/www/api ..." >> $LOGFILE
@@ -50,7 +50,7 @@ echo "running rake tasks ..." >> $LOGFILE
 # loadbalancer's rotation for the duration of this script.
 # - mb
 cd /srv/www/api
-bundle exec rake db:migrate \
-     && bundle exec rake tmp:clear \
-     && bundle exec rake jobs:clear \
-     && bundle exec rake contentqa:delete_reports
+bundle exec rake db:migrate >> $LOGFILE 2>&1 \
+     && bundle exec rake tmp:clear >> $LOGFILE 2>&1 \
+     && bundle exec rake jobs:clear >> $LOGFILE 2>&1 \
+     && bundle exec rake contentqa:delete_reports >> $LOGFILE 2>&1

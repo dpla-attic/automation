@@ -45,7 +45,7 @@ echo "installing bundle ..." >> $LOGFILE
 
 if [ $fast == 0 ]; then
     rm -f Gemfile.lock
-    bundle install || exit 1
+    bundle install >> $LOGFILE 2>&1 || exit 1
     rbenv rehash
 fi
 
@@ -89,14 +89,14 @@ echo "running rake ..." >> $LOGFILE
 
 cd /opt/heidrun
 if [ $do_webapp -eq 1 ]; then
-    bundle exec rake assets:precompile || exit 1
+    bundle exec rake assets:precompile >> $LOGFILE 2>&1 || exit 1
     if [ $fast -eq 0 ]; then
-        bundle exec rake db:migrate || exit 1
+        bundle exec rake db:migrate >> $LOGFILE 2>&1 || exit 1
     fi
 fi
 
 echo "clearing tmp directory ..." >> $LOGFILE
 
-bundle exec rake tmp:clear || exit 1
+bundle exec rake tmp:clear >> $LOGFILE 2>&1 || exit 1
 
 echo "done." >> $LOGFILE

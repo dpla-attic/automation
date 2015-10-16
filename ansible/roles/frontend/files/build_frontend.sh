@@ -6,25 +6,25 @@ LOGFILE=/tmp/build_frontend.log
 
 echo "starting" > $LOGFILE
 
-eval "`rbenv init -`"
+eval "`rbenv init -`" >> $LOGFILE 2>&1
 # Start ssh-agent and set environment variables.
 # Work-around for private GitHub repository in Gemfile.
 eval `ssh-agent`
-ssh-add $HOME/git_private_key
+ssh-add $HOME/git_private_key  >> $LOGFILE 2>&1
 
 cd $HOME/frontend
 
-rbenv shell $USE_VERSION
+rbenv shell $USE_VERSION >> $LOGFILE 2>&1
 
 echo "installing bundle ..." >> $LOGFILE
 
 rm -f Gemfile.lock
-bundle install
-bundle update dpla_frontend_assets
+bundle install >> $LOGFILE 2>&1
+bundle update dpla_frontend_assets >> $LOGFILE 2>&1
 rbenv rehash
 
 echo "precompiling assets ..." >> $LOGFILE
-bundle exec rake assets:precompile
+bundle exec rake assets:precompile >> $LOGFILE 2>&1
 
 echo "killing ssh_agent ..." >> $LOGFILE
 # Variable set above by ssh-agent

@@ -10,6 +10,8 @@ pss_secret_key_base: 9d0c334e9aa3d80e27ff0f9a370c21611cbbf80db7206ed19c48081d8bc
 # settings.local.yml values
 pss_devise_mail_sender: email@example.org
 pss_frontend_url: http://example.org
+pss_exhibitions_url: http://example.org
+pss_wordpress_url: http://example.org
 pss_app_scheme: http://
 pss_app_host: local.dp.la
 pss_aws_region: us-east-1
@@ -22,3 +24,4 @@ pss_zencoder_api_key: OVERRIDE-THIS
 pss_zencoder_notification_user: OVERRIDE-THIS
 pss_zencoder_notification_pass: OVERRIDE-THIS
 pss_zencoder_s3_credentials_name: false
+pss_contact_email: email@example.com

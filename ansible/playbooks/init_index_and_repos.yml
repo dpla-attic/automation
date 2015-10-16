@@ -27,7 +27,7 @@
 
     - name: Delete any existing river
       script: >
-          ../files/delete_river.sh {{ ruby_rbenv_version }}
+          ../files/delete_river.sh {{ api_rbenv_version }}
       sudo_user: dpla
 
     - name: Drop existing repositories
@@ -63,17 +63,17 @@
 
     - name: Create api key database (with its design doc)
       script: >
-          ../files/create_api_key_database.sh {{ ruby_rbenv_version }}
+          ../files/create_api_key_database.sh {{ api_rbenv_version }}
       sudo_user: dpla
 
     - name: Create new index and river
       script: >
-          ../files/create_index_and_river.sh {{ ruby_rbenv_version }}
+          ../files/create_index_and_river.sh {{ api_rbenv_version }}
       sudo_user: dpla
 
     - name: Delete any undeployed indices
       script: >
-          ../files/delete_undeployed_indices.sh {{ ruby_rbenv_version }}
+          ../files/delete_undeployed_indices.sh {{ api_rbenv_version }}
       sudo_user: dpla
 
     - name: Create test API user (optional)
@@ -90,7 +90,5 @@
           force_basic_auth: yes
           status_code: "201"
 
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
   vars:
     level: fail_if_this_is_not_given_explicitly

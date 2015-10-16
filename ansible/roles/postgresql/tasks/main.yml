@@ -1,12 +1,5 @@
 ---
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-  tags:
-    - postgresql
-    - backups
-    - munin
-
 - name: Set kernel shared memory to be enough for PostgreSQL
   template: >-
       src="30-postgresql-shm.conf.j2"
@@ -120,13 +113,13 @@
 
 - name: Make sure that the backups directory exists
   file: >-
-    path="{{ backups_basedir }}" state=directory owner=root group=root mode=0755
+    path="{{ pg_backups_basedir }}" state=directory owner=root group=root mode=0755
   tags:
     - postgresql
     - backups
 - name: Make sure that the PostgreSQL backups directory exists
   file: >-
-    path="{{ backups_basedir }}/postgresql" state=directory
+    path="{{ pg_backups_basedir }}/postgresql" state=directory
     owner=postgres group=postgres mode=0770
   tags:
     - postgresql

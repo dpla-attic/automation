@@ -3,15 +3,15 @@
 - name: Gather inventory facts in case playbook is run standalone
   hosts: all
 
-- name: API (platform) application
+- name: Deploy API
   hosts: api
-  serial: 1
-  sudo: yes
   roles:
     - api
+  sudo: yes
+  serial: 1
   vars:
     do_deployment: true
-    skip_configuration: false
+    skip_configuration: true
   pre_tasks:
     - include: pre_post_tasks/api_pretasks.yml
   post_tasks:

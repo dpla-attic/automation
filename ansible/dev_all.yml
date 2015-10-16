@@ -17,8 +17,6 @@
     - monitoring_web
   vars:
     level: development
-  vars_files:
-    - [ "./vars/development.yml" ]
   sudo: yes
 
 - include: playbooks/dev_loadbalancer.yml

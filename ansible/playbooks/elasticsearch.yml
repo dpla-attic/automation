@@ -8,16 +8,13 @@
 - name: Gather inventory facts in case playbook is run standalone
   hosts: all
 
-- hosts: 127.0.0.1
-  connection: local
+- hosts: elasticsearch[0]
   sudo: false
   tasks:
     - name: Turn off shard replica allocation
       when: level != 'contentqa' and initial_run is not defined and ingestion2 is not defined
       local_action: >
           script ../files/set-allocation.sh off "{{ es_cluster_loadbal }}"
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 
 - name: Elasticsearch setup
   hosts: elasticsearch
@@ -62,16 +59,11 @@
         aws_region: "{{ aws_region }}"
         state: present
         wait_timeout: 22
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
 
-- hosts: 127.0.0.1
-  connection: local
+- hosts: elasticsearch[0]
   sudo: false
   tasks:
     - name: Turn shard replica allocation back on
       when: level != 'contentqa' and ingestion2 is not defined
       local_action: >
           script ../files/set-allocation.sh on "{{ es_cluster_loadbal }}"
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

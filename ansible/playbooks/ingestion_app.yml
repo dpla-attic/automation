@@ -14,6 +14,7 @@
     - worker
   sudo: yes
   roles:
-    - { role: ingestion_app, tags: ['ingestion_app']}
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]
+    - ingestion_app
+  vars:
+    skip_configuration: false
+    do_deployment: true

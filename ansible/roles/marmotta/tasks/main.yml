@@ -1,8 +1,5 @@
 ---
 
-- include_vars: "../vars/{{ level }}.yml"
-  when: level is defined
-
 - file: >-
     path="{{ marmotta_home }}" state=directory owner=tomcat7 group=tomcat7
     mode=0755

@@ -7,6 +7,10 @@ The intention of this project is to provide automated configuration management
 for production, development, and staging environments with the same set of
 files.
 
+## Version 2
+
+For upgrade notes, see [README-upgrade-2.0.txt](README-upgrade-2.0.txt).
+
 [Release Notes](https://github.com/dpla/automation/releases)
 
 ## Installation, VM setup:
@@ -43,21 +47,12 @@ If you want to work with our new Ingestion2 system, please see
       and that they require SSH public keys in their ssh_authorized_keys fields.
       The `adminusers` variable is for administrative users who will run
       ansible-playbook.
-  * `ansible/vars/development.yml.dist`
-  * `ansible/roles/api/vars/development.yml.dist`
-    * Optional, if you want to use a local source directory for the API app (see
-      `Vagrantfile`).
-  * `ansible/roles/elasticsearch/vars/development.yml.dist`
-  * `ansible/roles/postgresql/vars/development.yml.dist`
-  * `ansible/roles/frontend/vars/development.yml.dist`
-    * Optional.  For the frontend app, as above.  See `Vagrantfile`.
-* Optionally, copy and update any other `ansible/roles/*/development.yml.dist`
-  files in a similar fashion.  There are defaults that will take effect if you don't
-  make any changes.
+  * `ansible/group_vars/development.dist`
+    * If you're going to be developing DPLA applications, you might want to
+      override the `*_use_local_source` variables in some of the roles'
+      `defaults` directories, as well as the variables related to the source
+      directories.
 * Copy `Vagrantfile.dist` to `Vagrantfile`.
-  In the future, there will be more hosts in our configuration than you'll want
-  to have running simultaneously as VMs, and you'll want to edit the default
-  Vagrantfile to suit your needs, commenting out VMs that you don't want running.
 * Make sure that Vagrant has downloaded the base server image that we'll need
   for our VMs:
 ```

@@ -1,5 +1,5 @@
 ---
 
-admin_pwhash: :plain::pass123
-heidrun_allowed_ip:  192.168.50.0/24
+marmotta_admin_pwhash: :plain::pass123
+marmotta_heidrun_allowed_ip:  192.168.50.0/24
 marmotta_home: /var/lib/marmotta

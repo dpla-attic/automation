@@ -5,4 +5,4 @@ mysql_users:
   - {name: "dpla_omeka", password: "changeme"}
   - {name: "dpla_wordpress", password: "changeme"}
 mysql_backup_keep_days: 30
-backups_basedir: /backups
+mysql_backups_basedir: /backups

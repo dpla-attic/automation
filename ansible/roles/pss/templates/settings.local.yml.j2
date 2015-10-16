@@ -1,0 +1,29 @@
+---
+
+devise:
+  mailer_sender: {{ pss_devise_mail_sender }}
+
+frontend:
+  url: {{ pss_frontend_url }}
+
+app_scheme: {{ pss_app_scheme }}
+app_host: {{ pss_app_host }}
+
+aws:
+  region: {{ pss_aws_region }}
+  access_key_id: {{ pss_aws_access_key_id }}
+  secret_access_key: {{ pss_aws_secret_access_key }}
+  s3_upload_bucket: {{ pss_aws_s3_upload_bucket }}
+  s3_destination_bucket: {{ pss_aws_s3_destination_bucket }}
+  cloudfront_domain: {{ pss_aws_s3_cloudfront_domain }}
+
+zencoder:
+  api_key: {{ pss_zencoder_api_key }}
+  notification_user: {{ pss_zencoder_notification_user }}
+  notification_pass: {{ pss_zencoder_notification_pass }}
+{% if pss_zencoder_s3_credentials_name %}
+  s3_credentials_name: {{ pss_zencoder_s3_credentials_name }}
+{% endif %}
+
+googleanalytics:
+  tracker: {{ google_analytics_property_id }}

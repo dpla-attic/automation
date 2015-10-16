@@ -1,6 +1,7 @@
 ---
 
 postgresql_user: {name: "dpla", password: "changeme"}
+# These memory-related values are tuned to the size of the development VM.
 pg_max_connections: 50
 pg_shared_buffers: 24MB
 pg_effective_cache_size: 128MB
@@ -9,8 +10,21 @@ pg_maintenance_work_mem: 16MB
 # The default random_page_cost of 4.0 assumes you're using disks.
 # Decrease it if you're using SSD drives.  1.5 might be a good value.
 pg_random_page_cost: 4.0
+# default for bgwriter_delay is 200ms
+pg_bgwriter_delay: 200ms
+# default for bgwriter_lru_maxpages is 100
+pg_bgwriter_lru_maxpages: 100
+# default for bgwriter_lru_multiplier is 2.0
+pg_bgwriter_lru_multiplier: 2.0
+# default for checkpoint_segments is 3
+pg_checkpoint_segments: 32
+# default for checkpoint_timeout is 5min
+pg_checkpoint_timeout: 10min
+# default for checkpoint_completion_target is 0.5
+pg_checkpoint_completion_target: 0.9
+
 pg_backup_keep_days: 7
 pg_log_min_duration_statement: 100
-backups_basedir: /backups
-log_rotation_interval: daily
-log_rotation_count: 14
+pg_backups_basedir: /backups
+pg_log_rotation_interval: daily
+pg_log_rotation_count: 14

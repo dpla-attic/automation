@@ -1,15 +1,3 @@
 ---
 
-- name: Deploy API (content QA)
-  hosts: api
-  sudo: yes
-  tasks:
-    - include: ../roles/api/tasks/deploy.yml
-  handlers:
-    - include: ../roles/api/handlers/main.yml
-  vars:
-    level: contentqa
-  vars_files:
-    - "../vars/contentqa.yml"
-    - "../roles/api/defaults/main.yml"
-    - "../roles/api/vars/contentqa.yml"
+- include: deploy_api.yml level=contentqa

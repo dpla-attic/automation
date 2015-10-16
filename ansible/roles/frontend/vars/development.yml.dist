@@ -1,7 +1,0 @@
----
-
-# Uncomment this to use your local working copy for the frontend (portal)
-# (See Vagrantfile)
-# frontend_use_local_source: true
-# Set this to your S3 bucket used for your dev environemnt
-# frontend_s3_bucket: changeme

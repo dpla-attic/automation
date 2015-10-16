@@ -2,7 +2,7 @@
 
 USERNAME="dpla"
 APP_ROOT="/opt/heidrun"
-UNICORN_OPTS="-D -E {{ rails_env }} -c $APP_ROOT/config/unicorn.rb"
+UNICORN_OPTS="-D -E {{ ingestion_app_rails_env }} -c $APP_ROOT/config/unicorn.rb"
 
 export RBENV_VERSION="{{ ingestion_rbenv_version }}"
 export RBENV_SHELL=bash

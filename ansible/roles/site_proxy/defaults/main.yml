@@ -4,39 +4,36 @@ siteproxy_503_message: >-
   This part of the site is temporarily unavailable.  Please check back
   in a few minutes!
 
-nginx_real_ip_from_addrs:
-    - 192.168.50.0/24
-
 # Sizes of NGINX shared memory zones for storing states of requests and
 # connections, for rate limiting.
 # See:
 # http://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_zone
 # http://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_zone
-nginx_conn_zone_size: 10m
-nginx_req_zone_size: 10m
+siteproxy_nginx_conn_zone_size: 10m
+siteproxy_nginx_req_zone_size: 10m
 # Zones for specific areas of the site:
-nginx_bookshelf_conn_zone_size: 10m
-nginx_bookshelf_req_zone_size: 10m
+siteproxy_bookshelf_conn_zone_size: 10m
+siteproxy_bookshelf_req_zone_size: 10m
 
 # Default maximum connections per address, where connection-limiting is
 # performed
-nginx_default_max_conn: 10
+siteproxy_nginx_default_max_conn: 10
 # Maximum connections per address for specific areas of the site:
-nginx_bookshelf_max_conn: 2
+siteproxy_bookshelf_max_conn: 2
 
 # Default maximum request rate, where rate-limiting is performed
-nginx_default_req_rate: 10r/s
+siteproxy_nginx_default_req_rate: 10r/s
 # Maximum request rates for specific areas of the site:
-nginx_bookshelf_req_rate: 1r/s
+siteproxy_bookshelf_req_rate: 1r/s
 
 # Default number of requests that are delayed for serving if a client's
 # requests per second goes over its threshold.
 # See http://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req
-nginx_default_req_burst_size: 20
+siteproxy_nginx_default_req_burst: 20
 
 # Level at which connection-limiting events will be logged
-nginx_limit_conn_log_level: notice
+siteproxy_nginx_limit_conn_log_level: notice
 # Level at which rate-limiting events will be logged.  Note that when requests
 # are simply delayed (per the rate and burst parameters), they will be logged at
 # one level lower.
-nginx_limit_req_log_level: notice
+siteproxy_nginx_limit_req_log_level: notice

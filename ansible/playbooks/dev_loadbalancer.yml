@@ -5,5 +5,3 @@
   sudo: yes
   roles:
     - dev_loadbalancer
-  vars_files:
-    - [ "../vars/development.yml", "../vars/defaults.yml"]

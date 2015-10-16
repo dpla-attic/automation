@@ -19,5 +19,3 @@
   sudo: yes
   roles:
     - common_web
-  vars_files:
-    - ["../vars/{{ level }}.yml", "../vars/defaults.yml"]

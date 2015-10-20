@@ -20,4 +20,14 @@
         dest=/srv/www/api/tmp/maintenance.yml
         owner=root group=root mode=0644
 
+- name: Put Primary Source Sets into maintenance mode
+  hosts: pss
+  sudo: true
+  tasks:
+    - name: Deploy turnout maintenance.yml file
+      copy: >-
+        src=../files/turnout_postgres_maintenance.yml
+        dest=/srv/www/pss/tmp/maintenance.yml
+        owner=root group=root mode=0644
+
 - include: clear_proxy_cache.yml

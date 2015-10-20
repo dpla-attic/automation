@@ -174,6 +174,7 @@ server {
         rewrite ^/about/map /info/map last;
         rewrite ^/about/schema /info/schema last;
         rewrite ^/platform /info/developers/codex last;
+        rewrite ^/education /info/education last;
         rewrite ^/lists(.*)$ http://lists.dp.la$1 last;
         {% if sitemap_host is defined %}
         rewrite ^/sitemap.xml$ http://{{ sitemap_host }}/all_item_urls.xml last;

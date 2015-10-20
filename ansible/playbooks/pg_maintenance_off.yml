@@ -18,4 +18,13 @@
         path=/srv/www/frontend/tmp/maintenance.yml
         state=absent
 
+- name: Take Primary Source Sets out of maintenance mode
+  hosts: pss
+  sudo: true
+  tasks:
+    - name: Remove maintenance.yml file
+      file: >-
+        path=/srv/www/pss/tmp/maintenance.yml
+        state=absent
+
 - include: clear_proxy_cache.yml

@@ -91,6 +91,8 @@
   script: >-
     build_pss.sh "{{ pss_rbenv_version }}"
   sudo_user: dpla
+  environment:
+    RAILS_ENV: "{{ pss_rails_env }}"
 
 - name: Ensure existence of uploads directory
   file: >-

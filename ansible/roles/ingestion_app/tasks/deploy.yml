@@ -197,7 +197,7 @@
     {{ hostvars[inventory_hostname]['group_names'] | join(',') }}
   sudo_user: dpla
   environment:
-    RAILS_ENV: "{{ pss_rails_env }}"
+    RAILS_ENV: "{{ ingestion_app_rails_env }}"
 
 - name: Start Unicorn
   service: name=unicorn_heidrun state=started

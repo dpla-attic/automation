@@ -9,6 +9,13 @@ everything onto two servers, `dev1` and `dev2`, to save memory.
 
 Follow all of the steps in [README.md](README.md) up until "Copy Vagrantfile.dist to Vagrantfile."
 
+# Upgrade notes
+
+Release 2.2.0 upgrades PostgreSQL from 9.1 to 9.4 in order to gain significant
+performance increases by queries issued by Marmotta.  See
+[the 2.2.0 upgrade document](README-upgrade-2.2.0.txt) if you have installed
+machines with a version prior to 2.2.0.
+
 ## Steps
 
 * Copy `Vagrantfile.ingestion2` to `Vagrantfile`

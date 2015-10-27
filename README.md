@@ -13,6 +13,10 @@ For upgrade notes, see [README-upgrade-2.0.txt](README-upgrade-2.0.txt).
 
 [Release Notes](https://github.com/dpla/automation/releases)
 
+Release 2.2.0 upgrades PostgreSQL from 9.1 to 9.4.  If you have an installation
+that predates [Release 2.2.0](https://github.com/dpla/automation/releases),
+please see [the 2.2.0 upgrade document](README-upgrade-2.2.0.txt) now.
+
 ## Installation, VM setup:
 
 ### Prerequisites and Dependencies

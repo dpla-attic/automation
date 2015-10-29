@@ -205,4 +205,5 @@ might use Docker, keeping in mind our need to represent our network setup.
 * If you destroy and re-create a VM, you should delete the old public key
   from `$HOME/.ssh/known_hosts` to avoid getting an error when you run
   ansible-playbook again.  Look for the hostname in addition to its IP address.
-
+* See the note in group_vars/all.dist about using SSH private keys for deploying
+  from private GitHub repositories, if you intend to use private resources.

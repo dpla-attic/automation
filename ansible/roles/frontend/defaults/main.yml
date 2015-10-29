@@ -7,4 +7,5 @@ frontend_use_local_source: false
 frontend_branch_or_tag: master
 frontend_s3_bucket: changeme
 frontend_alternate_db_host: false
+frontend_include_branding: false
 bookshelf_max_pages: 100

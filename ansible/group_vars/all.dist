@@ -20,6 +20,9 @@ iana_timezone: US/Eastern
 # is to set an alias for the ansible-playbook command, such as:
 #   $ alias ansible-playbook='ansible-playbook \
 #     -e "github_private_key_path=~/.ssh/id_rsa_github'
+# Note that this key file should not be password-protected.  We recommend that
+# you create a deployment-only ssh-key that's not password protected, that's
+# separate from the key that you'd normally use to log into your servers.
 # github_private_key_path: ~/.ssh/id_rsa
 
 ## The following variables are only relevant if you're using Amazon SES for mail

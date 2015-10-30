@@ -13,10 +13,11 @@ Follow all of the steps in [README.md](README.md) up until "Copy Vagrantfile.dis
 
 * Copy `Vagrantfile.ingestion2` to `Vagrantfile`
 
-* Make sure that Vagrant has downloaded the base server image that we'll need
+* Make sure that Vagrant has downloaded the base server images that we'll need
   for our VMs:
 ```
 $ vagrant box add hashicorp/precise64
+$ vagrant box add ubuntu/trusty64
 ```
 * Add the following entries to your /etc/hosts file or the equivalent for your
   operating system:
@@ -41,6 +42,8 @@ $ ansible-playbook -i ingestion -u vagrant \
 ```
 Then some more invocations to configure everything:
 ```
+$ ansible-playbook -i ingestion -u <your username in group_vars/all> \
+  playbooks/common.yml -t locale
 $ ansible-playbook -i ingestion -u <your username in group_vars/all> \
   playbooks/package_upgrade.yml
 $ vagrant reload

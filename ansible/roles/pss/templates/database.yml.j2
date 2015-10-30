@@ -1,6 +1,8 @@
-
-{# Assume there's just one frontend db server. #}
-{% set db_host = groups['postgresql_dbs'][0] %}
+{% if pss_alternate_db_host %}
+{%     set db_host = pss_alternate_db_host %}
+{% else %}
+{%     set db_host = groups['postgresql_dbs'][0] %}
+{% endif %}
 
 test:
   adapter: postgresql

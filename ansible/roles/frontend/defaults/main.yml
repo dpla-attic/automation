@@ -6,4 +6,5 @@ frontend_unicorn_worker_processes: 2
 frontend_use_local_source: false
 frontend_branch_or_tag: master
 frontend_s3_bucket: changeme
+frontend_alternate_db_host: false
 bookshelf_max_pages: 100

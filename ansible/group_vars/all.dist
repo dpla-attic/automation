@@ -65,6 +65,8 @@ exhibitions_app_port: 8000
 wordpress_app_port: 8001
 frontend_app_port: 8002
 ingestion_app_port: 8004
+# port 8005 is used by Tomcat
+pss_app_port: 8006
 
 nginx_real_ip_from_addrs:
     - 192.168.50.0/24

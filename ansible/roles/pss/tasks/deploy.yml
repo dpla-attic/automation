@@ -48,6 +48,14 @@
       src=unicorn.rb.j2 dest=/home/dpla/pss/config/unicorn.rb
       owner=dpla group=dpla mode=0644
 
+- name: Add dpla_frontend_assets to Gemfile if branding is turned on
+  lineinfile: >
+    dest=/home/dpla/pss/Gemfile
+    state=present
+    regexp=dpla_frontend_assets
+    line="gem 'dpla_frontend_assets', git: 'git@github.com:dpla/frontend-assets.git'"
+  when: pss_include_branding
+
 - name: Make sure that rbenv and bundler are current
   script: >-
       ../../../files/install_ruby_tools.sh {{ pss_rbenv_version }}
@@ -90,6 +98,7 @@
 - name: Build primary-source-sets app
   script: >-
     build_pss.sh "{{ pss_rbenv_version }}"
+    {{ 'branding' if pss_include_branding else '' }}
   sudo_user: dpla
   environment:
     RAILS_ENV: "{{ pss_rails_env }}"

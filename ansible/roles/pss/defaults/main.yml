@@ -25,3 +25,4 @@ pss_zencoder_notification_user: OVERRIDE-THIS
 pss_zencoder_notification_pass: OVERRIDE-THIS
 pss_zencoder_s3_credentials_name: false
 pss_contact_email: email@example.com
+pss_alternate_db_host: false

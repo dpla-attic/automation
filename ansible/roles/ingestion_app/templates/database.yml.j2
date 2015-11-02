@@ -1,7 +1,10 @@
-{# Assume there's just one db server. #}
-{% set db_host = groups['postgresql_dbs'][0] %}
 
-{# The "test" environment is not used yet. #}
+{% if ingestion_app_alternate_db_host %}
+{%     set db_host = ingestion_app_alternate_db_host %}
+{% else %}
+{%     set db_host = groups['postgresql_dbs'][0] %}
+{% endif %}
+
 test:
   adapter: postgresql
   encoding: unicode
@@ -15,7 +18,6 @@ development:
   adapter: postgresql
   encoding: unicode
   host: {{ db_host }}
-  hostname: localhost
   database: ingestion
   username: {{ postgresql_user['name'] }}
   password: {{ postgresql_user['password'] }}

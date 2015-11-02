@@ -1,6 +1,9 @@
 
-{# Assume there's just one frontend db server. #}
-{% set db_host = groups['postgresql_dbs'][0] %}
+{% if api_alternate_db_host %}
+{%     set db_host = api_alternate_db_host %}
+{% else %}
+{%     set db_host = groups['postgresql_dbs'][0] %}
+{% endif %}
 
 {# The "test" environment is not used yet. #}
 test:

@@ -1,6 +1,8 @@
 ---
 
 - include: pg_maintenance_on.yml
+# TODO:  When Ansible version 2 is stable, add a "where:" condition here so
+# so that the playbook is not even included if some condition is False.
 
 - name: Reboot PostgreSQL server
   hosts: postgresql_dbs
@@ -18,3 +20,4 @@
         port=5432 delay=40 timeout=600
 
 - include: pg_maintenance_off.yml
+# TODO: see above

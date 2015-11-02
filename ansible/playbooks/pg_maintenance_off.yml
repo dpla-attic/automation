@@ -8,6 +8,7 @@
       file: >-
         path=/srv/www/api/tmp/maintenance.yml
         state=absent
+      when: not api_alternate_db_host | default(false)
 
 - name: Take frontend out of maintenance mode
   hosts: frontend
@@ -17,6 +18,7 @@
       file: >-
         path=/srv/www/frontend/tmp/maintenance.yml
         state=absent
+      when: not frontend_alternate_db_host | default(false)
 
 - name: Take Primary Source Sets out of maintenance mode
   hosts: pss
@@ -26,5 +28,6 @@
       file: >-
         path=/srv/www/pss/tmp/maintenance.yml
         state=absent
+      when: not pss_alternate_db_host | default(false)
 
 - include: clear_proxy_cache.yml

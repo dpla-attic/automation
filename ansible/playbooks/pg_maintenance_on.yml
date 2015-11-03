@@ -9,6 +9,7 @@
         src=../files/turnout_postgres_maintenance.yml
         dest=/srv/www/frontend/tmp/maintenance.yml
         owner=root group=root mode=0644
+      when: not frontend_alternate_db_host | default(false)
 
 - name: Put API into maintenance mode
   hosts: api
@@ -19,6 +20,7 @@
         src=../files/turnout_postgres_maintenance.yml
         dest=/srv/www/api/tmp/maintenance.yml
         owner=root group=root mode=0644
+      when: not api_alternate_db_host | default(false)
 
 - name: Put Primary Source Sets into maintenance mode
   hosts: pss
@@ -29,5 +31,6 @@
         src=../files/turnout_postgres_maintenance.yml
         dest=/srv/www/pss/tmp/maintenance.yml
         owner=root group=root mode=0644
+      when: not pss_alternate_db_host | default(false)
 
 - include: clear_proxy_cache.yml

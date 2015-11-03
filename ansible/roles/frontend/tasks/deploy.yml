@@ -43,6 +43,14 @@
       src=unicorn.rb.j2 dest=/home/dpla/frontend/config/unicorn.rb
       owner=dpla group=dpla mode=0644
 
+- name: Add dpla_frontend_assets to Gemfile if branding is turned on
+  lineinfile: >
+    dest=/home/dpla/frontend/Gemfile
+    state=present
+    regexp=dpla_frontend_assets
+    line="gem 'dpla_frontend_assets', git: 'git@github.com:dpla/frontend-assets.git'"
+  when: frontend_include_branding
+
 - name: Make sure rbenv and bundler are current
   script: >
       ../../../files/install_ruby_tools.sh {{ frontend_rbenv_version }}
@@ -63,6 +71,7 @@
       src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
       dest=/home/dpla/git_private_key
       owner=dpla group=dpla mode=0600
+  when: frontend_include_branding
 
 - name: Stop Unicorn (gracefully)
   # Unicorn is stopped completely, and later restarted, because we assume that
@@ -81,8 +90,9 @@
     - sock
 
 - name: Build frontend app
-  script: >
+  script: >-
       build_frontend.sh {{ frontend_rbenv_version }}
+      {{ 'branding' if frontend_include_branding else '' }}
   sudo_user: dpla
   notify: restart memcached
 
@@ -101,3 +111,4 @@
 
 - name: Remove temporary private key for GitHub
   file: path=/home/dpla/git_private_key state=absent
+  when: frontend_include_branding

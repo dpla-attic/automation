@@ -66,6 +66,8 @@ if solr_home_absent; then
     rm -rf /var/tmp/solr-$VERSION*
     cd /opt
     ln -sf $solrversion solr || err_exit "Could not symlink solr directory"
+    ln -sf /opt/solr/dpla/solr /var/lib/tomcat7/solr \
+        || err_exit "Could not symlink solr into /var/lib/tomcat7"
     changed=1
 fi
 

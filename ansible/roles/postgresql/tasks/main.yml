@@ -13,39 +13,49 @@
   tags:
     - postgresql
 
-- name: Ensure that PostgreSQL and Ansible dependencies are installed
-  apt: >
-      pkg="{{ item }}" state=present
-  environment:
-    LANG: "{{ dpla_locale }}"
-    LC_CTYPE: "{{ dpla_locale }}"
-    LC_COLLATE: "{{ dpla_locale }}"
-  with_items:
-    - postgresql
-    - libpq-dev
-    - python-psycopg2
-  tags:
-    - postgresql
-    - packages
+- include: install.yml
 
 - name: Ensure state of main PostgreSQL config file (postgresql.conf)
-  template: src=postgresql.conf.j2 dest=/etc/postgresql/9.1/main/postgresql.conf
+  template: >-
+    src=postgresql.conf.j2
+    dest="/etc/postgresql/{{ pg_version }}/main/postgresql.conf"
   notify:
     - restart postgresql
   tags:
     - postgresql
 
 - name: Ensure state of PostgreSQL networking config file (pg_hba.conf)
-  template: src=pg_hba.conf.j2 dest=/etc/postgresql/9.1/main/pg_hba.conf
+  template: >-
+    src=pg_hba.conf.j2
+    dest="/etc/postgresql/{{ pg_version }}/main/pg_hba.conf"
   notify:
     - restart postgresql
   tags:
     - postgresql
 
 - name: Make sure that PostgreSQL server environemnt variables are correct
-  template: src=environment.j2 dest=/etc/postgresql/9.1/main/environment
+  template: >-
+    src=environment.j2
+    dest="/etc/postgresql/{{ pg_version }}/main/environment"
   notify:
     - restart postgresql
+  tags:
+    - postgresql
+
+- name: Make sure that SSL files are symlinked
+  file: >-
+    src="/etc/ssl/{{ item.src }}"
+    dest="/var/lib/postgresql/{{ pg_version }}/main/{{ item.dest }}"
+    state=link
+  with_items:
+    - { src: 'certs/ssl-cert-snakeoil.pem', dest: 'server.crt' }
+    - { src: 'private/ssl-cert-snakeoil.key', dest: 'server.key' }
+  notify:
+    - restart postgresql
+  tags:
+    - postgresql
+
+- meta: flush_handlers
   tags:
     - postgresql
 

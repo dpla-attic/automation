@@ -52,6 +52,7 @@
     - munin-plugins-extra
     - zlib1g-dev
     - debian-goodies
+    - python-apt
   tags:
     - packages
     - munin

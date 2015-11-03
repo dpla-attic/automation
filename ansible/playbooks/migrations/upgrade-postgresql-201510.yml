@@ -1,0 +1,111 @@
+---
+
+### Upgrade PostgreSQL from 9.1 to 9.4 -- 2015-10
+#
+
+# This migration puts sites into maintenance mode, upgrades the PostgreSQL
+# software, and then upgrades the system tables.  PostgreSQL system tables are
+# not compatible between major versions (9.n and 9.n+1).  It then runs the
+# `postgresql` role to configure what is actually a separate, new installation;
+# and, finally, deletes the old version so that you don't have two versions
+# of the database running at the same time.
+#
+# PLEASE SEE README-upgrade-2.2.0.txt FOR DETAILED INFORMATION ABOUT THE
+# UPGRADE.
+
+# PERFORMING THE UPGRADE
+#
+# 1.  Make sure your packages and your configuration are up-to-date and
+#     you don't get any errors running the "all" playbooks, e.g. dev_all.yml
+#     or dev_ingestion_all.yml.  You can use the package_upgrade.yml playbook
+#     to make sure your o/s packages have been updated.
+#
+# 2.  Run this playbook.  For example:
+#     $ cd /path/to/ansible
+#     $ ansible-playbook -u me -i ingestion \
+#       playbooks/migrations/upgrade-postgresql-201510.yml \
+#       -e 'level=development'
+
+# ** Commandline variables **
+#
+# The following variables must be passed on the commandline.
+# - level:  Environment "level," e.g. "development", "staging",
+#           or "production".)  If you're unsure, you want "development".
+#
+# The following variables may be passed on the commandline.
+# - upgrade_jobs: Number of concurrent upgrade processes. Recommended 1 per CPU.
+#                 A degree of concurrency can speed up the upgrade.
+# - purge: Whether to purge the old 9.1 installation and cluster from the
+#          filesystem.
+
+# See Also:
+# - http://www.postgresql.org/docs/9.4/static/pgupgrade.html
+
+- name: Gather inventory facts
+  hosts: all
+
+- name: Make sure that vars are set on the commandline
+  # This will fail if the variable has not been defined ...
+  hosts: postgresql_dbs
+  tasks:
+    - debug: >-
+        msg="Environment: {{ level }}"
+
+- include: ../pg_maintenance_on.yml
+
+- name: Upgrade
+  hosts: postgresql_dbs
+  sudo: yes
+  tasks:
+
+    - include: ../../roles/postgresql/tasks/install.yml pg_version=9.4
+
+    # Because the apt installer starts the clusters ...
+    - service: name=postgresql state=stopped
+
+    - name: Upgrade system tables
+      command: >-
+        /usr/lib/postgresql/9.4/bin/pg_upgrade -b /usr/lib/postgresql/9.1/bin
+        -B /usr/lib/postgresql/9.4/bin -d /var/lib/postgresql/9.1/main
+        -D /var/lib/postgresql/9.4/main
+        -o '-c config_file=/etc/postgresql/9.1/main/postgresql.conf'
+        -O '-c config_file=/etc/postgresql/9.4/main/postgresql.conf'
+        -P 50433 -j {{ upgrade_jobs | default("2") }}
+      args:
+        chdir: /var/lib/postgresql
+      sudo_user: postgres
+
+    - name: Disable startup of old version
+      # The init script will look for this when determining which clusters to
+      # start.
+      command: >-
+        mv /usr/lib/postgresql/9.1/bin/pg_ctl
+           /usr/lib/postgresql/9.1/bin/pg_ctl_disabled
+      ignore_errors: yes
+
+    - name: Ensure that old versions of PostgreSQL are absent
+      apt: >-
+        pkg="{{ item }}"
+        state=absent purge=yes
+      with_items:
+        - postgresql-9.1
+        - postgresql-client-9.1
+      when: purge | default(false) | bool
+
+- name: Configure new installation
+  hosts: postgresql_dbs
+  sudo: yes
+  roles:
+    - postgresql
+  vars:
+    pg_version: 9.4
+
+- name: Post-installation tasks
+  hosts: postgresql_dbs
+  sudo: yes
+  tasks:
+    - name: Analyze tables
+      command: /usr/lib/postgresql/9.4/bin/vacuumdb --all --analyze-only
+      sudo_user: postgres
+
+- include: ../pg_maintenance_off.yml

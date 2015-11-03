@@ -1,0 +1,36 @@
+---
+
+- name: 'Ensure presence of PostgreSQL Global Development Group repository'
+  apt_repository: >-
+    repo='deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main'
+    state=present
+    update_cache=yes
+  tags:
+    - postgresql
+
+- name: 'Ensure that the PGDG signing key is present'
+  apt_key: >-
+    id=ACCC4CF8
+    url=https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state=present
+  tags:
+    - postgresql
+
+- name: Ensure that PostgreSQL and Ansible dependencies are installed
+  apt: >-
+    pkg="{{ item }}"
+    state=present
+    update_cache=yes
+    default_release=precise-pgdg
+  with_items:
+    - "postgresql-{{ pg_version }}"
+    - libpq-dev
+  tags:
+    - postgresql
+    - packages
+
+- name: Ensure presence of python-psycopg2 package for Ansible
+  apt: pkg=python-psycopg2 state=present
+  tags:
+    - postgresql
+    - packages

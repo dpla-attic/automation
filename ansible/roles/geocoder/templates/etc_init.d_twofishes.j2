@@ -14,6 +14,9 @@ set -e
 
 . /lib/lsb/init-functions
 
+# Make sure that Twofishes is started with the system locale.
+. /etc/default/locale
+export LANG
 
 JAR={{ twofishes_jar_name }}
 INDEX_DIR={{ index_dir_name_result.stdout_lines.0 }}

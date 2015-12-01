@@ -21,6 +21,7 @@
     - munin_master
     - common_web
     - monitoring_web
+    - { role: exporter, tags: ['exporter'] }
   vars:
     production_munin_master: true
     level: production

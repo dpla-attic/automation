@@ -51,6 +51,4 @@ echo "running rake tasks ..." >> $LOGFILE
 # - mb
 cd /srv/www/api
 bundle exec rake db:migrate >> $LOGFILE 2>&1 \
-     && bundle exec rake tmp:clear >> $LOGFILE 2>&1 \
-     && bundle exec rake jobs:clear >> $LOGFILE 2>&1 \
-     && bundle exec rake contentqa:delete_reports >> $LOGFILE 2>&1
+     && bundle exec rake tmp:clear >> $LOGFILE 2>&1

@@ -1,8 +1,5 @@
 ---
 
-- name: restart delayed job
-  service: name=delayed_job_api state=restarted
-
 - name: restart nginx
   service: name=nginx state=reloaded
 

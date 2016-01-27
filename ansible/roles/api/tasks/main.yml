@@ -46,38 +46,41 @@
     - web
     - initscripts
 
-- name: Ensure state of delayed job init script
-  template: >
-      src=etc_init.d_delayed_job_api.j2 dest=/etc/init.d/delayed_job_api
-      owner=root group=root mode=0755
+##
+# Clean up delayed_job init scripts and processes that used to be created in
+# earlier versions of this file
+- name: Stop obsolete delayed_job if it exists and is running
+  service: name=delayed_job_api state=stopped
   when: not skip_configuration
+  ignore_errors: yes
   tags:
     - web
     - initscripts
 
-- name: Ensure state of delayed job control script
-  template: >
-      src=delayed_job_api.sh.j2 dest=/usr/local/sbin/delayed_job_api.sh
-      owner=root group=root mode=0755
-  when: not skip_configuration
-  tags:
-    - web
-    - scripts
-    - initscripts
-
-- name: Clear existing unicorn init script run levels in case of change
+- name: Clear obsolete delayed_job init script run levels if they are set
   command: update-rc.d -f delayed_job_api remove
   when: not skip_configuration
   tags:
     - web
     - initscripts
 
-- name: Ensure delayed job init script run levels
-  command: update-rc.d delayed_job_api defaults 20 19
+- name: Ensure that obsolete delayed_job control script is absent
+  file: path=/usr/local/sbin/delayed_job_api.sh state=absent
   when: not skip_configuration
   tags:
     - web
     - initscripts
+
+- name: Ensure that obsolete QA app htpasswd file is absent
+  file: path=/etc/nginx/qa_htpasswd state=absent
+  notify: restart nginx
+  when: not skip_configuration
+  tags:
+    - nginx
+    - web
+    - htpasswd
+
+### end cleanup
 
 - name: Update webserver virtual host for api app
   template: >
@@ -100,18 +103,6 @@
   tags:
     - nginx
     - web
-
-- name: Ensure state of QA app's password file
-  template: >
-      src="qa_htpasswd.j2"
-      dest="/etc/nginx/qa_htpasswd"
-      owner=root group=www-data mode=0640
-  notify: restart nginx
-  when: not skip_configuration
-  tags:
-    - nginx
-    - web
-    - htpasswd
 
 - name: Make sure that API app logs get rotated
   template: >-

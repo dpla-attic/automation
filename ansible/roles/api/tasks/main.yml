@@ -51,7 +51,6 @@
 # earlier versions of this file
 - name: Stop obsolete delayed_job if it exists and is running
   service: name=delayed_job_api state=stopped
-  when: not skip_configuration
   ignore_errors: yes
   tags:
     - web
@@ -59,14 +58,12 @@
 
 - name: Clear obsolete delayed_job init script run levels if they are set
   command: update-rc.d -f delayed_job_api remove
-  when: not skip_configuration
   tags:
     - web
     - initscripts
 
 - name: Ensure that obsolete delayed_job control script is absent
   file: path=/usr/local/sbin/delayed_job_api.sh state=absent
-  when: not skip_configuration
   tags:
     - web
     - initscripts

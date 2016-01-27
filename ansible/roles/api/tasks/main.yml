@@ -49,15 +49,20 @@
 ##
 # Clean up delayed_job init scripts and processes that used to be created in
 # earlier versions of this file
-- name: Stop obsolete delayed_job if it exists and is running
-  service: name=delayed_job_api state=stopped
-  ignore_errors: yes
+- name: Stop obsolete delayed_job if it is running
+  command: pkill -9 -f delayed_job
   tags:
     - web
     - initscripts
 
 - name: Clear obsolete delayed_job init script run levels if they are set
   command: update-rc.d -f delayed_job_api remove
+  tags:
+    - web
+    - initscripts
+
+- name: Clear obsolete delayed_job init script if it is present
+  file: path=/etc/init.d/delayed_job_api state=absent
   tags:
     - web
     - initscripts

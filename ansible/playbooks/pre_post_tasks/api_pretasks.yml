@@ -18,3 +18,4 @@
   wait_for: >-
     host="{{ inventory_hostname }}" port="{{ api_app_port }}"
     state=drained timeout=60
+  ignore_errors: yes

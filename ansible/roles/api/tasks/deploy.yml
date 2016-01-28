@@ -72,7 +72,6 @@
       build_api.sh {{ api_rbenv_version }}
   sudo_user: dpla
   notify:
-    - restart delayed job
     - restart memcached
 
 - name: Clear site proxy cache

@@ -50,7 +50,12 @@
 # Clean up delayed_job init scripts and processes that used to be created in
 # earlier versions of this file
 - name: Stop obsolete delayed_job if it is running
-  command: pkill -9 -f delayed_job
+  shell: pkill -9 -f delayed_job
+  register: pkill_result
+  # The `shell' module returns -9 if the process not running, and it is OK if it
+  # was not.
+  failed_when: "pkill_result.rc != 0 and pkill_result.rc != -9"
+  changed_when: pkill_result.rc == 0
   tags:
     - web
     - initscripts

@@ -3,7 +3,9 @@
 ingestion_rbenv_version: 2.1.3
 ingestion_use_local_source: false
 heidrun_branch_or_tag: develop
+heidrun_repo: dpla/heidrun
 heidrun_mappings_branch_or_tag: master
+heidrun_mappings_repo: dpla/heidrun-mappings
 ingestion_app_rails_env: development
 ingestion_app_alternate_db_host: false
 

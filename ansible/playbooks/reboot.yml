@@ -13,6 +13,11 @@
   hosts:
     - ingestion
     - cms
+    - ingestion_app
+    - worker
+    - solr
+    - marmotta
+    - geocoder
   sudo: yes
   tasks:
     - name: Reboot

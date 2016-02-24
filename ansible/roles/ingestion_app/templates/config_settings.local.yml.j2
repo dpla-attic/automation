@@ -17,6 +17,7 @@ marmotta:
   ldp: '{{ marmotta_base }}/ldp'
   record_container: '{{ marmotta_base }}/ldp/original_record'
   item_container: '{{ marmotta_base }}/ldp/items'
+  read_timeout: {{ ingestion_app_marmotta_read_timeout }}
 
 elasticsearch:
   host: '{{ es_cluster_loadbal }}:9200'

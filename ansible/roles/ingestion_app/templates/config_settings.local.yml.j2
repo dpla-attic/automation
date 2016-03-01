@@ -31,3 +31,5 @@ prov:
 {% set solr_host = groups['solr'][0] %}
 solr:
   url: "http://{{ solr_host }}:8080/solr"
+
+log_level: {{ ingestion_app_log_level }}

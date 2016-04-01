@@ -53,6 +53,7 @@ map $http_user_agent $bad_bot{
     "-"         1;
     "0"         1;
     "Mozilla/5.0 (compatible; SiteBot/0.1; +http://www.sitebot.org/robot/)"     1;
+    "Pcore-HTTP/v0.18.1"    1;
 }
 
 map $http_content_type $do_not_cache {

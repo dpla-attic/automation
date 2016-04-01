@@ -30,3 +30,4 @@ pss_include_branding: false
 # Default mail delivery is :file, for development.  Mail is stored in
 # /srv/www/pss/tmp/mails.
 pss_delivery_method: file
+pss_api_key: aa11d0958e93bb25e457a726dc10a40f

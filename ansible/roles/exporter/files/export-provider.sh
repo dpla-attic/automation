@@ -39,6 +39,18 @@ Usage:  $SCRIPT -u <url> -o <directory> -s <s3 bucket> -p <provider>...
           "each" can be used together.  Multiple providers may be specified.
           The provider name corresponds to provider.@id in our schema.
 
+Examples:
+
+    Dumping out one provider.
+
+    $ ./export-provider.sh -u http://es-server:9200/myindex -o /tmp \\
+      -s my-bucket -p http://dp.la/api/contributor/someprovider
+
+    Dumping out each provider.  The syntax for "all" is similar.
+
+    $ ./export-provider.sh -u http://es-server:9200/myindex -o /tmp \\
+      -s my-bucket -p each
+
 END
 }
 
@@ -51,9 +63,13 @@ searchbody() {
         cat <<END
 {
     "query": {
-        "query_string": {
-            "default_field": "provider.@id",
-            "query": "*$1"
+        "match_all": {},
+        "filtered" : {
+            "filter" : {
+                "term" : {
+                    "provider.@id" : "$1"
+                }
+            }
         }
     }
 }
@@ -92,18 +108,18 @@ providers_list_response() {
     fi
 }
 
-# Given JSON produced by `providers_list_search_body`, return a list of tokens
-# that represent the substrings at the end of provider.@id.
-# For example, "nypl" for "http://dp.la/api/contributor/nypl"
+# Given JSON produced by `providers_list_search_body`, return a list of
+# provider.@ids e.g. http://dp.la/api/contributor/nypl
 providers_list() {
     json=`providers_list_response`
-    echo $json | jq '.facets.providers.terms[].term' \
-        | sed $sed_opts 's/^.*\/([^\/]+)"$/\1/'
+    echo $json | jq '.facets.providers.terms[].term' | tr -d '"'
 }
 
 # Return basename of the output file, which is gzipped JSON
 outfile() {
-    base=`echo $1 | sed $sed_opts 's/[^A-Za-z]+/_/g;'`
+    base=`echo $1 \
+          | sed $sed_opts 's/^.*\/([^\/]+)$/\1/' \
+          | sed $sed_opts 's/[^A-Za-z]+/_/g;'`
     echo ${base}.json.gz
 }
 

@@ -8,7 +8,7 @@ notifications:
 # DPLA API URL and credentials
 api:
   # Without trailing slash, please
-  url: http://{{ api_hostname }}:{{ api_port }}/v2
+  url: https://{{ api_hostname }}:{{ api_port }}/v2
   # API key, will be added to all API requests as &api_key=
   key: {{ api_key }}
 exhibitions:
@@ -20,7 +20,7 @@ exhibitions:
     default_index: omeka
 wordpress:
   # Wordpress site for building links to pages served by WP
-  site: http://{{ frontend_hostname }}/info
+  site: //{{ frontend_hostname }}/info
 # Google Analytics account
 googleanalytics:
   tracker: {{ google_analytics_property_id }}
@@ -44,8 +44,8 @@ widgets:
   twitter_widget_id: {{ twitter_widget_id }}
   # URL of wordpress site.
   # NOTE: JSON API plugin is required to able read Wordpress feed as JSONP requests
-  wordpress_json_api: http://{{ frontend_hostname }}/info
-  wordpress_view_all_link: http://{{ frontend_hostname }}/info/news/
+  wordpress_json_api: //{{ frontend_hostname }}/info
+  wordpress_view_all_link: //{{ frontend_hostname }}/info/news/
   # Urls for social icons
   social_icons:
     facebook: https://www.facebook.com/{{ facebook_account_name }}

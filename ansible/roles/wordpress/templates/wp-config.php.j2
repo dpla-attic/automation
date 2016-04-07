@@ -1,7 +1,15 @@
 <?php
 
-define('WP_HOME', 'http://{{ frontend_hostname }}/info');
-define('WP_SITEURL', 'http://{{ frontend_hostname }}/info');
+define('WP_HOME', '//{{ frontend_hostname }}/info');
+define('WP_SITEURL', '//{{ frontend_hostname }}/info');
+
+define('FORCE_SSL_ADMIN', true);
+// in some setups HTTP_X_FORWARDED_PROTO might contain
+// a comma-separated list e.g. http,https
+// so check for https existence
+if (strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false)
+       $_SERVER['HTTPS']='on';
+
 
 /** The name of the database for WordPress */
 define('DB_NAME', 'dpla_wp');
@@ -77,8 +85,8 @@ define('WP_DEBUG_LOG', {{ debug_value }});
 define('WP_DEBUG_DISPLAY', {{ debug_value }});
 
 define('DPLA_API_KEY', '{{ api_key }}');
-define('DPLA_FRONTEND_URL', 'http://{{ frontend_hostname }}');
-define('DPLA_API_URL', 'http://{{ api_hostname }}/v2');
+define('DPLA_FRONTEND_URL', '//{{ frontend_hostname }}');
+define('DPLA_API_URL', 'https://{{ api_hostname }}/v2');
 
 
 /** Absolute path to the WordPress directory. */

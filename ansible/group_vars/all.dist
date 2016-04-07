@@ -70,6 +70,7 @@ frontend_app_port: 8002
 ingestion_app_port: 8004
 # port 8005 is used by Tomcat
 pss_app_port: 8006
+thumbp_port: 8007
 
 nginx_real_ip_from_addrs:
     - 192.168.50.0/24

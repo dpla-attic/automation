@@ -8,7 +8,7 @@ notifications:
 # DPLA API URL and credentials
 api:
   # Without trailing slash, please
-  url: https://{{ api_hostname }}:{{ api_port }}/v2
+  url: {{ api_default_protocol }}://{{ api_hostname }}:{{ api_port }}/v2
   # API key, will be added to all API requests as &api_key=
   key: {{ api_key }}
 exhibitions:

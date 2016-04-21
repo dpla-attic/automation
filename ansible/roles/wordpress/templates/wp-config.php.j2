@@ -86,8 +86,7 @@ define('WP_DEBUG_DISPLAY', {{ debug_value }});
 
 define('DPLA_API_KEY', '{{ api_key }}');
 define('DPLA_FRONTEND_URL', '//{{ frontend_hostname }}');
-define('DPLA_API_URL', 'https://{{ api_hostname }}/v2');
-
+define('DPLA_API_URL', '{{ api_default_protocol }}://{{ api_hostname }}/v2');
 
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )

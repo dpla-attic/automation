@@ -1,0 +1,75 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides: thumbp
+# Required-Start: $all
+# Required-Stop: $network $local_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start/stop thumbp
+# Description: Start/stop thumbp
+### END INIT INFO
+
+set -u
+set -e
+
+. /lib/lsb/init-functions
+
+# Make sure that thumbp is started with the system locale.
+. /etc/default/locale
+export LANG
+
+export PYENV_ROOT=/home/thumbp/.pyenv
+export PATH=$PYENV_ROOT/bin:$PATH
+
+THUMBP_ROOT=/opt/thumbp
+SERVER_NAME=twistd
+EXECUTABLE=$THUMBP_ROOT/bin/$SERVER_NAME
+PYTHON=$THUMBP_ROOT/bin/python2.7
+PIDFILE=/var/run/thumbp/thumbp.pid
+LOGDIR=/var/log/thumbp
+USER=thumbp
+GROUP=thumbp
+IF={{ hostvars[inventory_hostname][internal_network_interface]['ipv4']['address'] }}
+IFPORT="tcp:{{ thumbp_port }}:interface=$IF"
+export ES_BASE=http://{{ es_cluster_loadbal }}:9200/dpla_alias/item
+
+usage() {
+    echo >&2 "Usage: $0 <start|stop|restart|reload|status|usage>"
+}
+
+start() {
+    log_daemon_msg "Starting thumbp" "thumbp"
+    cd $LOGDIR
+    $EXECUTABLE -u $USER -g $GROUP --pidfile=$PIDFILE web \
+        --class=thumbp.thumbp.resource -l $LOGDIR/access_log -p $IFPORT
+}
+
+stop() {
+    log_daemon_msg "Stopping thumbp" "thumbp"
+    kill `cat $PIDFILE`
+    log_end_msg $?
+    rm -f $PIDFILE
+}
+
+case $1 in
+start)
+    start
+    ;;
+stop)
+    stop
+    ;;
+restart|reload)
+    stop && sleep 3 && start
+    ;;
+status)
+    status_of_proc -p $PIDFILE $PYTHON $SERVER_NAME && exit 0 || exit $?
+    ;;
+usage)
+    usage
+    exit 0
+    ;;
+*)
+    usage
+    exit 1
+    ;;
+esac

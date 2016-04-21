@@ -41,6 +41,7 @@
   sudo: yes
   roles:
     - frontend
+    - { role: thumbp, tags: ['thumbp']}
   vars:
     level: development
     do_deployment: true

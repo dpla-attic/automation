@@ -1,0 +1,11 @@
+---
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
+- name: Thumbnail proxy
+  hosts: thumbp
+  serial: 1
+  become: yes
+  roles:
+    - thumbp

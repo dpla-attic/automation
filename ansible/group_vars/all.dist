@@ -59,9 +59,12 @@ api_hostname: local.dp.la
 sitemap_host: sitemaps.example.tld
 marmotta_domain: ldp.local.dp.la
 
-# HTTP ports for various applications
+# HTTP ports/configuration for various applications
+#
 # api_port is the port the *loadbalancer* answers on for API requests
 api_port: 8080
+# api_default_protocol should not have trailing '://'
+api_default_protocol: http
 # api_app_port is the port the *backend app server* runs on
 api_app_port: 8003
 exhibitions_app_port: 8000
@@ -70,6 +73,7 @@ frontend_app_port: 8002
 ingestion_app_port: 8004
 # port 8005 is used by Tomcat
 pss_app_port: 8006
+thumbp_port: 8007
 
 nginx_real_ip_from_addrs:
     - 192.168.50.0/24

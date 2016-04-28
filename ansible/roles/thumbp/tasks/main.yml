@@ -28,14 +28,14 @@
   file: path=/opt/thumbp state=directory owner=thumbp group=thumbp mode=0755
 
 - name: Make sure that pyenv is installed (directory and scripts)
-  sudo_user: thumbp
+  become_user: thumbp
   git: >-
       repo=https://github.com/yyuu/pyenv.git
       dest=/home/thumbp/.pyenv
       version=master
 
 - name: Ensure that pyenv is configured (PYENV_ROOT)
-  sudo_user: thumbp
+  become_user: thumbp
   lineinfile:
     dest: /home/thumbp/.bashrc
     state: present
@@ -43,7 +43,7 @@
     line: "export PYENV_ROOT=$HOME/.pyenv"
 
 - name: Ensure that pyenv is configured (PATH)
-  sudo_user: thumbp
+  become_user: thumbp
   lineinfile:
     dest: /home/thumbp/.bashrc
     state: present
@@ -51,7 +51,7 @@
     line: "export PATH=$PYENV_ROOT/bin:$PATH"
 
 - name: Ensure that pyenv is configured (pyenv init)
-  sudo_user: thumbp
+  become_user: thumbp
   lineinfile:
     dest: /home/thumbp/.bashrc
     state: present
@@ -65,11 +65,11 @@
   ignore_errors: yes
 
 - name: Ensure that the correct Python is installed
-  sudo_user: thumbp
+  become_user: thumbp
   script: install_python.sh
 
 - name: Install thumbp
-  sudo_user: thumbp
+  become_user: thumbp
   pip:
     name: "git+https://github.com/dpla/thumbp.git@{{ thumbp_branch_or_tag }}#egg=thumbp"
     executable: /opt/thumbp/bin/pip

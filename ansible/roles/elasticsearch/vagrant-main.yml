@@ -2,7 +2,7 @@
 # Elasticsearch Ansible Playbook
 - hosts: all
   user: $user
-  sudo: yes
+  become: yes
 
   vars_files:
     - defaults/main.yml

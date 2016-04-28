@@ -11,7 +11,7 @@
 - name: Primary Source Sets App
   hosts:
     - pss
-  sudo: yes
+  become: yes
   vars:
     do_deployment: true
     skip_configuration: false

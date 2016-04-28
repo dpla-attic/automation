@@ -7,7 +7,7 @@
   hosts:
     - ingestion_app
     - worker
-  sudo: yes
+  become: yes
   roles:
     - ingestion_app
   vars:

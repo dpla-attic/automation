@@ -9,7 +9,7 @@
   hosts: all
 
 - hosts: elasticsearch[0]
-  sudo: false
+  become: false
   tasks:
     - name: Turn off shard replica allocation
       when: level != 'contentqa' and initial_run is not defined and ingestion2 is not defined
@@ -19,7 +19,7 @@
 - name: Elasticsearch setup
   hosts: elasticsearch
   serial: 1
-  sudo: yes
+  become: yes
   roles:
     - elasticsearch
   pre_tasks:
@@ -29,7 +29,7 @@
     - name: De-register instance from loadbalancer
       local_action: ec2_elb
       when: level == 'production' or level == 'staging'
-      sudo: false
+      become: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
         ec2_elbs: "{{ es_elb_name }}"
@@ -43,14 +43,14 @@
           host="{{ inventory_hostname }}" port="9200" state=drained timeout=60
   post_tasks:
     - name: Wait for ES node to come back up
-      sudo: false
+      become: false
       # Assume default port, 9200.
       local_action: >
           wait_for host="{{ inventory_hostname }}" port=9200 delay=30 timeout=300
     - name: Register instance with loadbalancer again
       local_action: ec2_elb
       when: level == 'production' or level == 'staging'
-      sudo: false
+      become: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
         ec2_elbs: "{{ es_elb_name }}"
@@ -61,7 +61,7 @@
         wait_timeout: 22
 
 - hosts: elasticsearch[0]
-  sudo: false
+  become: false
   tasks:
     - name: Turn shard replica allocation back on
       when: level != 'contentqa' and ingestion2 is not defined

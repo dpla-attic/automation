@@ -8,7 +8,7 @@
 
 - name: Common httpd configuration
   hosts: webapps
-  sudo: yes
+  become: yes
   roles:
     - common_web
   vars:
@@ -16,7 +16,7 @@
 
 - name: Common PHP configuration
   hosts: webapps
-  sudo: yes
+  become: yes
   roles:
     - common_php
   vars:
@@ -24,7 +24,7 @@
 
 - name: Content-management and exhibitions services
   hosts: webapps
-  sudo: yes
+  become: yes
   roles:
     - common_sitenode
     - site_proxy
@@ -38,7 +38,7 @@
 
 - name: Frontend (portal) site
   hosts: webapps
-  sudo: yes
+  become: yes
   roles:
     - frontend
     - { role: thumbp, tags: ['thumbp']}

@@ -2,6 +2,6 @@
 
 - name: memcacheds
   hosts: memcached
-  sudo: yes
+  become: yes
   roles:
     - memcached

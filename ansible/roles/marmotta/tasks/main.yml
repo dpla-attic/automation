@@ -57,7 +57,7 @@
 #
 # - name: Tune the 'marmotta' database for our usage patterns
 #   script: tunedb.sh
-#   sudo_user: postgres
+#   become_user: postgres
 #   delegate_to: "{{ groups.postgresql_dbs[0] }}"
 #   tags:
 #     - tuning

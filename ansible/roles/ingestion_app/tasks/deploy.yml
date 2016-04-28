@@ -77,7 +77,7 @@
 - name: Make sure rbenv and bundler are current
   script: >-
       ../../../files/install_ruby_tools.sh {{ ingestion_rbenv_version }}
-  sudo_user: dpla
+  become_user: dpla
   when: not fast_deployment
 
 # Clear these out prior to copying and symlinking below
@@ -93,7 +93,7 @@
       dest=/home/dpla/{{ heidrun_working_copy }}
       version={{ heidrun_branch_or_tag }}
       force=true
-  sudo_user: dpla
+  become_user: dpla
   when: not ingestion_use_local_source
 
 - name: Check out mappings from their repository (not using local source)
@@ -102,7 +102,7 @@
       dest=/home/dpla/{{ heidrun_mappings_working_copy }}
       version={{ heidrun_mappings_branch_or_tag }}
       force=true
-  sudo_user: dpla
+  become_user: dpla
   when: not ingestion_use_local_source
 
 # Symlink to the build directories, to allow local and git builds to coexist
@@ -122,7 +122,7 @@
 # Copy files to build, local filesystem installation
 - name: Check out ingestion app from mounted directory (using local source)
   script: copy_local_app.sh
-  sudo_user: dpla
+  become_user: dpla
   when: ingestion_use_local_source
 
 # Symlinking, as above
@@ -137,7 +137,7 @@
     dest=/home/dpla/heidrun/Gemfile
     regexp="^gem 'krikri'"
     line="gem 'krikri', path: '/home/dpla/krikri'"
-  sudo_user: dpla
+  become_user: dpla
   when: ingestion_use_local_source
 
 - name: Remove Gemfile.lock
@@ -204,7 +204,7 @@
   script: >-
     ../files/build_ingestion.sh "{{ '-f' if fast_deployment else '' }}" {{ ingestion_rbenv_version }}
     {{ hostvars[inventory_hostname]['group_names'] | join(',') }}
-  sudo_user: dpla
+  become_user: dpla
   environment:
     RAILS_ENV: "{{ ingestion_app_rails_env }}"
 

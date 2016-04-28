@@ -11,14 +11,14 @@
 
 - name: Build Wordpress (local)
   when: do_wordpress and do_deployment and wp_theme_use_local_source
-  sudo_user: dpla
+  become_user: dpla
   script: build_wordpress_local.sh
   tags:
     - web
 
 - name: Build Wordpress (remote)
   when: do_wordpress and do_deployment and not wp_theme_use_local_source
-  sudo_user: dpla
+  become_user: dpla
   script: >-
       build_wordpress_remote.sh "{{ wp_branch_or_tag }}"
   tags:
@@ -38,7 +38,7 @@
 
 - name: Sync installation to site root
   script: sync_to_siteroot.sh
-  sudo_user: dpla
+  become_user: dpla
   when: do_wordpress and do_deployment
   notify:
     - clear site proxy cache

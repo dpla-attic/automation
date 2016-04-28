@@ -9,7 +9,7 @@
       dest=/home/dpla/api-git
       version={{ api_branch_or_tag | default("master") }}
       force=true
-  sudo_user: dpla
+  become_user: dpla
   when: not api_use_local_source
 
 # Symlink to the build directory, to allow local and git builds to coexist neatly
@@ -46,7 +46,7 @@
 - name: Make sure rbenv and bundler are current
   script: >
       ../../../files/install_ruby_tools.sh {{ api_rbenv_version }}
-  sudo_user: dpla
+  become_user: dpla
 
 - name: Ensure existence of live app directory
   file: path=/srv/www/api state=directory owner=dpla group=dpla mode=0755
@@ -70,7 +70,7 @@
 - name: Build api app
   script: >
       build_api.sh {{ api_rbenv_version }}
-  sudo_user: dpla
+  become_user: dpla
   notify:
     - restart memcached
 

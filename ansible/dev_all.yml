@@ -17,7 +17,7 @@
     - monitoring_web
   vars:
     level: development
-  sudo: yes
+  become: yes
 
 - include: playbooks/dev_loadbalancer.yml
 

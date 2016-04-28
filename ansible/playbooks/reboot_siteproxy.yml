@@ -20,6 +20,7 @@
     - name: Wait for connections to drain
       wait_for: >-
           host="{{ inventory_hostname }}" port="80" state=drained timeout=60
+      ignore_errors: yes
     - name: Reboot
       command: /sbin/shutdown -r now
       async: 0

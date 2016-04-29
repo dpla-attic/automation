@@ -37,12 +37,6 @@
       dest=/home/dpla/exhibitions/application/config/config.ini
       owner=dpla group=webapp mode=0640
 
-- name: Temporarily copy private key
-  copy: >
-      src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
-      dest=/home/dpla/git_private_key
-      owner=dpla group=dpla mode=0600
-
 - name: Check out exhibitions assets
   git: >-
        repo=https://github.com/dpla/exhibitions-assets.git
@@ -50,9 +44,6 @@
        version=master
        force=true
   sudo_user: dpla
-
-- name: Remove temporary private key file
-  file: path=/home/dpla/git_private_key state=absent
 
 - name: Ensure exhibitions document root exists
   file: path=/srv/www/exhibitions state=directory owner=dpla group=dpla mode=0755

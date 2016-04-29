@@ -36,6 +36,8 @@ backend bigcouch-httpd
 	server dbnode1 192.168.50.4:5986 maxconn 500
 	server dbnode2 192.168.50.5:5986 maxconn 500
 
+{% endif %}
+
 ### Web
 
 frontend web-http-in
@@ -43,31 +45,43 @@ frontend web-http-in
 	default_backend web-http
 
 frontend web-https-in
-	bind *:443
-	default_backend web-https
+	bind *:443 ssl crt /etc/ssl/certs/local.dp.la.pem
+	mode http
+	reqadd X-Forwarded-Proto:\ https
+	default_backend web-http
 
 backend web-http
-	server webapp1 192.168.50.6:80 maxconn 500
+{% if ingestion2 is not defined %}
+	server webapp1 192.168.50.6:{{ siteproxy_port }} maxconn 500
+{% else %}
+	server dev1 192.168.50.7:{{ siteproxy_port }} maxconn 500
+{% endif %}
 
-backend web-https
-	server webapp1 192.168.50.6:443 maxconn 500
 
 ### Elasticsearch
 
 frontend elasticsearch-in
-	bind *:9200
-	default_backend elasticsearch
+    bind *:9201
+    default_backend elasticsearch
 
 backend elasticsearch
-	server dbnode1 192.168.50.4:9200 maxconn 500
-	server dbnode2 192.168.50.4:9200 maxconn 500
-
+{% if ingestion2 is not defined %}
+    server dbnode1 192.168.50.4:9200 maxconn 500
+    server dbnode2 192.168.50.4:9200 maxconn 500
+{% else %}
+    server dev1 192.168.50.7:9200 maxconn 500
 {% endif %}
 
 ### API
 
 frontend api-http-in
+{% if default_http_scheme == 'https' %}
+	bind *:{{ api_port }} ssl crt /etc/ssl/certs/local.dp.la.pem
+	reqadd X-Forwarded-Proto:\ https
+{% else %}
 	bind *:{{ api_port }}
+{% endif %}
+	mode http
 	default_backend api-http
 
 backend api-http

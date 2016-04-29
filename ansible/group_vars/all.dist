@@ -40,8 +40,8 @@ aws_secret_key: changeme
 # We would normally get an IP address by querying the inventory, but
 # this will work easiest between development and production
 bigcouch_cluster_loadbal: 192.168.50.2
-# same with Elasticsearch ...
-es_cluster_loadbal: 192.168.50.2
+# same with Elasticsearch. Note that es_cluster_loadbal *includes the port*
+es_cluster_loadbal: 192.168.50.2:9201
 
 munin_master_ipaddr: 192.168.50.6
 
@@ -61,10 +61,10 @@ marmotta_domain: ldp.local.dp.la
 
 # HTTP ports/configuration for various applications
 #
+# default_http_scheme should not have trailing '://'
+default_http_scheme: http
 # api_port is the port the *loadbalancer* answers on for API requests
 api_port: 8080
-# api_default_protocol should not have trailing '://'
-api_default_protocol: http
 # api_app_port is the port the *backend app server* runs on
 api_app_port: 8003
 exhibitions_app_port: 8000
@@ -73,6 +73,7 @@ frontend_app_port: 8002
 ingestion_app_port: 8004
 # port 8005 is used by Tomcat
 pss_app_port: 8006
+siteproxy_port: 80
 thumbp_port: 8007
 
 nginx_real_ip_from_addrs:

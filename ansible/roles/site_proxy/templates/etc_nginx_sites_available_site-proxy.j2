@@ -134,8 +134,8 @@ upstream dpla_berkman {
 
 server {
 
-    listen   80 default;
-    listen   [::]:80 default ipv6only=on;
+    listen   {{ siteproxy_port }} default;
+    listen   [::]:{{ siteproxy_port }} default ipv6only=on;
 
     server_name {{ frontend_hostname }};
   
@@ -215,7 +215,7 @@ server {
 
     location ~ ^/api/(.*)$ {
          add_header 'Access-Control-Allow-Origin' '*';
-         rewrite ^/api/(.*)$ http://{{ api_hostname }}/$1 last;
+         rewrite ^/api/(.*)$ {{ default_http_scheme }}://{{ api_hostname }}:{{ api_port }}/$1 last;
     }
 
     location ~ ^/donate(/?|/.*)$ {
@@ -376,7 +376,7 @@ server {
 }
 
 server {
-    listen 80;
+    listen {{ siteproxy_port }};
     server_name www.{{ frontend_hostname }};
     location / {
         rewrite ^(.*)$ http://{{ frontend_hostname }}$1 permanent;

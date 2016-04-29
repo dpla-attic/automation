@@ -36,6 +36,7 @@
     - common_sitenode
     - site_proxy
     - frontend
+    - { role: thumbp, tags: ['thumbp']}
   vars:
     level: development
     ingestion2: true

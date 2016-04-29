@@ -11,10 +11,7 @@ Follow all of the steps in [README.md](README.md) up until "Copy Vagrantfile.dis
 
 # Upgrade notes
 
-Release 2.2.0 upgrades PostgreSQL from 9.1 to 9.4 in order to gain significant
-performance increases by queries issued by Marmotta.  See
-[the 2.2.0 upgrade document](README-upgrade-2.2.0.txt) if you have installed
-machines with a version prior to 2.2.0.
+See the upgrade notes in [README.md](README.md).
 
 ## Steps
 
@@ -67,10 +64,28 @@ The various sites will be online at:
 * http://ingestion2.local.dp.la:8080/manager/html (Tomcat admin interface)
 * http://ingestion2.local.dp.la:8080/solr/#/ (Solr admin interface)
 * http://ldp.local.dp.la/ (Marmotta admin interface)
+* http://dev1:8008/munin/ (resource monitoring graphs)
+
+If you are using SSL (see "SSL Setup" in [README.md](README.md)), you will use
+https://local.dp.la/ for the frontend and https://local.dp.la:8080/v2/items for
+the API.
 
 There won't be any data ingested until you run an ingestion.
 
 See the rest of the main [README.md](README.md) file for more information.
+
+## SSL Setup
+
+See "SSL Setup" in [README.md](README.md).
+
+If you alternate between the `development` and `ingestion` inventories
+(for example, if you work on our legacy applications, or our content-management
+sites, in addition to Ingestion 2), they will have conflicting SSL certificates
+for `local.dp.la`. Your browser will warn you about invalid certificates, even
+if one of them is a trusted certificate in your keychain. Nothing can be done
+about this, other than replacing the trusted certificate in your keychain, or
+ignoring the browser warnings from one of the inventories.
+
 
 ## Tips
 

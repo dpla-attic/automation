@@ -38,3 +38,6 @@ mysql_users:
 # You should set these manually in your environment.
 # slack_channel: "#channel"
 # slack_webhook_url: https://hooks.slack.com/services/XXXXX/YYYYY/ZZZZZZZZ
+
+monitoring_http_port: 8008
+siteproxy_port: 8010

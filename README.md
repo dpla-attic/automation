@@ -7,15 +7,24 @@ The intention of this project is to provide automated configuration management
 for production, development, and staging environments with the same set of
 files.
 
-## Version 2
-
-For upgrade notes, see [README-upgrade-2.0.txt](README-upgrade-2.0.txt).
+## Version 3
 
 [Release Notes](https://github.com/dpla/automation/releases)
 
-Release 2.2.0 upgrades PostgreSQL from 9.1 to 9.4.  If you have an installation
+Release 3.0 adds SSL support and introduces a variable (`siteproxy_port`) that
+must be present in `ansible/group_vars/all`; and which will need to be added if
+you are upgrading from an earlier version. See
+[README-upgrade-3.0](README-upgrade-3.0.md).
+
+Earlier versions' upgrade notes:
+
+* [README-upgrade-2.2.0.txt](README-upgrade-2.2.0.txt)
+* [README-upgrade-2.0.txt](README-upgrade-2.0.txt)
+
+Release 2.2.0 upgraded PostgreSQL from 9.1 to 9.4.  If you have an installation
 that predates [Release 2.2.0](https://github.com/dpla/automation/releases),
 please see [the 2.2.0 upgrade document](README-upgrade-2.2.0.txt) now.
+
 
 ## Installation, VM setup:
 
@@ -99,13 +108,16 @@ $ vagrant reload
 
 The various sites will be online at:
 
-* http://local.dp.la/
-* http://local.dp.la/exhibitions/
+* http://local.dp.la/ (the frontend and WordPress)
+* http://local.dp.la/exhibitions/ (the Exhibitions site)
 * http://local.dp.la:8080/v2/items (the API)
-* http://webapp1:8004/munin/  (resource monitoring graphs)
+* http://webapp1:8008/munin/  (resource monitoring graphs)
 
+If you are having the applications go over SSL (see below), you will use
+https://local.dp.la/, https://local.dp.la/exhibitions/, and
+https://local.dp.la:8080/v2/items.
 
-However, there won't be any data ingested until you run an ingestion with
+There won't be any data ingested until you run an ingestion with
 [the ingestion system](http://github.com/dpla/ingestion) and you've pointed
 it at the BigCouch instance, which will be loadbal:5984.
 
@@ -126,6 +138,30 @@ ElasticSearch search index and initialize your repositories.  Please consult
 those other projects for more information.  There's a playbook for an
 ingestion server that's not implemented yet in the development VMs.
 
+
+### SSL Setup
+
+You may set `default_http_scheme` in `ansible/group_vars/all` to control
+whether your development VM's sites go over SSL. The default is `http`, which
+means the development VMs will not use HTTPS.
+
+The development VMs use a self-signed certificate, which will cause your browser
+to issue a harsh security warning when you try to load `https://local.dp.la/`.
+We recommend that you add the `local.dp.la` SSL certificate to your operating
+system's list of trusted certificates to get around this. If you use Chrome,
+the blog for the Postman utility has an article at
+http://blog.getpostman.com/2014/01/28/using-self-signed-certificates-with-postman/
+that provides a useful walkththrough of the steps that you can take to achieve
+this. It's intended for users of Postman, which is a Chrome plugin, but will
+obviously work to get Chrome to accept the certificate, which is what you need.
+If you use another browser, the procedure should be similar. You need to
+download the certificate and add it to your certificate chain, or your operating
+system's certificate chain, with trusted status.
+
+#### Upgrading from before Version 3
+
+See the "Legacy / Pre-Ingestion 2 VMs" section of
+[README-upgrade-3.0](README-upgrade-3.0.md)
 
 ## Subsequent Usage
 

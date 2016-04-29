@@ -254,7 +254,7 @@ upload.maxFileSize = "50M"
 ;;;;;;;;
 
 ; adress of DPLA frontend. Required to build links
-dpla.frontendUrl = 'http://{{ frontend_hostname }}'
+dpla.frontendUrl = '//{{ frontend_hostname }}'
 
 ; address exhibit "home" page to right URL
 dpla.exhibitionsUrl = '/exhibitions'
@@ -263,7 +263,7 @@ dpla.exhibitionsUrl = '/exhibitions'
 dpla.wordpressURL = '/info'
 
 ; API URL
-dpla.apiUrl = 'http://{{ api_hostname }}:{{ api_port }}/v2'
+dpla.apiUrl = '{{ default_http_scheme }}://{{ api_hostname }}:{{ api_port }}/v2'
 
 ; API key
 dpla.apiKey = '{{ exhibitions_api_key }}';

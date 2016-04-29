@@ -1,7 +1,10 @@
 ---
 
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
 - name: Development loadbalancer
   hosts: loadbalancer
   become: yes
   roles:
-    - dev_loadbalancer
+    - { role: dev_loadbalancer, tags: ['dev_loadbalancer', 'loadbalancer'] }

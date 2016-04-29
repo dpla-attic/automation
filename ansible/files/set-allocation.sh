@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage() {
-    echo "usage: set-allocation.sh <on|off> <target-node>"
+    echo "usage: set-allocation.sh <on|off> <target-node-and-port>"
 }
 
 if [ "x$1" != "x" ]; then
@@ -38,7 +38,7 @@ else
 fi
 
 curl_result=`echo $json | sed -e "s/SETTING/$setting/g" \
-                 | curl -s -XPUT "$node:9200/_cluster/settings" -d @-`
+                 | curl -s -XPUT "$node/_cluster/settings" -d @-`
 status_check=`echo $curl_result | awk '/"ok":true/'`
 
 if [ "$status_check" != "" ]; then

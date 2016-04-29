@@ -4,7 +4,7 @@
     - elasticsearch[0]
   tasks:
     - name: Turn off shard replica allocation
-      sudo: false
+      become: false
       local_action: >-
           script ../files/set-allocation.sh off "{{ es_cluster_loadbal }}"
 
@@ -12,13 +12,13 @@
   hosts:
     - elasticsearch
   serial: 1
-  sudo: yes
+  become: yes
   tasks:
     - name: Gather ec2 facts
       ec2_facts:
     - name: De-register instance from loadbalancer
       local_action: ec2_elb
-      sudo: false
+      become: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
         ec2_elbs: "{{ es_elb_name }}"
@@ -35,15 +35,15 @@
       poll: 0
       ignore_errors: true
     - name: Wait for instance to come back up
-      sudo: false
+      become: false
       local_action: >-
           wait_for host="{{ inventory_hostname }}"
           port="9200" delay=60 timeout=600
     - name: Register instance with loadbalancer again
-      sudo: false
+      become: false
       local_action: ec2_elb
       when: level == 'production' or level == 'staging'
-      sudo: false
+      become: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
         ec2_elbs: "{{ es_elb_name }}"
@@ -56,6 +56,6 @@
     - elasticsearch[0]
   tasks:
     - name: Turn shard replica allocation back on
-      sudo: false
+      become: false
       local_action: >-
           script ../files/set-allocation.sh on "{{ es_cluster_loadbal }}"

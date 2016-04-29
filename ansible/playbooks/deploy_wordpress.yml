@@ -5,7 +5,7 @@
 
 - name: Deploy Wordpress
   hosts: wordpress
-  sudo: yes
+  become: yes
   serial: 1
   roles:
     - wordpress

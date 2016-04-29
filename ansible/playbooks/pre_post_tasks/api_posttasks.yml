@@ -1,7 +1,7 @@
 ---
 
 - name: Wait for API node to come back up
-  sudo: false
+  become: false
   local_action: >
       wait_for host="{{ inventory_hostname }}" port="{{ api_app_port }}"
       delay={{ delay | default(2) }}
@@ -17,7 +17,7 @@
   # particular resource.
   local_action: ec2_elb
   when: level == 'production' or level == 'staging'
-  sudo: false
+  become: false
   args:
     instance_id: "{{ ansible_ec2_instance_id }}"
     ec2_elbs: "{{ api_elb_name }}"

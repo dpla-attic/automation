@@ -2,7 +2,7 @@
 
 - name: Put frontend into maintenance mode
   hosts: frontend
-  sudo: true
+  become: true
   tasks:
     - name: Deploy turnout maintenance.yml file
       copy: >-
@@ -13,7 +13,7 @@
 
 - name: Put API into maintenance mode
   hosts: api
-  sudo: true
+  become: true
   tasks:
     - name: Deploy turnout maintenance.yml file
       copy: >-
@@ -24,7 +24,7 @@
 
 - name: Put Primary Source Sets into maintenance mode
   hosts: pss
-  sudo: true
+  become: true
   tasks:
     - name: Deploy turnout maintenance.yml file
       copy: >-

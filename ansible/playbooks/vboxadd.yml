@@ -13,7 +13,7 @@
 
 - name: Reinstall vboxfs kernel module for VirtualBox
   hosts: all
-  sudo: yes
+  become: yes
   tasks:
     - stat: path=/etc/init.d/vboxadd
       register: vboxadd

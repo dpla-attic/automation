@@ -20,7 +20,7 @@
     body_format: raw
     body: "<delete><query>*:*</query></delete>"
   delegate_to: 127.0.0.1
-  sudo: no
+  become: no
 
 - name: commit solr index
   uri:
@@ -30,10 +30,10 @@
     body_format: raw
     body: "<commit/>"
   delegate_to: 127.0.0.1
-  sudo: no
+  become: no
 
 - name: reload solr core
   uri:
     url: "http://{{ groups['solr'][0] }}:8080/solr/admin/cores?action=RELOAD&core=collection1"
   delegate_to: 127.0.0.1
-  sudo: no
+  become: no

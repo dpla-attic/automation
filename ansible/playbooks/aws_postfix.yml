@@ -8,6 +8,6 @@
 
 - name: AWS Postfix
   hosts: all
-  sudo: yes
+  become: yes
   roles:
     - aws_postfix

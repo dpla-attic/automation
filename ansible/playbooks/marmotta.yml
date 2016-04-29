@@ -9,6 +9,6 @@
 - name: Marmotta
   hosts:
     - marmotta
-  sudo: yes
+  become: yes
   roles:
     - { role: marmotta, tags: ['marmotta']}

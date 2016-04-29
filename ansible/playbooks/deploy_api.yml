@@ -7,7 +7,7 @@
   hosts: api
   roles:
     - api
-  sudo: yes
+  become: yes
   serial: 1
   vars:
     do_deployment: true

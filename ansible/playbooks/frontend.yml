@@ -6,7 +6,7 @@
 - name: Frontend (portal) site
   hosts: frontend
   serial: 1
-  sudo: yes
+  become: yes
   roles:
     - frontend
   vars:

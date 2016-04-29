@@ -9,7 +9,7 @@
       dest=/home/dpla/exhibitions-git
       version={{ exhibitions_branch_or_tag | default("master") }}
       force=true
-  sudo_user: dpla
+  become_user: dpla
   when: not exhibitions_use_local_source
 
 # Symlink to the build directory, to allow local and git builds to coexist neatly
@@ -43,7 +43,7 @@
        dest="/home/dpla/exhibitions-assets"
        version=master
        force=true
-  sudo_user: dpla
+  become_user: dpla
 
 - name: Ensure exhibitions document root exists
   file: path=/srv/www/exhibitions state=directory owner=dpla group=dpla mode=0755

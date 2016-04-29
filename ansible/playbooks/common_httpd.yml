@@ -16,6 +16,6 @@
     - exhibitions
     - ingestion_app
     - marmotta
-  sudo: yes
+  become: yes
   roles:
     - common_web

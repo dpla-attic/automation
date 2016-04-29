@@ -18,7 +18,7 @@
   vars:
     level: development
     ingestion2: true
-  sudo: yes
+  become: yes
 
 - include: playbooks/dev_loadbalancer.yml ingestion2=true
 
@@ -30,7 +30,7 @@
 
 - name: Web Configuration (frontend and site)
   hosts: webapps
-  sudo: yes
+  become: yes
   roles:
     - common_web
     - common_sitenode
@@ -48,7 +48,7 @@
   hosts:
     - ingestion_app
     - marmotta
-  sudo: yes
+  become: yes
   roles:
     - common_web
   vars:

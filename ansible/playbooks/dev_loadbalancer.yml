@@ -2,6 +2,6 @@
 
 - name: Development loadbalancer
   hosts: loadbalancer
-  sudo: yes
+  become: yes
   roles:
     - dev_loadbalancer

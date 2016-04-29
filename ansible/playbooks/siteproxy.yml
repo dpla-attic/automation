@@ -12,7 +12,7 @@
 - name: Site proxies
   hosts:
     - site_proxies
-  sudo: yes
+  become: yes
   serial: 1
   roles:
     - site_proxy
@@ -23,7 +23,7 @@
     - name: De-register instance from loadbalancer
       local_action: ec2_elb
       when: level == 'production' or level == 'staging'
-      sudo: false
+      become: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
         ec2_elbs: "{{ siteproxy_elb_name }}"
@@ -36,7 +36,7 @@
           host="{{ inventory_hostname }}" port="80" state=drained timeout=60
   post_tasks:
     - name: Wait for site proxy node to come back up
-      sudo: false
+      become: false
       local_action: >
           wait_for host="{{ inventory_hostname }}" port=80 delay=2 timeout=30
     - name: Register instance with loadbalancer again
@@ -47,7 +47,7 @@
       # initializing everything, and then switch it later to a HTTP check for "/".
       local_action: ec2_elb
       when: level == 'production' or level == 'staging'
-      sudo: false
+      become: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
         ec2_elbs: "{{ siteproxy_elb_name }}"

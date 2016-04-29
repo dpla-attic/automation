@@ -62,7 +62,7 @@
 - name: Ensure credentials of application PostgreSQL user
   postgresql_user: >
       name="{{ postgresql_user.name }}" password="{{ postgresql_user.password }}"
-  sudo_user: postgres
+  become_user: postgres
   tags:
     - postgresql
 
@@ -74,7 +74,7 @@
       lc_collate={{ dpla_locale }}
       state=present
       template=template0
-  sudo_user: postgres
+  become_user: postgres
   with_items:
     - dpla_portal
     - api
@@ -92,7 +92,7 @@
       state=present
       type=database
       privs=ALL
-  sudo_user: postgres
+  become_user: postgres
   with_items:
     - dpla_portal
     - api
@@ -113,7 +113,7 @@
       state=present
       type=database
       privs=ALL
-  sudo_user: postgres
+  become_user: postgres
   with_items:
     - ingestion
     - marmotta

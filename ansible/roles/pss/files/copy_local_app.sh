@@ -16,6 +16,7 @@ fi
 rsync -rIptl --delete --checksum \
     --exclude 'log' --exclude 'tmp' \
     --exclude 'public/uploads' \
+    --exclude '.vagrant'
     /pss_dev/ /home/dpla/pss-local
 if [ $? -ne 0 ]; then
 	exit 1

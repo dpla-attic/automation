@@ -32,6 +32,7 @@
     src: "/tmp/apache-marmotta-{{ marmotta_version }}-webapp.tar.gz"
     dest: "/usr/share"
   when: not warstat.stat.exists
+  notify: restart tomcat
 
 - name: Symlink Marmotta /usr/share directory
   file:

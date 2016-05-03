@@ -28,11 +28,12 @@
 
 - include: playbooks/memcached.yml level=development
 
+- include: playbooks/common_httpd.yml level=development
+
 - name: Web Configuration (frontend and site)
   hosts: webapps
   become: yes
   roles:
-    - common_web
     - common_sitenode
     - site_proxy
     - frontend
@@ -43,21 +44,7 @@
     skip_configuration: false
     do_deployment: true
 
-- name: Web Configuration (ingestion app and marmotta)
-  # Technically, it's not necessary to specify marmotta because ingestion_app and
-  # marmotta are the same in this environment, but this is done to be throrough.
-  hosts:
-    - ingestion_app
-    - marmotta
-  become: yes
-  roles:
-    - common_web
-  vars:
-    level: development
-    ingestion2: true
-
-- include: >-
-    playbooks/api.yml level=development ingestion2=true
+- include: playbooks/api.yml level=development ingestion2=true
 
 - include: playbooks/redis.yml level=development
 

@@ -35,7 +35,7 @@ rsync -rIptl --delete --checksum \
     || exit 1
 
 rsync -rIptl --delete --checksum \
-    --exclude '.git*' --exclude 'log' \
+    --exclude '.git*' --exclude '.vagrant' --exclude 'log' \
     /heidrun/ /home/dpla/heidrun-local \
     || exit 1
 

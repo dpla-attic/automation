@@ -41,3 +41,12 @@ contact_email: {{ pss_contact_email }}
 
 action_mailer:
   delivery_method: {{ pss_delivery_method }}
+
+widgets:
+  social_icons:
+    facebook: https://www.facebook.com/{{ facebook_account_name }}
+    twitter: https://twitter.com/{{ twitter_username }}
+    tumblr: http://{{ tumblr_account_name }}.tumblr.com/
+    rss: http://{{ frontend_hostname }}/info/feed
+
+twitter_username: {{ twitter_username }}

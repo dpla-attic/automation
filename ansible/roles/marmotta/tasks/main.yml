@@ -1,14 +1,45 @@
 ---
 
-- file: >-
+- name: Make sure that old Marmotta APT package list is absent
+  file: path=/etc/apt/sources.list.d/marmotta.list state=absent
+
+- name: Update apt cache after potential package list change
+  apt: update_cache=yes
+
+- name: Make sure that old Marmotta package has been purged
+  apt: pkg=marmotta state=absent purge=yes force=yes
+
+- name: Ensure existence of Marmotta home
+  file: >-
     path="{{ marmotta_home }}" state=directory owner=tomcat7 group=tomcat7
     mode=0755
 
-- name: Add Marmotta APT package list
-  copy: src=marmotta.list dest=/etc/apt/sources.list.d/marmotta.list
+- name: Determine existence of WAR file
+  stat:
+    path: "/usr/share/apache-marmotta-{{ marmotta_version }}/marmotta.war"
+  register: warstat
 
-- name: Make sure that the marmotta package is up-to-date
-  apt: pkg=marmotta state=present update_cache=yes force=yes
+- name: "Download tar archive, if necessary"
+  get_url:
+    url: "http://www-us.apache.org/dist/marmotta/{{ marmotta_version }}/apache-marmotta-{{ marmotta_version }}-webapp.tar.gz"
+    sha256sum: 34c37281b6875ea95da391ae5bbe059f31091f3c6bf2529539241b35690c84b0
+    dest: "/tmp/apache-marmotta-{{ marmotta_version }}-webapp.tar.gz"
+  when: not warstat.stat.exists
+
+- name: "Unpack tar archive, if necessary"
+  unarchive:
+    copy: no
+    src: "/tmp/apache-marmotta-{{ marmotta_version }}-webapp.tar.gz"
+    dest: "/usr/share"
+  when: not warstat.stat.exists
+  notify: restart tomcat
+
+- name: Symlink Marmotta /usr/share directory
+  file:
+    src: "/usr/share/apache-marmotta-{{ marmotta_version }}"
+    dest: /usr/share/marmotta
+    state: link
+  when: not warstat.stat.exists
 
 - name: Ensure state of Tomcat context for Marmotta
   template: >-

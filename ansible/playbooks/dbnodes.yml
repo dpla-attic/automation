@@ -11,7 +11,7 @@
 - name: Database nodes
   hosts: dbnodes
   serial: 1
-  sudo: yes
+  become: yes
   roles:
     - dbnode
   pre_tasks:
@@ -24,7 +24,7 @@
     - name: De-register instance from loadbalancer
       local_action: ec2_elb
       when: level == 'production' or level == 'staging'
-      sudo: false
+      become: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
         ec2_elbs: "{{ bigcouch_elb_name }}"
@@ -43,7 +43,7 @@
     - name: Register instance with loadbalancer again
       local_action: ec2_elb
       when: level == 'production' or level == 'staging'
-      sudo: false
+      become: false
       args:
         instance_id: "{{ ansible_ec2_instance_id }}"
         ec2_elbs: "{{ bigcouch_elb_name }}"

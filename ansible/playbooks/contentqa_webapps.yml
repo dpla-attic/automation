@@ -10,7 +10,7 @@
 
 - name: Common httpd configuration
   hosts: webapps
-  sudo: yes
+  become: yes
   roles:
     - common_web
   vars:

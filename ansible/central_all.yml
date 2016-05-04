@@ -11,7 +11,7 @@
 
 - name: Common
   hosts: central
-  sudo: yes
+  become: yes
   roles:
     # The only one of these roles so far that has environment-specific variables
     # is munin_master.  If any role has environment-specific variables files, the
@@ -28,8 +28,8 @@
 
 - name: Install rbenv/bundler/extra gems to central
   hosts: central
-  sudo: yes
-  sudo_user: dpla
+  become: yes
+  become_user: dpla
   tasks:
     - name: Make sure rbenv and bundler are current
       script: >
@@ -44,7 +44,7 @@
 
 - name: Install scripts to central
   hosts: central
-  sudo: yes
+  become: yes
   tasks:
     - name: Install Elasticsearch heap stats script
       copy: >-

@@ -31,11 +31,11 @@ if [ ! -d /home/dpla/heidrun-mappings-local ]; then
 fi
 
 rsync -rIptl --delete --checksum \
-    --exclude '.git*' /krikri/ /home/dpla/krikri \
+    --exclude '.git*' --exclude '.vagrant' /krikri/ /home/dpla/krikri \
     || exit 1
 
 rsync -rIptl --delete --checksum \
-    --exclude '.git*' --exclude 'log' \
+    --exclude '.git*' --exclude '.vagrant' --exclude 'log' \
     /heidrun/ /home/dpla/heidrun-local \
     || exit 1
 

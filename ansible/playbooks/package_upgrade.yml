@@ -2,7 +2,7 @@
 
 - name: Upgrade o/s packages
   hosts: all
-  sudo: yes
+  become: yes
   tasks:
     - name: Upgrade apt packages
       apt: upgrade=safe update_cache=yes

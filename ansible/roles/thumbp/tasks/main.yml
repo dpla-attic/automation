@@ -1,0 +1,94 @@
+---
+
+- name: Ensure existence of the "thumbp" account
+  user: >-
+      name=thumbp comment="thumbp privsep user"
+      home=/home/thumbp shell=/bin/bash state=present
+  tags:
+    - users
+
+- name: Ensure that necessary packages are installed
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - libffi-dev
+    - libreadline-dev
+    - libbz2-dev
+    - libsqlite3-dev
+    - libssl-dev
+
+- name: Ensure state of log directory
+  file: path=/var/log/thumbp state=directory owner=thumbp group=thumbp mode=0755
+
+- name: Ensure state of pid directory
+  file: path=/var/run/thumbp state=directory owner=thumbp group=thumbp mode=0755
+
+- name: Ensure state of virtualenv directory
+  file: path=/opt/thumbp state=directory owner=thumbp group=thumbp mode=0755
+
+- name: Make sure that pyenv is installed (directory and scripts)
+  become_user: thumbp
+  git: >-
+      repo=https://github.com/yyuu/pyenv.git
+      dest=/home/thumbp/.pyenv
+      version=master
+
+- name: Ensure that pyenv is configured (PYENV_ROOT)
+  become_user: thumbp
+  lineinfile:
+    dest: /home/thumbp/.bashrc
+    state: present
+    regexp: "PYENV_ROOT="
+    line: "export PYENV_ROOT=$HOME/.pyenv"
+
+- name: Ensure that pyenv is configured (PATH)
+  become_user: thumbp
+  lineinfile:
+    dest: /home/thumbp/.bashrc
+    state: present
+    insertafter: "PYENV_ROOT="
+    line: "export PATH=$PYENV_ROOT/bin:$PATH"
+
+- name: Ensure that pyenv is configured (pyenv init)
+  become_user: thumbp
+  lineinfile:
+    dest: /home/thumbp/.bashrc
+    state: present
+    regexp: "pyenv init"
+    insertafter: "export PATH"
+    line: >-
+        eval \"$(pyenv init -)\"
+
+- name: Stop thumbp if it is running in case of virtualenv change
+  service: name=thumbp state=stopped
+  ignore_errors: yes
+
+- name: Ensure that the correct Python is installed
+  become_user: thumbp
+  script: install_python.sh
+
+- name: Install thumbp
+  become_user: thumbp
+  pip:
+    name: "git+https://github.com/dpla/thumbp.git@{{ thumbp_branch_or_tag }}#egg=thumbp"
+    executable: /opt/thumbp/bin/pip
+    state: latest
+
+- name: Ensure state of init script
+  template: >-
+    src=etc_init.d_thumbp.j2 dest=/etc/init.d/thumbp
+    owner=root group=root mode=0755
+  notify: restart thumbp
+  tags:
+    - initscripts
+
+- name: Clear init script runlevels in case of a change
+  command: update-rc.d -f thumbp remove
+  tags:
+    - initscripts
+
+- name: Ensure init script run levels
+  command: update-rc.d thumbp defaults
+  tags:
+    - initscripts

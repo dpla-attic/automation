@@ -9,6 +9,6 @@
 - name: Solr
   hosts:
     - solr
-  sudo: yes
+  become: yes
   roles:
     - { role: solr, tags: ['solr']}

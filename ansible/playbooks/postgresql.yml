@@ -11,6 +11,6 @@
 
 - name: PostgreSQL databases
   hosts: postgresql_dbs
-  sudo: yes
+  become: yes
   roles:
     - postgresql

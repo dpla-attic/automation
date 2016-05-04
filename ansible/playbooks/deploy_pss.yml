@@ -6,7 +6,7 @@
 - name: Deploy Primary Source Sets Application
   hosts:
     - pss
-  sudo: yes
+  become: yes
   roles:
     - pss
   vars:

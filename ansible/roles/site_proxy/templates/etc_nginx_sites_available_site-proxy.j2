@@ -1,6 +1,6 @@
 
 # proxy configs
-proxy_cache_path  /var/cache/nginx  levels=1:2   keys_zone=staticfilecache:360m  max_size=10000m;
+proxy_cache_path  /var/cache/nginx levels=1:2 keys_zone=staticfilecache:{{ siteproxy_nginx_cache_shmem_size }} max_size={{ siteproxy_nginx_cache_max_size }};
 proxy_temp_path /var/spool/nginx;
 proxy_cache_key       "$scheme://$host$request_uri";
 proxy_cache         staticfilecache;
@@ -120,6 +120,13 @@ upstream dpla_portal {
 {% endfor %}
 }
 
+# Thumbnail proxy servers
+upstream dpla_thumbp {
+{% for h in groups['thumbp'] %}
+    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ thumbp_port }} fail_timeout=120s; # {{ h }}
+{% endfor %}
+}
+
 # Old wiki
 upstream dpla_berkman {
   server 128.103.64.94:80 weight=1 fail_timeout=120s;
@@ -194,6 +201,16 @@ server {
 
         limit_req zone=bookshelfreq burst={{ siteproxy_nginx_default_req_burst }};
         limit_conn bookshelfconn {{ siteproxy_bookshelf_max_conn }};
+    }
+
+    location /thumb {
+        proxy_cache_valid 200 60m;
+        proxy_cache_valid 404 1h;
+        proxy_cache_valid 403 24h;
+        proxy_cache_use_stale error timeout http_500 http_503;
+        expires 1d;
+        add_header Cache-Control "public";
+        proxy_pass http://dpla_thumbp;
     }
 
     location ~ ^/api/(.*)$ {

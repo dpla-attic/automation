@@ -5,7 +5,7 @@
 
 - name: Deploy Exhibitions
   hosts: exhibitions
-  sudo: yes
+  become: yes
   serial: 1
   roles:
     - omeka

@@ -4,13 +4,13 @@
 
 - name: HTTP proxy
   hosts: contentqa_proxy_host
-  sudo: yes
+  become: yes
   roles:
     - contentqa_proxy
 
 - name: Mail
   hosts: all
-  sudo: yes
+  become: yes
   roles:
     - aws_postfix
 
@@ -21,7 +21,7 @@
 - include: playbooks/contentqa_webapps.yml level=contentqa
 
 - hosts: api
-  sudo: yes
+  become: yes
   tasks:
     - name: Ensure existence of QA API account
       # This could fail if you try to run a "contentqa" VirtualBox VM, because mail

@@ -5,6 +5,6 @@
 
 - name: Geocoder (twofishes)
   hosts: geocoder
-  sudo: yes
+  become: yes
   roles:
     - geocoder

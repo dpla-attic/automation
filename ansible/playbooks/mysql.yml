@@ -11,6 +11,6 @@
 
 - name: MySQL
   hosts: mysql_dbs
-  sudo: yes
+  become: yes
   roles:
     - mysql

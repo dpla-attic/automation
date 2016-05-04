@@ -2,7 +2,7 @@
 
 - name: Take API out of maintenance mode
   hosts: api
-  sudo: true
+  become: true
   tasks:
     - name: Remove maintenance.yml file
       file: >-
@@ -12,7 +12,7 @@
 
 - name: Take frontend out of maintenance mode
   hosts: frontend
-  sudo: true
+  become: true
   tasks:
     - name: Remove maintenance.yml file
       file: >-
@@ -22,7 +22,7 @@
 
 - name: Take Primary Source Sets out of maintenance mode
   hosts: pss
-  sudo: true
+  become: true
   tasks:
     - name: Remove maintenance.yml file
       file: >-

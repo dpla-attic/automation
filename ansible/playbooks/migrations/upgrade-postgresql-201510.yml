@@ -55,7 +55,7 @@
 
 - name: Upgrade
   hosts: postgresql_dbs
-  sudo: yes
+  become: yes
   tasks:
 
     - include: ../../roles/postgresql/tasks/install.yml pg_version=9.4
@@ -73,7 +73,7 @@
         -P 50433 -j {{ upgrade_jobs | default("2") }}
       args:
         chdir: /var/lib/postgresql
-      sudo_user: postgres
+      become_user: postgres
 
     - name: Disable startup of old version
       # The init script will look for this when determining which clusters to
@@ -94,7 +94,7 @@
 
 - name: Configure new installation
   hosts: postgresql_dbs
-  sudo: yes
+  become: yes
   roles:
     - postgresql
   vars:
@@ -102,10 +102,10 @@
 
 - name: Post-installation tasks
   hosts: postgresql_dbs
-  sudo: yes
+  become: yes
   tasks:
     - name: Analyze tables
       command: /usr/lib/postgresql/9.4/bin/vacuumdb --all --analyze-only
-      sudo_user: postgres
+      become_user: postgres
 
 - include: ../pg_maintenance_off.yml

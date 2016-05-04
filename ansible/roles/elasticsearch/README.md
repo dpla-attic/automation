@@ -69,7 +69,7 @@ Example `my-playbook-main.yml`:
 
 - hosts: all_nodes
   user: $user
-  sudo: yes
+  become: yes
 
   vars_files:
     - defaults/main.yml
@@ -215,7 +215,7 @@ Example `my-master-playbook-main.yml`:
 
 - hosts: all_nodes
   user: ubuntu
-  sudo: yes
+  become: yes
 
   roles:
     - ansible-elasticsearch

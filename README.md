@@ -76,13 +76,18 @@ $ cd /dir/with/Vagrantfile
 $ vagrant up
 $ cd ansible
 ```
-An initial run to add your admin shell account to the VMs:
+
+* An initial run to add your admin shell account to the VMs:
 ```
 $ ansible-playbook -i development -u vagrant \
   --private-key=$HOME/.vagrant.d/insecure_private_key dev_all.yml \
   -t users
 ```
-Then some more invocations to configure everything:
+(Note that if you have a Vagrantfile from prior to
+[June 2, 2015](https://github.com/dpla/automation/commit/ff515b975768da9f3e99e5caa74f6dd87d075589) and are
+rebuilding your VMs, you may need to add `config.ssh.insert_key = false`.)
+
+* Then some more invocations to configure everything:
 ```
 $ ansible-playbook -i development -u <your username in group_vars/all> \
   playbooks/package_upgrade.yml

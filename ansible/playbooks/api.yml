@@ -6,7 +6,7 @@
 - name: API (platform) application
   hosts: api
   serial: 1
-  sudo: yes
+  become: yes
   roles:
     - api
   vars:

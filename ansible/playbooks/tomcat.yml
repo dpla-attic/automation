@@ -10,6 +10,6 @@
   hosts:
     - marmotta
     - solr
-  sudo: yes
+  become: yes
   roles:
     - { role: tomcat_common, tags: ['tomcat']}

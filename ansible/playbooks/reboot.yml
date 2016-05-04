@@ -18,7 +18,7 @@
     - solr
     - marmotta
     - geocoder
-  sudo: yes
+  become: yes
   tasks:
     - name: Reboot
       command: /sbin/shutdown -r now
@@ -26,7 +26,7 @@
       poll: 0
       ignore_errors: true
     - name: Wait for server to come back up
-      sudo: false
+      become: false
       local_action: >-
           wait_for host="{{ inventory_hostname }}" port="22"
           delay=60 timeout=500

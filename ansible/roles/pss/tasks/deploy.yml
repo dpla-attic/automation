@@ -9,7 +9,7 @@
       dest=/home/dpla/pss-git
       version={{ pss_branch_or_tag }}
       force=true
-  sudo_user: dpla
+  become_user: dpla
   when: not pss_use_local_source
 
 ## Symlink to the build directory, to allow local and git builds to coexist
@@ -59,7 +59,7 @@
 - name: Make sure that rbenv and bundler are current
   script: >-
       ../../../files/install_ruby_tools.sh {{ pss_rbenv_version }}
-  sudo_user: dpla
+  become_user: dpla
 
 - name: Ensure the existence and permissions of necessary directories
   file: >-
@@ -99,7 +99,7 @@
   script: >-
     build_pss.sh "{{ pss_rbenv_version }}"
     {{ 'branding' if pss_include_branding else '' }}
-  sudo_user: dpla
+  become_user: dpla
   environment:
     RAILS_ENV: "{{ pss_rails_env }}"
 

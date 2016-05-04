@@ -1,7 +1,7 @@
 ---
 
 - hosts: ingestion
-  sudo: yes
+  become: yes
   tasks:
     - name: Make sure that the "dpla" user exists
       user: >

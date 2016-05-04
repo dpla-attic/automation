@@ -83,6 +83,8 @@
     src=etc_init.d_twofishes.j2 dest=/etc/init.d/twofishes
     owner=root group=root mode=0755
   notify: restart twofishes
+  tags:
+    - initscripts
 
 - name: Clear init script runlevels in case of a change
   command: update-rc.d -f twofishes remove

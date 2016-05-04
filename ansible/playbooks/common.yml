@@ -8,6 +8,6 @@
 
 - name: Common
   hosts: all
-  sudo: yes
+  become: yes
   roles:
     - common

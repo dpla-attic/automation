@@ -9,7 +9,7 @@
       dest=/home/dpla/frontend-git
       version={{ frontend_branch_or_tag }}
       force=true
-  sudo_user: dpla
+  become_user: dpla
   when: not frontend_use_local_source
 
 # Symlink to the build directory, to allow local and git builds to coexist neatly
@@ -54,7 +54,7 @@
 - name: Make sure rbenv and bundler are current
   script: >
       ../../../files/install_ruby_tools.sh {{ frontend_rbenv_version }}
-  sudo_user: dpla
+  become_user: dpla
 
 - name: Ensure existence of live app directory
   file: path=/srv/www/frontend state=directory owner=dpla group=dpla mode=0755
@@ -93,7 +93,7 @@
   script: >-
       build_frontend.sh {{ frontend_rbenv_version }}
       {{ 'branding' if frontend_include_branding else '' }}
-  sudo_user: dpla
+  become_user: dpla
   notify: restart memcached
 
 - name: Ensure existence of uploads directory

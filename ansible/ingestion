@@ -37,6 +37,9 @@ dev2
 [solr]
 dev2
 
+[thumbp]
+dev1
+
 [worker]
 dev2
 [worker:vars]

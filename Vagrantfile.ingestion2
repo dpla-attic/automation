@@ -29,6 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # (the first argument), but don't modify the mount point.
     # dev1.vm.synced_folder "../frontend", "/frontend_dev"
     # dev1.vm.synced_folder "../platform", "/api_dev"
+    # dev1.vm.synced_folder "../thumbp", "/thumbp"
   end
 
   # Ingestion2

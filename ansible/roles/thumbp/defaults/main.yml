@@ -1,3 +1,5 @@
 ---
 
 thumbp_branch_or_tag: master
+thumbp_nvm_version: 0.31.0
+thumbp_use_local_source: false

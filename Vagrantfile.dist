@@ -66,6 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # webapp.vm.synced_folder "../frontend-wp", "/wordpress_dev"
         # webapp.vm.synced_folder "../exhibitions", "/exhibitions_dev"
         # webapp.vm.synced_folder "../primary-source-sets", "/pss_dev"
+        # webapp.vm.synced_folder "../thumbp", "/thumbp"
     end
 
 end

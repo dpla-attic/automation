@@ -1,22 +1,26 @@
 ---
 
+- name: Ensure that the PPA repository vbernat/haproxy-1.6 is registered
+  apt_repository: repo='ppa:vbernat/haproxy-1.6' state=present update_cache=yes
+
 - name: Install packages
-  apt: >
+  apt: >-
       pkg="{{ item }}" state=present
   with_items:
     - haproxy
     - hatop
-  tags:
-    - loadbalancer
+
+- name: Update SSL certificate
+  script: certificate.sh
+  register: script_result
+  changed_when: "'Changed' in script_result.stdout"
+  notify:
+    - restart haproxy
 
 - name: Copy haproxy init defaults file
   copy: src=etc_default_haproxy dest=/etc/default/haproxy owner=root group=root mode=0644
   notify: restart haproxy
-  tags:
-    - loadbalancer
 
 - name: Update haproxy config file
   template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
   notify: restart haproxy
-  tags:
-    - loadbalancer

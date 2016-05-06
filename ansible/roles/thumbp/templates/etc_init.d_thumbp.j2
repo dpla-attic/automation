@@ -31,7 +31,7 @@ USER=thumbp
 GROUP=thumbp
 IF={{ hostvars[inventory_hostname][internal_network_interface]['ipv4']['address'] }}
 IFPORT="tcp:{{ thumbp_port }}:interface=$IF"
-export ES_BASE=http://{{ es_cluster_loadbal }}:9200/dpla_alias/item
+export ES_BASE=http://{{ es_cluster_loadbal }}/dpla_alias/item
 
 usage() {
     echo >&2 "Usage: $0 <start|stop|restart|reload|status|usage>"

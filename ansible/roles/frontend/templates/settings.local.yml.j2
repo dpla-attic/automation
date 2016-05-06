@@ -8,9 +8,10 @@ notifications:
 # DPLA API URL and credentials
 api:
   # Without trailing slash, please
-  url: {{ api_default_protocol }}://{{ api_hostname }}:{{ api_port }}/v2
+  url: {{ default_http_scheme }}://{{ api_hostname }}:{{ api_port }}/v2
   # API key, will be added to all API requests as &api_key=
   key: {{ api_key }}
+  verify_ssl: {{ (level == 'development') | ternary('false', 'true') }}
 exhibitions:
   # Omeka exhibition site address. Used for generating link
   site: http://{{ frontend_hostname }}/exhibitions

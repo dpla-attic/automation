@@ -59,3 +59,11 @@
 
 - name: Ensure init script run levels
   command: update-rc.d thumbp defaults
+
+- name: Ensure state of logrotate configuration
+  copy:
+    src: etc_logrotate.d_thumbp
+    dest: /etc/logrotate.d/thumbp
+    owner: root
+    group: root
+    mode: 0644

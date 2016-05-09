@@ -4,6 +4,9 @@ proxy_cache_path  /var/cache/nginx levels=1:2 keys_zone=staticfilecache:{{ sitep
 proxy_temp_path /var/spool/nginx;
 proxy_cache_key       "$scheme://$host$request_uri";
 proxy_cache         staticfilecache;
+proxy_cache_valid 200 302 24h;
+proxy_cache_valid 404 1h;
+proxy_cache_valid 403 24h;
 proxy_connect_timeout 5;
 proxy_read_timeout    120;
 proxy_send_timeout    120;
@@ -153,8 +156,6 @@ server {
 
     location / {
 
-        proxy_cache_valid 200 240m;
-
         # Ignore cache-disabling headers set by the portal app
         proxy_ignore_headers Cache-Control Set-Cookie;
 
@@ -171,9 +172,8 @@ server {
         }
 
         location ~* \.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
-            # Cache static-looking files for 120 minutes, setting a 10 day expiry time.
-            proxy_cache_valid 200 360m;
-            expires 864000;
+            # 10 day expiry time for static files
+            expires 10d;
             proxy_pass http://dpla_portal;
         }
 
@@ -194,7 +194,6 @@ server {
         # redundant with `location /` above.
         proxy_cache off;
         # TODO:  consider selective caching, but watch out for Content-Type
-        # proxy_cache_valid 200 240m;
         # proxy_ignore_headers Cache-Control Set-Cookie;
         # proxy_cache_key       "$request_uri$http_content_type";
         proxy_pass http://dpla_portal;
@@ -204,11 +203,8 @@ server {
     }
 
     location /thumb {
-        proxy_cache_valid 200 60m;
-        proxy_cache_valid 404 1h;
-        proxy_cache_valid 403 24h;
         proxy_cache_use_stale error timeout http_500 http_503;
-        expires 1d;
+        expires 10d;
         add_header Cache-Control "public";
         proxy_pass http://dpla_thumbp;
     }
@@ -224,7 +220,6 @@ server {
 
 {% if groups['cms'] is defined %}
     location /info {
-        proxy_cache_valid 200 240m;
         proxy_cache_bypass        $http_cache_bypass $cookie_wordpress_logged_in;
         proxy_no_cache            $http_cache_bypass $cookie_wordpress_logged_in;
 
@@ -258,8 +253,7 @@ server {
         location ~* \.(jpg|png|gif|jpeg|css|js|mp3|wav|swf|mov|doc|pdf|xls|ppt|docx|pptx|xlsx)$ {
             # Cache static-looking files for 120 minutes, setting a 10 day expiry time.
             # Do not cache for logged-in users.
-            proxy_cache_valid 200 360m;
-            expires 864000;
+            expires 10d;
             if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
                 set $do_not_cache 1;
             }
@@ -282,14 +276,12 @@ server {
         }
 
         location ~* \/[^\/]+\/(feed|\.xml)\/? {
-            proxy_cache_valid 200 240m;
             limit_conn defaultconnzone 3;
             limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
             if ($http_cookie ~* "comment_author_|wordpress_(?!test_cookie)|wp-postpass_" ) {
                 set $do_not_cache 1;
             }
             proxy_cache_key     "$scheme://$host$request_uri $do_not_cache";
-            proxy_cache_valid 200 240m;
             proxy_pass http://dpla_wp;
         }
 
@@ -309,8 +301,7 @@ server {
         # Do not cache HTML, but cache static files
         proxy_cache off;
         location ~* \.(css|doc|docx|flv|gif|htm|ico|jpeg|jpg|js|m4v|mov|mp3|mp4|pdf|png|ppt|pptx|swf|svg|svgz|tif|ttf|wav|xls|xlsx)$ {
-            proxy_cache_valid 200 360m;
-            expires 864000;
+            expires 10d;
             proxy_pass http://dpla_omeka;
         }
 
@@ -339,8 +330,7 @@ server {
         proxy_cache off;
 
         location ~* \.(css|png|js|jpe?g|ico|mov|mp3|mp4|pdf)$ {
-            proxy_cache_valid 200 360m;
-            expires 864000;
+            expires 10d;
             proxy_pass http://dpla_pss;
         }
 

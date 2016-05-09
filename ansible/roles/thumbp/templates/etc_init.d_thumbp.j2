@@ -24,7 +24,7 @@ THUMBP_ROOT=/opt/thumbp/thumbp
 PIDFILE=/var/run/thumbp/thumbp.pid
 LOGDIR=/var/log/thumbp
 USER=thumbp
-ES_BASE=http://{{ es_cluster_loadbal }}:9200/dpla_alias/item
+ES_BASE=http://{{ es_cluster_loadbal }}/dpla_alias/item
 LISTEN_PORT={{ thumbp_port }}
 cmd="node $THUMBP_ROOT/thumbp.js $ES_BASE $LISTEN_PORT"
 

@@ -213,3 +213,40 @@
   tags:
     - munin
     - postgresql
+
+# Update queries in following munin plugins so they reference correct
+# PostgreSQL 9.4 column names
+#
+#   * postgres_connections_
+#   * postgres_connections_db
+#   * postgres_users
+#   * postgres_querylength_
+- name: Patch plugins - replace 'procpid' with 'pid'
+  replace: >-
+    dest='/usr/share/munin/plugins/{{ item }}'
+    regexp='\sprocpid'
+    replace=' pid '
+    backup=yes
+  with_items:
+    - postgres_connections_
+    - postgres_connections_db
+    - postgres_users
+    - postgres_querylength_
+  tags:
+    - munin
+    - postgresql
+
+- name: Patch plugins - replace 'current_query' with 'query'
+  replace: >-
+    dest='/usr/share/munin/plugins/{{ item }}'
+    regexp='\scurrent_query'
+    replace=' query '
+    backup=yes
+  with_items:
+    - postgres_connections_
+    - postgres_connections_db
+    - postgres_users
+    - postgres_querylength_
+  tags:
+    - munin
+    - postgresql

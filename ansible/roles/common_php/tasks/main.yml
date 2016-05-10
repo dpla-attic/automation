@@ -16,6 +16,20 @@
     - web
     - php
 
+- name: Ensure state of ImageMagick policy.xml file
+  # This is configured here because php5-imagick depends on imagemagick-common
+  # and the policy.xml file is part of that package.
+  copy:
+    src: ../../../files/imagemagick_policy.xml
+    dest: /etc/ImageMagick/policy.xml
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart php
+  tags:
+    - web
+    - php
+
 - name: Update PHP configuration (php.ini)
   template: >-
       src=php.ini.j2 dest=/etc/php5/fpm/php.ini

@@ -15,6 +15,15 @@
   tags:
     - packages
 
+- name: Ensure state of ImageMagick policy.xml file
+  copy:
+    src: ../../../files/imagemagick_policy.xml
+    dest: /etc/ImageMagick/policy.xml
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart unicorn
+
 - name: Ensure state of Unicorn init script
   template: >
       src=etc_init.d_unicorn_frontend.j2 dest=/etc/init.d/unicorn_frontend

@@ -1,24 +1,32 @@
 
 # proxy configs
-proxy_cache_path  /var/cache/nginx levels=1:2 keys_zone=staticfilecache:{{ siteproxy_nginx_cache_shmem_size }} max_size={{ siteproxy_nginx_cache_max_size }};
+proxy_cache_path  /var/cache/nginx
+                  levels=1:2
+                  keys_zone=main_cache:{{ siteproxy_nginx_cache_shmem_size }}
+                  max_size={{ siteproxy_nginx_cache_max_size }}
+                  inactive={{ siteproxy_nginx_cache_inactive_time }};
+# TODO with NGINX >=1.7.10: set "use_temp_path=off" option to proxy_cache_path.
+# We still have NGINX v1.1.19 in Ubuntu 12.04LTS. Ubuntu 16.04LTS (Xenial)
+# provides v1.10.
 proxy_temp_path /var/spool/nginx;
-proxy_cache_key       "$scheme://$host$request_uri";
-proxy_cache         staticfilecache;
+proxy_cache_key   "$scheme://$host$request_uri";
+proxy_cache       main_cache;
 proxy_cache_valid 200 302 1d;
 proxy_cache_valid 404 1h;
 proxy_cache_valid 403 1d;
+# TODO with NGINX >= 1.5.7: set proxy_cache_revalidate to employ
+# If-Modified-Since. See note above about Ubuntu versions.
+# proxy_cache_revalidate on;
+proxy_cache_lock on;
 proxy_connect_timeout 5;
 proxy_read_timeout    120;
 proxy_send_timeout    120;
 proxy_redirect      off;
-# this causes issues with file cache - disabling :: jsd
-#proxy_buffering     off;
 
-# disable gzip for nagios checks
-gzip_disable "nagios-plugins";
-
-# use stale while updating, use next backend if error
+# Use a stale cache file in the event that another request is updating the
+# cached file. (Do not wait or try the next upstream server.)
 proxy_cache_use_stale updating;
+# Try next upstream server in the event of a failure
 proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
 
 # allows backend to see real ip
@@ -203,7 +211,10 @@ server {
     }
 
     location /thumb {
-        proxy_cache_use_stale error timeout http_500 http_503;
+        # Move on to next origin server in the event of connection error or
+        # timeout via proxy_next_upstream (above), but deliver stale file for
+        # a 500 or 503, assuming the other server won't respond any better.
+        proxy_cache_use_stale updating http_500 http_503;
         expires 10d;
         add_header Cache-Control "public";
         proxy_pass http://dpla_thumbp;
@@ -272,7 +283,7 @@ server {
                 set $do_not_cache 1;
             }
             proxy_cache_key     "$scheme://$host$request_uri $do_not_cache";
-            proxy_cache staticfilecache;
+            proxy_cache main_cache;
         }
 
         location ~* \/[^\/]+\/(feed|\.xml)\/? {

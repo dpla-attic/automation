@@ -6,7 +6,7 @@ proxy_cache_key       "$scheme://$host$request_uri";
 proxy_cache         staticfilecache;
 proxy_cache_valid 200 302 1d;
 proxy_cache_valid 404 1h;
-proxy_cache_valid 403 24h;
+proxy_cache_valid 403 1d;
 proxy_connect_timeout 5;
 proxy_read_timeout    120;
 proxy_send_timeout    120;

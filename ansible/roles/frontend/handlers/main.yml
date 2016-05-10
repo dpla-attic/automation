@@ -7,3 +7,6 @@
   delegate_to: "{{ item }}"
   with_items: groups.memcached
   service: name=memcached state=restarted
+
+- name: restart unicorn
+  service: name=unicorn_frontend state=restarted

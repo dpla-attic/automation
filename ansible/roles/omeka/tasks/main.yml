@@ -7,6 +7,8 @@
     - php
     - web
 
+# ImageMagick policy.xml file is configured by common_php role.
+
 - name: Update php-fpm pool for Omeka
   template: >
       src=etc_php5_fpm_pool.d_omeka.conf.j2

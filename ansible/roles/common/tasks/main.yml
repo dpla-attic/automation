@@ -53,6 +53,7 @@
     - zlib1g-dev
     - debian-goodies
     - python-apt
+    - apt-show-versions
   tags:
     - packages
     - munin

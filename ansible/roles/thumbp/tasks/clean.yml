@@ -1,0 +1,14 @@
+---
+
+- name: Stop thumbp if it is running
+  service: name=thumbp state=stopped
+  ignore_errors: yes
+
+- name: Remove thumbp user
+  user: name=thumbp state=absent
+
+- name: Remove legacy thumbp home directory
+  file: path=/home/thumbp state=absent
+
+- name: Remove /opt/thumbp
+  file: path=/opt/thumbp state=absent

@@ -42,3 +42,7 @@ siteproxy_nginx_limit_req_log_level: notice
 siteproxy_nginx_cache_max_size: 6144m
 # Size of shared memory zone that is used for NGINX cache
 siteproxy_nginx_cache_shmem_size: 360m
+# How long an item can remain in the cache without being accessed, independently
+# of how long its expiration time is, or the value of the proxy_cache_valid
+# directive:
+siteproxy_nginx_cache_inactive_time: 1d

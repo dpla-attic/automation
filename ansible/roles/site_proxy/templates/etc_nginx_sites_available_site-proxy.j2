@@ -127,10 +127,6 @@ upstream dpla_thumbp {
 {% endfor %}
 }
 
-# Old wiki
-upstream dpla_berkman {
-  server 128.103.64.94:80 weight=1 fail_timeout=120s;
-}
 
 server {
 
@@ -359,10 +355,7 @@ server {
 {% endif %}
 
     location /wiki {
-        proxy_set_header Host dev.dp.la;     
-        sub_filter dev.dp.la 'dp.la';
-        sub_filter_once off;
-        proxy_pass http://dpla_berkman/wiki;
+        return 301 http://web.archive.org/web/20160316200044/http://dp.la/wiki/Main_Page;
      }
 
     location ~ /\.ht {

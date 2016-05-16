@@ -12,3 +12,5 @@
   vars:
     do_deployment: true
     skip_configuration: true
+  environment:
+    RAILS_ENV: "{{ frontend_rails_env }}"

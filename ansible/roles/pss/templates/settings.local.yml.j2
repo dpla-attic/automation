@@ -51,3 +51,11 @@ widgets:
     rss: http://{{ frontend_hostname }}/info/feed
 
 twitter_username: {{ twitter_username }}
+
+cache:
+  store: mem_cache_store
+  opts:
+{% for h in groups['memcached'] %}
+    - {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}
+{% endfor %}
+    - { namespace: 'pss' }

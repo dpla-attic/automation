@@ -15,7 +15,7 @@ fi
 
 rsync -rIptl --delete --checksum \
     --exclude 'log' --exclude 'tmp' --exclude 'vendor/assets' \
-    --exclude 'public/uploads' \
+    --exclude 'public/assets' --exclude 'public/uploads' \
     /frontend_dev/ /home/dpla/frontend-local
 if [ $? -ne 0 ]; then
 	exit 1

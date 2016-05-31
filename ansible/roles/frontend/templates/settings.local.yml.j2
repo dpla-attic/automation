@@ -14,7 +14,7 @@ api:
   verify_ssl: {{ (level == 'development') | ternary('false', 'true') }}
 exhibitions:
   # Omeka exhibition site address. Used for generating link
-  site: http://{{ frontend_hostname }}/exhibitions
+  site: //{{ frontend_hostname }}/exhibitions
   # Elasticsearch instance for searching exhibitions
   elasticsearch:
     host: http://ignore-me:9200

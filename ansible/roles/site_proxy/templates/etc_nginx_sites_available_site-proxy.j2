@@ -161,9 +161,15 @@ server {
     server_name {{ frontend_hostname }};
   
     # Bad bot!
-    if ( $bad_bot = 1 ) {
+    if ($bad_bot = 1) {
         return 403;
     }
+
+{% if default_http_scheme == 'https' %}
+    if ($http_x_forwarded_proto != 'https') {
+        return 301 https://{{ frontend_hostname }}$request_uri;
+    }
+{% endif %}
 
 {% for addr in nginx_real_ip_from_addrs %}
     set_real_ip_from {{ addr }};
@@ -420,7 +426,5 @@ server {
 server {
     listen {{ siteproxy_port }};
     server_name www.{{ frontend_hostname }};
-    location / {
-        rewrite ^(.*)$ http://{{ frontend_hostname }}$1 permanent;
-    }
+    return 301 {{ default_http_scheme }}://{{ frontend_hostname }}$request_uri;
 }

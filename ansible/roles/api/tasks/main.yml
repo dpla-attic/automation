@@ -11,7 +11,7 @@
     - libreadline6
     - libreadline6-dev
     - zip
-  when: not skip_configuration
+  when: not skip_configuration | default(false)
   tags:
     - packages
 
@@ -19,7 +19,7 @@
   template: >
       src=etc_init.d_unicorn_api.j2 dest=/etc/init.d/unicorn_api
       owner=root group=root mode=0755
-  when: not skip_configuration
+  when: not skip_configuration | default(false)
   tags:
     - web
     - initscripts
@@ -28,20 +28,20 @@
   template: >
       src=start_unicorn_api.sh.j2 dest=/usr/local/sbin/start_unicorn_api.sh
       owner=root group=root mode=0755
-  when: not skip_configuration
+  when: not skip_configuration | default(false)
   tags:
     - web
 
 - name: Clear existing unicorn init script run levels in case of change
   command: update-rc.d -f unicorn_api remove
-  when: not skip_configuration
+  when: not skip_configuration | default(false)
   tags:
     - web
     - initscripts
 
 - name: Ensure Unicorn init script run levels
   command: update-rc.d unicorn_api defaults 21 18
-  when: not skip_configuration
+  when: not skip_configuration | default(false)
   tags:
     - web
     - initscripts
@@ -81,7 +81,7 @@
 - name: Ensure that obsolete QA app htpasswd file is absent
   file: path=/etc/nginx/qa_htpasswd state=absent
   notify: restart nginx
-  when: not skip_configuration
+  when: not skip_configuration | default(false)
   tags:
     - nginx
     - web
@@ -95,7 +95,7 @@
       dest="/etc/nginx/sites-available/api"
       owner=root group=root mode=0644
   notify: restart nginx
-  when: not skip_configuration
+  when: not skip_configuration | default(false)
   tags:
     - nginx
     - web
@@ -106,7 +106,7 @@
       dest="/etc/nginx/sites-enabled/api"
       state=link owner=root group=root
   notify: restart nginx
-  when: not skip_configuration
+  when: not skip_configuration | default(false)
   tags:
     - nginx
     - web
@@ -116,7 +116,7 @@
       src=etc_logrotate.d_api_rails_logs.j2
       dest=/etc/logrotate.d/api_rails_logs
       owner=root group=root mode=0644
-  when: not skip_configuration
+  when: not skip_configuration | default(false)
   tags:
     - logrotate
 

@@ -13,3 +13,6 @@
 # sysctl.
 - name: start procps
   service: name=procps state=started
+
+- name: update resolv.conf
+  command: resolvconf -u

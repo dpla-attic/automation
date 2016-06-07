@@ -37,7 +37,7 @@ search:
   endpoint: {{ es_cluster_loadbal }}
 
   # Name of the alias pointing to your deployed ElasticSearch index
-  index_name: dpla_alias
+  index_name: {{ api_index_name }}
 
   # Name of your live river that points to your $index_name
   river_name: dpla_river

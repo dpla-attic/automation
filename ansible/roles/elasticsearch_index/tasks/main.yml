@@ -1,0 +1,87 @@
+---
+
+# elasticsearch_index role
+# ---
+#
+# These tasks are all run locally, from the system running Ansible.
+# This role can be run for a particular server by calling it from a playbook
+# where `hosts' is an inventory group, or can be run for the whole inventory
+# by calling it from a playbook where `hosts' is simply localhost and variables
+# are overridden to assign `es_cluster_loadbal'.
+
+# NOTE that the variable `index_name' is purposely undefined within this role.
+# You are expected to define it in the role invocation, or in a variable
+# declaration in your playbook, or on the commandline.
+
+# Example of running this role for the whole inventory, where the search index
+# is not used for one particular server:
+
+# - hosts: localhost
+#   vars:
+#     index_name: prod_20160605
+#   roles:
+#     - {role: elasticsearch_index }
+
+# Example of running this role for some kind of staging / test environment,
+# where you want each server to have its own search index:
+
+# - hosts: testinggroup
+#   roles:
+#     - {role: elasticsearch_index,
+#        index_name: "{{ inventory_hostname }}"}
+
+# TODO: add variable to govern whether to create an alias for the new index.
+
+- name: Check whether the index exists
+  become: no
+  local_action: uri
+  args:
+    url: "http://{{ es_cluster_loadbal }}/{{ index_name }}"
+    method: "HEAD"
+    status_code: "200,404"
+  register: probe
+
+- name: Display search index that will be created or updated
+  debug:
+    msg: "Search index: http://{{ es_cluster_loadbal }}/{{ index_name }}"
+
+# We would ideally create the index and post its settings and mappings in
+# the same request, but the serialization sorts the 'settings' and
+# 'mappings' properties alphabetically, and Elasticsearch 0.90 doesn't like
+# it if the mappings appear in the request body before the settings that
+# define analyzers and filters.
+
+- name: Create index
+  when: probe.status == 404
+  become: no
+  local_action: >-
+    command curl -X POST -i -d '{{ es_index_settings | to_json }}'
+    -H 'Content-Type: application/json'
+    "http://{{ es_cluster_loadbal }}/{{ index_name }}"
+  register: curl_post
+  failed_when: "'200 OK' not in curl_post.stdout"
+
+- name: Create or update mapping (item)
+  become: no
+  local_action: >-
+    command curl -X PUT -i -d '{{ es_index_mapping_item | to_json }}'
+    -H 'Content-Type: application/json'
+    "http://{{ es_cluster_loadbal }}/{{ index_name }}/item/_mapping"
+  register: curl_post
+  failed_when: "'200 OK' not in curl_post.stdout"
+
+- name: Create or update mapping (collection)
+  become: no
+  local_action: >-
+    command curl -X PUT -i -d '{{ es_index_mapping_collection | to_json }}'
+    -H 'Content-Type: application/json'
+    "http://{{ es_cluster_loadbal }}/{{ index_name }}/collection/_mapping"
+  register: curl_post
+  failed_when: "'200 OK' not in curl_post.stdout"
+
+# TODO: Create alias. This should be implemented with a module.
+#       We should check to see if the alias already exists and use
+#       the "remove" and "add" actions described in
+#       https://www.elastic.co/guide/en/elasticsearch/reference/0.90/indices-aliases.html
+#       to atomically reassign the alias if that's necessary.
+

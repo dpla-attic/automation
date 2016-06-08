@@ -66,6 +66,12 @@
     - puppet-common
     - chef
     - chef-zero
+    - landscape-common
+    - landscape-client
+
+- name: Remove Ubuntu Advantage Cloud Guest advertisement
+  file: >
+    path="/etc/update-motd.d/51-cloudguest" state=absent
 
 - name: Disable default munin plugins that we don't need
   file: >

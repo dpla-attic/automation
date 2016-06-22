@@ -31,15 +31,7 @@
     - nginx
     - web
 
-- name: Copy Nginx settings for Nagios checks
-  copy: >
-      src=etc_nginx_conf.d_nagioschecks dest=/etc/nginx/conf.d/nagioschecks
-      owner=root group=root mode=0644
-  notify: restart nginx
-  tags:
-    - nginx
-    - web
-    - nagios
+# TODO before committing: git rm files/etc_nginx_conf.d_nagioschecks
 
 - name: Ensure "dpla" user exists
   user: >

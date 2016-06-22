@@ -9,8 +9,19 @@
   tags:
     - kernel
 
+- name: Update hostname resolver configuration
+  template:
+    src: etc_resolvconf_resolv.conf.d_base.j2
+    dest: /etc/resolvconf/resolv.conf.d/base
+    mode: 0644
+    owner: root
+    group: root
+  notify: update resolv.conf
+
+- meta: flush_handlers
+
 - name: Set hostname
-  hostname: name={{ inventory_hostname }}
+  hostname: name={{ inventory_hostname | replace('_', '-') }}
   tags:
     - networking
 

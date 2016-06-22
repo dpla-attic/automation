@@ -7,8 +7,11 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
-{% for h in groups['all'] %}
-{{ hostvars[h][internal_network_interface]['ipv4']['address'] }}	{{ h }}
+{% for h in groups[all_group_name] %}
+{# Hostnames should not have underscores, but dynamic inventories (particularly,
+   EC2) can have names with underscores. They have to be converted to use
+   hyphens. #}
+{{ hostvars[h][internal_network_interface]['ipv4']['address'] }}	{{ h | replace('_', '-')}}
 {% endfor %}
 
 {% if level is defined and level == 'development' %}
@@ -22,7 +25,9 @@ ff02::2 ip6-allrouters
 {# TODO:  remove the "is defined" clause below once we get rid of the legacy #}
 {#        ingestion inventory and 'marmotta' is present in the #}
 {#        'development' inventory. #}
-{% if marmotta_domain is defined and inventory_hostname != 'central' and groups['marmotta'] is defined %}
+{% if marmotta_domain | default(false)
+   and inventory_hostname != 'central'
+   and groups['marmotta'] is defined %}
 {# assume one Marmotta host: #}
 {% set marmottahost = groups['marmotta'][0] %}
 {{ hostvars[marmottahost][internal_network_interface]['ipv4']['address'] }} {{ marmotta_domain }}

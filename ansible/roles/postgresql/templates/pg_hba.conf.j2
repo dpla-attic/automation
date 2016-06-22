@@ -72,18 +72,19 @@
 # listen on a non-local interface via the listen_addresses
 # configuration parameter, or via the -i or -h command line switches.
 
+# hostvars[h][internal_network_interface]['ipv4']['address']
 
 {% for host in groups['frontend'] %}
-host   all             all            {{ host }}             md5
+host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 {% for host in groups['api'] %}
-host   all             all            {{ host }}             md5
+host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 
 {# The `cms` group needs access because of the pss app #}
 {% if groups['cms'] is defined %}
 {% for host in groups['cms'] %}
-host   all             all            {{ host }}             md5
+host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 {% endif %}
 
@@ -93,19 +94,19 @@ host   all             all            {{ host }}             md5
 
 {% if groups['ingestion_app'] is defined %}
 {% for host in groups['ingestion_app'] %}
-host   all             all            {{ host }}             md5
+host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 {% endif %}
 
 {% if groups['worker'] is defined %}
 {% for host in groups['worker'] %}
-host   all             all            {{ host }}             md5
+host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 {% endif %}
 
 {% if groups['marmotta'] is defined %}
 {% for host in groups['marmotta'] %}
-host   all             all            {{ host }}             md5
+host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 {% endif %}
 

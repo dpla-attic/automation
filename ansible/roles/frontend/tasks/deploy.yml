@@ -101,11 +101,6 @@
       path=/srv/www/frontend/public/uploads state=directory
       owner=dpla group=dpla mode=0755 recurse=yes
 
-- name: Clear site proxy cache
-  command: find /var/cache/nginx -type f -delete
-  delegate_to: "{{ item }}"
-  with_items: groups.site_proxies
-
 - name: Start Unicorn
   service: name=unicorn_frontend state=started
 

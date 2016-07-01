@@ -41,7 +41,6 @@
   become_user: dpla
   when: do_wordpress and do_deployment
   notify:
-    - clear site proxy cache
     - reload php5-fpm
   tags:
     - web
@@ -61,7 +60,6 @@
   when: do_wordpress and do_deployment
   notify:
     - reload php5-fpm
-    - clear site proxy cache
   tags:
     - web
 
@@ -83,7 +81,6 @@
       owner=root group=root mode=0644
   notify:
     - restart nginx
-    - clear site proxy cache
   when: do_wordpress and not skip_configuration
   tags:
     - nginx
@@ -96,7 +93,6 @@
       state=link owner=root group=root
   notify:
     - restart nginx
-    - clear site proxy cache
   when: do_wordpress and not skip_configuration
   tags:
     - nginx

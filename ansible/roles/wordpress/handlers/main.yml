@@ -5,8 +5,3 @@
 
 - name: reload php5-fpm
   service: name=php5-fpm state=reloaded
-
-- name: clear site proxy cache
-  command: find /var/cache/nginx -type f -delete
-  delegate_to: "{{ item }}"
-  with_items: groups.site_proxies

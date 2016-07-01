@@ -10,5 +10,3 @@ omeka_php_start_servers: 2
 omeka_php_min_spare_servers: 2
 omeka_php_max_spare_servers: 4
 omeka_php_max_requests: 500
-
-skip_site_proxy_cache: false

@@ -74,10 +74,5 @@
   notify:
     - restart memcached
 
-- name: Clear site proxy cache
-  command: find /var/cache/nginx -type f -delete
-  delegate_to: "{{ item }}"
-  with_items: groups.site_proxies
-
 - name: Start Unicorn
   service: name=unicorn_api state=started

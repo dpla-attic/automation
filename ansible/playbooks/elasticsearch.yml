@@ -41,6 +41,7 @@
       when: level == 'production' or level == 'staging'
       wait_for: >-
           host="{{ inventory_hostname }}" port="9200" state=drained timeout=60
+      ignore_errors: yes
   post_tasks:
     - name: Wait for ES node to come back up
       become: false

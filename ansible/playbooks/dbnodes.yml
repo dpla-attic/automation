@@ -39,6 +39,7 @@
       when: level == 'production' or level == 'staging'
       wait_for: >-
           host="{{ inventory_hostname }}" port="5984" state=drained timeout=60
+      ignore_errors: yes
   post_tasks:
     - name: Register instance with loadbalancer again
       local_action: ec2_elb

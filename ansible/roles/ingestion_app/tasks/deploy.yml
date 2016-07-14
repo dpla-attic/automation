@@ -165,6 +165,14 @@
     dest=/home/dpla/heidrun/config/solr.yml
     owner=dpla group=dpla mode=0644
 
+- name: Update geocode.yml file in ingestion app
+  template:
+    src: geocode.yml.j2
+    dest: /home/dpla/heidrun/geocode.yml
+    owner: dpla
+    group: dpla
+    mode: 0644
+
 - name: Update configuration for test environment
   # On overriding settings:  https://github.com/railsconfig/rails_config#common-config-file
   template: >-

@@ -16,9 +16,6 @@
 - name: Ensure state of log directory
   file: path=/var/log/thumbp state=directory owner=thumbp mode=0755
 
-- name: Ensure state of pid directory
-  file: path=/var/run/thumbp state=directory owner=thumbp mode=0755
-
 - name: Ensure state of opt directory
   file: path=/opt/thumbp state=directory owner=thumbp mode=0755
 

@@ -43,7 +43,7 @@ fi
 rbenv rehash
 
 echo "precompiling assets ..." >> $LOGFILE
-bundle exec rake assets:precompile >> $LOGFILE 2>&1
+bundle exec rake assets:precompile >> $LOGFILE 2>&1 || exit 1
 
 if [ "$BRANDING" == "branding" ]; then
     echo "killing ssh_agent ..." >> $LOGFILE
@@ -64,7 +64,8 @@ fi
 
 echo "migrate database ..." >> $LOGFILE
 cd /srv/www/frontend
-bundle exec rake db:migrate
+bundle exec rake db:migrate || exit 1
+
 
 echo "check logfile directory ..." >> $LOGFILE
 
@@ -73,4 +74,7 @@ if [ ! -d $logdir ]; then
     mkdir $logdir \
         && chown dpla:webapp $logdir \
         && chmod 0775 $logdir
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
 fi

@@ -31,7 +31,7 @@ fi
 rbenv rehash >> $LOGFILE 2>&1
 
 echo "precompiling assets ..." >> $LOGFILE
-bundle exec rake assets:precompile >> $LOGFILE 2>&1
+bundle exec rake assets:precompile >> $LOGFILE 2>&1 || exit 1
 
 if [ "$BRANDING" == "branding" ]; then
     echo "killing ssh_agent ..." >> $LOGFILE
@@ -55,4 +55,4 @@ cd /srv/www/pss
 
 echo "migrate database ..." >> $LOGFILE
 cd /srv/www/pss
-bundle exec rake db:migrate >> $LOGFILE 2>&1
+bundle exec rake db:migrate >> $LOGFILE 2>&1 || exit 1

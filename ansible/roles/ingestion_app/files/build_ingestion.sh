@@ -76,9 +76,13 @@ echo "checking directories ... " >> $LOGFILE
 dirs_to_check='/opt/heidrun/log /opt/heidrun/tmp'
 for dir in $dirs_to_check; do
     if [ ! -d $dir ]; then
+        echo "... creating $dir"
         mkdir $dir \
             && chown dpla:webapp $dir \
             && chmod 0775 $dir
+        if [ $? -ne 0 ]; then
+            exit 1
+        fi
     fi
 done
 

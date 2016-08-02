@@ -15,7 +15,7 @@ rbenv shell $USE_VERSION >> $LOGFILE 2>&1
 echo "installing bundle ..." >> $LOGFILE
 
 rm -f Gemfile.lock
-bundle install >> $LOGFILE 2>&1
+bundle install >> $LOGFILE 2>&1 || exit 1
 rbenv rehash
 
 echo "rsync from home to /srv/www/api ..." >> $LOGFILE
@@ -35,9 +35,13 @@ echo "checking log and tmp directories ..." >> $LOGFILE
 dirs_to_check='/srv/www/api/var/log /srv/www/api/tmp'
 for dir in $dirs_to_check; do
     if [ ! -d $dir ]; then
+        echo "... creating $dir"
         mkdir $dir \
             && chown dpla:webapp $dir \
             && chmod 0775 $dir
+        if [ $? -ne 0 ]; then
+            exit 1
+        fi
     fi
 done
 
@@ -52,3 +56,6 @@ echo "running rake tasks ..." >> $LOGFILE
 cd /srv/www/api
 bundle exec rake db:migrate >> $LOGFILE 2>&1 \
      && bundle exec rake tmp:clear >> $LOGFILE 2>&1
+if [ $? -ne 0 ]; then
+    exit 1
+fi

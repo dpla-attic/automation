@@ -1,3 +1,34 @@
+{# siteproxy_self_ssl governs whether this is a demo or sandbox site that has #}
+{# no loadbalancer in front of it to handle SSL termination.  We would #}
+{# normally run in the development environment with the dev_loadbalancer #}
+{# role configuring an HAProxy loadbalancer with SSL termination, or would #}
+{# run in staging or production with another loadbalancer doing SSL. #}
+{# siteproxy_self_ssl defaults to false; you're on your own if you change #}
+{# that! #}
+
+{% if siteproxy_self_ssl %}
+{%     set nginx_port = "443" %}
+{%     set listen_opts = "ssl" %}
+
+## SSL
+#
+ssl_protocols TLSv1.2;
+{# dhparam.pem could be created in ansible/files/certificate.sh but it takes #}
+{# long enough to calculate that it's not necessary for most #}
+{# development environments. #}
+# ssl_dhparam /etc/ssl/dhparam.pem;
+ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
+ssl_prefer_server_ciphers on;
+# ssl_stapling and ssl_stapling_verify are not available in nginx 1.1
+# ssl_stapling on;
+# ssl_stapling_verify on;
+ssl_session_cache shared:SSL:10m;
+ssl_session_timeout 10m;
+
+{% else %}
+{%     set nginx_port = siteproxy_port %}
+{%     set listen_opts = "" %}
+{% endif %}
 
 # proxy configs
 proxy_cache_path  /var/cache/nginx
@@ -112,59 +143,77 @@ limit_conn_zone $addr_to_limit zone=bookshelfconn:{{ siteproxy_bookshelf_conn_zo
 limit_conn_log_level {{ siteproxy_nginx_limit_conn_log_level }};
 limit_req_log_level {{ siteproxy_nginx_limit_req_log_level }};
 
-{% if groups['cms'] is defined %}
-### CMS group
-
+{% if groups.wordpress is defined %}
 # Wordpress servers
 upstream dpla_wp {
-{% for h in groups['wordpress'] %}
+{% for h in groups.wordpress %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ wordpress_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
 }
+{% endif %}
 
+{% if groups.exhibitions is defined %}
 # Exhibitions servers
 upstream dpla_omeka {
-{% for h in groups['exhibitions'] %}
+{% for h in groups.exhibitions %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ exhibitions_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
 }
+{% endif %}
 
+{% if groups.pss is defined %}
 # Primary Source Sets servers
 upstream dpla_pss {
-{% for h in groups['pss'] %}
+{% for h in groups.pss %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ pss_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
 }
-
 {% endif %}
 
+{% if groups.frontend is defined %}
 # Frontend (portal) servers
 upstream dpla_portal {
-{% for h in groups['frontend'] %}
+{% for h in groups.frontend %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ frontend_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
 }
+{% endif %}
 
+{% if groups.thumbp is defined %}
 # Thumbnail proxy servers
 upstream dpla_thumbp {
-{% for h in groups['thumbp'] %}
+{% for h in groups.thumbp %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ thumbp_port }} fail_timeout=120s; # {{ h }}
 {% endfor %}
 }
+{% endif %}
 
 
 server {
 
-    listen   {{ siteproxy_port }} default;
+    listen   {{ nginx_port }} {{ listen_opts }} default;
 
     server_name {{ frontend_hostname }};
   
+    {% if siteproxy_self_ssl %}
+
+    # Gzip is off for SSL:
+    # https://michael.lustfield.net/nginx/getting-a-perfect-ssl-labs-score
+    gzip off;
+    ssl_certificate /etc/ssl/certs/{{ frontend_hostname }}.pem;
+    ssl_certificate_key /etc/ssl/private/{{ frontend_hostname }}.key.pem;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    proxy_set_header X-Forwarded-Proto "https";
+    {% endif %}
+
     # Bad bot!
     if ($bad_bot = 1) {
         return 403;
     }
 
-{% if default_http_scheme == 'https' %}
+{% if default_http_scheme == 'https' and not siteproxy_self_ssl %}
     if ($http_x_forwarded_proto != 'https') {
         return 301 https://{{ frontend_hostname }}$request_uri;
     }
@@ -199,6 +248,8 @@ server {
         # have already been seen will now result in a 304 Not Modified, unless
         # they have been modified.
         # (https://github.com/dpla/frontend/commit/0f1085f5c6d4b0c6f265866cb68384f969c53f54)
+
+{% if groups.frontend is defined %}
 
         proxy_pass http://dpla_portal;
         proxy_cache off;
@@ -244,7 +295,15 @@ server {
         {% if sitemap_host is defined %}
         rewrite ^/sitemap.xml$ http://{{ sitemap_host }}/all_item_urls.xml last;
         {% endif %}
+{% else %}
+{# When there is no 'frontend' group #}
+        return 301 {{ default_http_scheme }}://{{ frontend_hostname }}{{ siteproxy_redirect_home_path }};
+{% endif %}
     }
+
+{# More that has traditionally been placed outside of the "/" location above #}
+{# It may be that these are best as sub-locations. #}
+{% if groups.frontend is defined %}
 
     location = /bookshelf {
         # Any proxy-related directives must appear here although they may seem
@@ -280,7 +339,9 @@ server {
         rewrite ^/donate(/?|/.*)$ http://{{ frontend_hostname }}/info/donate$1 last;
     }
 
-{% if groups['cms'] is defined %}
+{% endif %}
+
+{% if groups.wordpress is defined %}
     location /info {
 
         proxy_pass          http://dpla_wp;
@@ -346,7 +407,9 @@ server {
         }
 
     }
+{% endif %}
 
+{% if groups.exhibitions is defined %}
     location /exhibitions {
 
         proxy_pass          http://dpla_omeka;
@@ -379,7 +442,9 @@ server {
         rewrite ^/exhibitions/(activism|boston-sports-temples|history-of-survivance|this-land|new-deal|breadandroses|spirits) /exhibitions/exhibits/show/$1 permanent;
 
     }
+{% endif %}
 
+{% if groups.pss is defined %}
     location /primary-source-sets {
 
         proxy_pass http://dpla_pss;
@@ -405,7 +470,6 @@ server {
         client_max_body_size 50M;
 
     }
-
 {% endif %}
 
     location /wiki {
@@ -423,7 +487,15 @@ server {
 }
 
 server {
-    listen {{ siteproxy_port }};
+    listen   {{ nginx_port }} {{ listen_opts }};
     server_name www.{{ frontend_hostname }};
     return 301 {{ default_http_scheme }}://{{ frontend_hostname }}$request_uri;
 }
+
+{% if siteproxy_self_ssl %}
+server {
+    listen 80;
+    server_name {{ frontend_hostname }};
+    return 301 https://{{ frontend_hostname }}$request_uri;
+}
+{% endif %}

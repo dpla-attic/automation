@@ -7,5 +7,7 @@
   hosts: thumbp
   serial: 1
   become: yes
+  vars:
+    do_deployment: yes
   roles:
     - thumbp

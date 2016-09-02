@@ -156,7 +156,6 @@ upstream dpla_thumbp {
 server {
 
     listen   {{ siteproxy_port }} default;
-    listen   [::]:{{ siteproxy_port }} default ipv6only=on;
 
     server_name {{ frontend_hostname }};
   

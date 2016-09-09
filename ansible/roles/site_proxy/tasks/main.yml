@@ -1,5 +1,11 @@
 ---
 
+- name: Ensure state of SSL certificate and private key
+  when: siteproxy_self_ssl
+  script: >
+      ../../../files/certificate.sh "{{ frontend_hostname }}"
+  notify: restart nginx
+
 - name: Ensure existence of cache directory
   file: >
       path=/var/cache/nginx state=directory

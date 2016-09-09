@@ -46,3 +46,7 @@ siteproxy_nginx_cache_shmem_size: 360m
 # of how long its expiration time is, or the value of the proxy_cache_valid
 # directive:
 siteproxy_nginx_cache_inactive_time: 1d
+
+siteproxy_self_ssl: false
+
+siteproxy_redirect_home_path: /info

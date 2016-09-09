@@ -11,7 +11,7 @@
     - hatop
 
 - name: Update SSL certificate
-  script: certificate.sh
+  script: ../../../files/certificate.sh local.dp.la
   register: script_result
   changed_when: "'Changed' in script_result.stdout"
   notify:

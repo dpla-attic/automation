@@ -6,6 +6,8 @@ tomcat_munin_username: tcmunin
 tomcat_munin_password: changememunin
 tomcat_max_mem_mb: 256
 tomcat_init_mem_mb: 256
+# The JDK can be installed for development or debugging purposes:
+tomcat_install_jdk: no
 
 # logfile ages, in days:
 # ... "catalina" logs are rotated by logrotate:

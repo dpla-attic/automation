@@ -30,9 +30,10 @@
 
 - name: "Download tar archive, if necessary"
   get_url:
-    url: "http://www-us.apache.org/dist/marmotta/{{ marmotta_version }}/apache-marmotta-{{ marmotta_version }}-webapp.tar.gz"
-    sha256sum: 34c37281b6875ea95da391ae5bbe059f31091f3c6bf2529539241b35690c84b0
+    url: "{{ marmotta_archive_base_url }}/apache-marmotta-{{ marmotta_version }}-webapp.tar.gz"
+    sha256sum: "{{ marmotta_archive_checksum }}"
     dest: "/tmp/apache-marmotta-{{ marmotta_version }}-webapp.tar.gz"
+    timeout: 120
   when: not warstat.stat.exists
 
 - name: "Unpack tar archive, if necessary"

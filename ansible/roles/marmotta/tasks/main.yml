@@ -1,5 +1,14 @@
 ---
 
+- name: Ensure sufficient kernel resource limits for the tomcat7 user
+  copy:
+    src: etc_security_limits.d_tomcat.conf
+    dest: /etc/security/limits.d/tomcat.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart tomcat
+
 - name: Make sure that old Marmotta APT package list is absent
   file: path=/etc/apt/sources.list.d/marmotta.list state=absent
 

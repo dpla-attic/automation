@@ -22,3 +22,6 @@ tomcat_accesslogvalve_log_age: 7
 # Kernel limit for the number of open files that the Tomcat jvm process should
 # be allowed to have open
 tomcat_open_files_limit: 10240
+
+# Whether to enable Java Management Extensions for profiling, etc.:
+tomcat_enable_jmx_extensions: no

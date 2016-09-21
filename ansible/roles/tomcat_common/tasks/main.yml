@@ -1,5 +1,14 @@
 ---
 
+- name: Ensure sufficient kernel resource limits for the tomcat7 user
+  template:
+    src: etc_security_limits.d_tomcat.conf.j2
+    dest: /etc/security/limits.d/tomcat.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart tomcat
+
 - name: Make sure that the Tomcat packages are installed
   apt: name={{ item }} state=present
   with_items:

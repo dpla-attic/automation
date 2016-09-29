@@ -12,6 +12,18 @@
     - nginx
     - web
 
+- name: Make sure nginx logs get rotated
+  template:
+      src: etc_logrotate.d_nginx.j2
+      dest: /etc/logrotate.d/nginx
+      owner: root
+      group: root
+      mode: 0644
+  tags:
+    - logrotate
+    - nginx
+    - web
+
 - name: Ensure git is present
   apt: pkg=git state=present
   tags:

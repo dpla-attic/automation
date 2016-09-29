@@ -1,3 +1,4 @@
 ---
 
 nginx_log_level: notice
+nginx_rotate_days: 14

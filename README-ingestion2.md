@@ -74,6 +74,15 @@ There won't be any data ingested until you run an ingestion.
 
 See the rest of the main [README.md](README.md) file for more information.
 
+## Running additional playbooks
+
+If you run any of the playbooks (except for the ones named with "ingestion"),
+you should always set the `ingestion2` variable to true, on the commandline. For
+example:
+```
+ansible-playbook -u mb -i ingestion deploy_api_development.yml -e "ingestion2=yes"
+```
+
 ## SSL Setup
 
 See "SSL Setup" in [README.md](README.md).

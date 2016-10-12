@@ -1,6 +1,10 @@
 ---
 
 dbnode_id_name:  bigcouch
+# dbnode_inventory_hosts_are_nodes governs whether all of the hosts in your
+# inventory file are supposed to be nodes of one BigCouch cluster.  This is
+# usually the case.
+dbnode_inventory_hosts_are_nodes: yes
 erlang_asynchronous_io_threads: 16
 
 # change these two in production:

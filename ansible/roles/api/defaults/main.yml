@@ -7,3 +7,4 @@ api_rails_env: development
 api_rbenv_version: 1.9.3-p547
 api_alternate_db_host: false
 api_index_name: dpla_alias
+api_dalli_store_cache: true

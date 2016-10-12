@@ -71,7 +71,7 @@ api_auth:
 # Supported values for 'store': null_store, file_store, dalli_store
 caching:
   cache_results: true
-{% if level != "contentqa" %}
+{% if api_dalli_store_cache %}
   store: dalli_store
   memcache_servers:
 {% for h in groups['memcached'] %}

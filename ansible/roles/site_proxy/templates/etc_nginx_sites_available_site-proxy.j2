@@ -263,6 +263,10 @@ server {
             alias /srv/www/robots.txt;
         }
 
+        location /sitemap.xml {
+            alias /srv/www/sitemap.xml;
+        }
+
         location /assets {
             # FIXME:
             # It would be great to extend the expiration of frontend assets,

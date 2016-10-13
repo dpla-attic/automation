@@ -11,6 +11,7 @@
     - hatop
 
 - name: Update SSL certificate
+  when: default_http_scheme == 'https'
   script: ../../../files/certificate.sh local.dp.la
   register: script_result
   changed_when: "'Changed' in script_result.stdout"
@@ -18,9 +19,27 @@
     - restart haproxy
 
 - name: Copy haproxy init defaults file
-  copy: src=etc_default_haproxy dest=/etc/default/haproxy owner=root group=root mode=0644
+  copy:
+    src: etc_default_haproxy
+    dest: /etc/default/haproxy
+    owner: root
+    group: root
+    mode: 0644
   notify: restart haproxy
 
 - name: Update haproxy config file
   template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
   notify: restart haproxy
+
+- name: Configure syslog logging of haproxy messages
+  copy:
+    src: etc_rsyslog.d_49-haproxy.conf
+    dest: /etc/rsyslog.d/49-haproxy.conf
+    mode: 0644
+  notify: restart rsyslog
+
+- name: Ensure that haproxy logs are rotated
+  copy:
+    src: etc_logrotate.d_haproxy
+    dest: /etc/logrotate.d/haproxy
+    mode: 0644

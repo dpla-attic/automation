@@ -2,6 +2,7 @@
 global
 	daemon
 	maxconn 1000
+	log 127.0.0.1 local1 notice
 
 defaults
 	mode http
@@ -16,8 +17,7 @@ defaults
 	timeout client 50s
 	timeout server 5m
 
-{% if ingestion2 is not defined %}
-
+{% if loadbalancer_expose_bigcouch and ingestion2 is not defined %}
 ### Bigcouch
 
 frontend bigcouch-chttpd-in
@@ -38,6 +38,8 @@ backend bigcouch-httpd
 
 {% endif %}
 
+
+{% if loadbalancer_expose_frontend %}
 ### Web
 
 frontend web-http-in
@@ -57,7 +59,10 @@ backend web-http
 	server dev1 192.168.50.7:{{ siteproxy_port }} maxconn 500
 {% endif %}
 
+{% endif %}
 
+
+{% if loadbalancer_expose_elasticsearch %}
 ### Elasticsearch
 
 frontend elasticsearch-in
@@ -72,6 +77,10 @@ backend elasticsearch
     server dev1 192.168.50.7:9200 maxconn 500
 {% endif %}
 
+{% endif %}
+
+
+{% if loadbalancer_expose_api %}
 ### API
 
 frontend api-http-in
@@ -88,3 +97,4 @@ backend api-http
 	{% set apihost = groups['api'][0] %}
 	server {{ apihost }} {{ hostvars[apihost][internal_network_interface]['ipv4']['address']}}:{{ api_app_port }}
 
+{% endif %}

@@ -1,1 +1,6 @@
 ---
+
+loadbalancer_expose_bigcouch: yes
+loadbalancer_expose_elasticsearch: yes
+loadbalancer_expose_frontend: yes
+loadbalancer_expose_api: yes

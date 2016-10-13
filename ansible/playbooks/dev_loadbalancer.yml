@@ -7,4 +7,4 @@
   hosts: loadbalancer
   become: yes
   roles:
-    - { role: dev_loadbalancer, tags: ['dev_loadbalancer', 'loadbalancer'] }
+    - { role: standalone_loadbalancer, tags: ['standalone_loadbalancer', 'loadbalancer'] }

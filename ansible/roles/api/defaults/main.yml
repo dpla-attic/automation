@@ -10,3 +10,4 @@ api_index_name: dpla_alias
 api_dalli_store_cache: true
 api_skip_auth: no
 api_repo: https://github.com/dpla/platform.git
+api_enable_contentqa: no

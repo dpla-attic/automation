@@ -50,6 +50,7 @@
 # Clean up delayed_job init scripts and processes that used to be created in
 # earlier versions of this file
 - name: Stop obsolete delayed_job if it is running
+  when: not api_enable_contentqa
   shell: pkill -9 -f delayed_job
   register: pkill_result
   # The `shell' module returns -9 if the process not running, and it is OK if it
@@ -61,6 +62,7 @@
     - initscripts
 
 - name: Clear obsolete delayed_job init script run levels if they are set
+  when: not api_enable_contentqa
   command: update-rc.d -f delayed_job_api remove
   tags:
     - web

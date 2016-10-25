@@ -15,6 +15,10 @@
   tags:
     - packages
 
+
+## Init scripts and control scripts
+#
+
 - name: Ensure state of Unicorn init script
   template: >
       src=etc_init.d_unicorn_api.j2 dest=/etc/init.d/unicorn_api
@@ -46,10 +50,34 @@
     - web
     - initscripts
 
-##
-# Clean up delayed_job init scripts and processes that used to be created in
-# earlier versions of this file
-- name: Stop obsolete delayed_job if it is running
+- name: Ensure state of delayed job init script
+  when: api_enable_contentqa
+  template:
+    src: etc_init.d_delayed_job_api.j2
+    dest: /etc/init.d/delayed_job_api
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart delayed_job
+  tags:
+    - web
+    - initscripts
+
+- name: Ensure state of delayed job control script
+  when: api_enable_contentqa
+  template:
+    src: delayed_job_api.sh.j2
+    dest: /usr/local/sbin/delayed_job_api.sh
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart delayed_job
+  tags:
+    - web
+    - initscripts
+
+- name: Stop legacy delayed_job if it is running after an upgrade and unwanted
+  when: not api_enable_contentqa
   shell: pkill -9 -f delayed_job
   register: pkill_result
   # The `shell' module returns -9 if the process not running, and it is OK if it
@@ -60,34 +88,60 @@
     - web
     - initscripts
 
-- name: Clear obsolete delayed_job init script run levels if they are set
+- name: "Clear delayed_job runlevels"
+  # In case of a change, or if it's been deselected, all the same
+  when: api_enable_contentqa
   command: update-rc.d -f delayed_job_api remove
   tags:
     - web
     - initscripts
 
-- name: Clear obsolete delayed_job init script if it is present
+- name: Set delayed_job runlevels if contentqa is selected
+  when: api_enable_contentqa
+  command: update-rc.d delayed_job_api defaults
+  tags:
+    - web
+    - initscripts
+
+- name: Clear legacy delayed_job init script if contentqa is deselected
+  when: not api_enable_contentqa
   file: path=/etc/init.d/delayed_job_api state=absent
   tags:
     - web
     - initscripts
 
-- name: Ensure that obsolete delayed_job control script is absent
+- name: Clear legacy delayed_job control script if contentqa is deselected
+  when: not api_enable_contentqa
   file: path=/usr/local/sbin/delayed_job_api.sh state=absent
   tags:
     - web
     - initscripts
 
-- name: Ensure that obsolete QA app htpasswd file is absent
+## End of init scripts / control scripts section
+
+
+- name: Ensure that legacy QA app htpasswd file is absent
+  when: not api_enable_contentqa and not skip_configuration
   file: path=/etc/nginx/qa_htpasswd state=absent
   notify: restart nginx
-  when: not skip_configuration | default(false)
   tags:
     - nginx
     - web
     - htpasswd
 
-### end cleanup
+- name: Ensure state of QA app's password file
+  when: api_enable_contentqa and not skip_configuration
+  template:
+      src: qa_htpasswd.j2
+      dest: /etc/nginx/qa_htpasswd
+      owner: root
+      group: www-data
+      mode: 0640
+  notify: restart nginx
+  tags:
+    - nginx
+    - web
+    - htpasswd
 
 - name: Update webserver virtual host for api app
   template: >

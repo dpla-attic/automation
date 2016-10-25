@@ -7,3 +7,6 @@
   delegate_to: "{{ item }}"
   with_items: groups.memcached
   service: name=memcached state=restarted
+
+- name: restart delayed_job
+  service: name=delayed_job_api state=restarted

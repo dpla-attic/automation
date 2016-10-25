@@ -25,3 +25,7 @@ elasticsearch_apt_cache_valid_time: 300 # seconds between "apt-get update" calls
 elasticsearch_install_java: "true"
 
 elasticsearch_heap_size: 400m
+
+# For special cases where you have an inventory where multiple hosts with the
+# elasticsearch role on them want independent clusters.
+elasticsearch_cluster_name_uses_hostname: no

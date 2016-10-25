@@ -26,7 +26,7 @@
 #
 # cluster.name: elasticsearch
 {% if elasticsearch_cluster_name is defined %}
-{% if level == "contentqa" %}
+{% if  elasticsearch_cluster_name_uses_hostname %}
 cluster.name: {{ elasticsearch_cluster_name }}_{{ inventory_hostname }}
 {% else %}
 cluster.name: {{ elasticsearch_cluster_name }}_{{ level }}

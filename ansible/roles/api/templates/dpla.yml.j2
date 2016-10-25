@@ -60,7 +60,7 @@ api_auth:
 
   # Set to true to *not* require an api_key param at all. This overrides allow_all_keys and
   # makes the API completely open. This is not recommended for actual production use.
-{% if ingestion2 is defined %}
+{% if ingestion2 is defined or api_skip_auth %}
   skip_key_auth_completely: true
 {% else %}
   skip_key_auth_completely: false
@@ -71,7 +71,7 @@ api_auth:
 # Supported values for 'store': null_store, file_store, dalli_store
 caching:
   cache_results: true
-{% if level != "contentqa" %}
+{% if api_dalli_store_cache %}
   store: dalli_store
   memcache_servers:
 {% for h in groups['memcached'] %}

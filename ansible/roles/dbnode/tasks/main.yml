@@ -74,26 +74,25 @@
 
 - meta: flush_handlers
 
-- name: Add nodes to cluster (not contentqa)
+- name: Add nodes to cluster (all hosts belong to one cluster)
   # This is the typical case.  There is a group of BigCouch nodes and you want
   # each node in the inventory file added to the cluster.
-  uri: >
+  uri: >-
       url="http://{{ inventory_hostname }}:5986/nodes/{{ dbnode_id_name }}@{{ item }}"
       method=PUT body="{}" status_code="201,409"
   with_items: groups['dbnodes']
-  when: level != "contentqa"
+  when: dbnode_inventory_hosts_are_nodes
   tags:
     - database
 
-- name: Add nodes to cluster (contentqa)
-  # This is a special case for a content QA environment, where there could be
-  # multiple QA hosts, but each one only has a single BigCouch node and you don't
-  # want them talking to each other, even though there are multiple dbnodes in
-  # the inventory.
-  uri: >
+- name: "Add nodes to cluster (multiple inventory hosts, multiple clusters)"
+  # This is a special case where there could be multiple QA hosts, but each one
+  # only has a single BigCouch node and you don't want them talking to each
+  # other, even though there are multiple dbnodes in the inventory.
+  uri: >-
       url="http://{{ inventory_hostname }}:5986/nodes/{{ dbnode_id_name }}@{{ inventory_hostname }}"
       method=PUT body="{}" status_code="201,409"
-  when: level == "contentqa"
+  when: not dbnode_inventory_hosts_are_nodes
   tags:
     - database
 

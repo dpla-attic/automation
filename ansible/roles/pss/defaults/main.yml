@@ -32,3 +32,4 @@ pss_include_branding: false
 pss_delivery_method: file
 pss_api_key: aa11d0958e93bb25e457a726dc10a40f
 pss_api_url: "//{{ api_hostname }}:{{ api_port }}"
+pss_x_frame_options: 'SAMEORIGIN'

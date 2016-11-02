@@ -9,6 +9,10 @@
     mode: 0644
   notify: restart tomcat
 
+- name: "Install the Java JDK, if requested"
+  when: tomcat_install_jdk
+  apt: name=openjdk-7-jdk state=present
+
 - name: Make sure that the Tomcat packages are installed
   apt: name={{ item }} state=present
   with_items:

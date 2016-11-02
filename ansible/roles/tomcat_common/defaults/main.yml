@@ -16,3 +16,7 @@ tomcat_catalina_log_age: 7
 # pruned by our own cron job.  See etc_default_tomcat7.j2 and
 # etc_logrotate.d_tomcat7.j2.
 tomcat_accesslogvalve_log_age: 7
+
+# Kernel limit for the number of open files that the Tomcat jvm process should
+# be allowed to have open
+tomcat_open_files_limit: 10240

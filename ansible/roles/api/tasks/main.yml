@@ -98,7 +98,7 @@
 
 - name: Set delayed_job runlevels if contentqa is selected
   when: api_enable_contentqa
-  command: update-rc.d delayed_job_api defaults
+  command: update-rc.d delayed_job_api defaults 22 17
   tags:
     - web
     - initscripts

@@ -1,5 +1,5 @@
 dev1 ansible_ssh_host=192.168.50.7
-dev2 ansible_ssh_host=192.168.50.8 tomcat_max_mem_mb=256 tomcat_init_mem_mb=256 kernel_vm_overcommit_ratio=95
+dev2 ansible_ssh_host=192.168.50.8 tomcat_max_mem_mb=256 tomcat_init_mem_mb=256 kernel_vm_overcommit_ratio=95 kernel_shmmax=4080218931 kernel_shmall=1022361
 
 [loadbalancer]
 dev1

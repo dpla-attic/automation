@@ -3,50 +3,10 @@
 - name: Gather EC2 facts
   action: ec2_facts
 
-- name: Ensure state of instance store mount point
-  file: path=/swap state=directory owner=root group=root mode=0755
+- name: Check whether swap is active
+  shell: "cat /proc/meminfo | awk '/SwapTotal/ {print $2}'"
+  register: swapstatus
+  changed_when: false
 
-- name: Unmount instance store volume that EC2 automatically mounts
-  mount: name=/mnt src=/dev/xvdb fstype=ext3 state=unmounted
-
-- name: Ensure state of filesystem on instance store
-  filesystem: fstype=ext4 dev=/dev/xvdb force=yes
-  when: >-
-    not (ansible_ec2_instance_type | match("^t2") or
-         ansible_ec2_instance_type | match("^m4"))
-
-- name: Make sure that /swap is mounted
-  mount: name=/swap src=/dev/xvdb fstype=ext4 state=mounted
-  when: >-
-    not (ansible_ec2_instance_type | match("^t2") or
-         ansible_ec2_instance_type | match("^m4"))
-
-- name: Check existence of swap file
-  stat: path=/swap/swapfile
-  register: swapfile
-
-- name: Allocate swap file
-  when: not swapfile.stat.exists
-  command: >-
-    fallocate -l {{ ec2_swapper_swap_size }} /swap/swapfile
-
-- name: Format swap file
-  when: not swapfile.stat.exists
-  command: mkswap /swap/swapfile
-
-- name: Ensure swap file permissions
-  file: path=/swap/swapfile owner=root group=root mode=0600
-
-- name: Enable swap
-  when: not swapfile.stat.exists
-  command: swapon /swap/swapfile
-
-- name: Ensure state of swap entry in /etc/fstab
-  mount:
-    name: none
-    src: /swap/swapfile
-    fstype: swap
-    opts: sw
-    passno: 0
-    dump: 0
-    state: present
+- include: needs_swap.yml
+  when: swapstatus.stdout == "0"

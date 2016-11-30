@@ -1,3 +1,5 @@
 ---
 
-ec2_swapper_swap_size: 1G
+# Swap size, expressed as the count of 1M-sized blocks; such that the value for
+# 1 GiB swap is 1024, for 1024 x 1MiB
+ec2_swapper_swap_size: 1024

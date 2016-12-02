@@ -26,11 +26,13 @@ server {
         proxy_pass http://api_app_server/v2/collections;
     }
 
+{% if api_enable_contentqa %}
     location /qa {
         auth_basic "Restricted";
         auth_basic_user_file /etc/nginx/qa_htpasswd;
         try_files $uri $uri/index.html @api_app_server;
     }
+{% endif %}
 
     location @api_app_server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

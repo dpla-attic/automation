@@ -38,9 +38,13 @@ session:
   # Settings for memcache sessions
   dalli_store:
     memcache_server:
+{% if all_in_one_hosts | default(false) %}
+      - {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}
+{% else %}
 {% for h in groups['memcached'] %}
       - {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}
 {% endfor %}
+{% endif %}
 
 widgets:
   twitter_username: {{ twitter_username }}

@@ -79,6 +79,11 @@ thumbp_port: 8007
 nginx_real_ip_from_addrs:
     - 192.168.50.0/24
 
+# Whether each host has all of the services in a local silo, as would be the
+# case in certain QA environments, where the goal is not to simulate the
+# production network environment.
+all_in_one_hosts: no
+
 ##
 # Role-specific vars
 

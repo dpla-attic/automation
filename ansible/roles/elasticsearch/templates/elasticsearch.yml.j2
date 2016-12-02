@@ -26,7 +26,7 @@
 #
 # cluster.name: elasticsearch
 {% if elasticsearch_cluster_name is defined %}
-{% if  elasticsearch_cluster_name_uses_hostname %}
+{% if  all_in_one_hosts | default(false) %}
 cluster.name: {{ elasticsearch_cluster_name }}_{{ inventory_hostname }}
 {% else %}
 cluster.name: {{ elasticsearch_cluster_name }}_{{ level }}
@@ -426,7 +426,11 @@ discovery.zen.ping.multicast.enabled: {{ elasticsearch_discovery_zen_ping_multic
 #
 # discovery.zen.ping.unicast.hosts: ["host1", "host2:port", "host3[portX-portY]"]
 
+{% if all_in_one_hosts | default(false) %}
+discovery.zen.ping.unicast.hosts: ["{{ inventory_hostname }}"]
+{% else %}
 discovery.zen.ping.unicast.hosts: {{ groups['elasticsearch'] | safe }}
+{% endif %}
 
 
 # EC2 discovery allows to use AWS EC2 API in order to perform discovery.

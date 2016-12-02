@@ -1,6 +1,10 @@
 {% if pss_alternate_db_host %}
 {%     set db_host = pss_alternate_db_host %}
+{% elif all_in_one_hosts | default(false) %}
+{%     set db_host = inventory_hostname %}
 {% else %}
+{# Typical inventories have just one Postgresql host, but it may not be #}
+{# the PSS application host used above. #}
 {%     set db_host = groups['postgresql_dbs'][0] %}
 {% endif %}
 

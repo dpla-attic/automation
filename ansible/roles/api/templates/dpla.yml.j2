@@ -74,9 +74,15 @@ caching:
 {% if api_dalli_store_cache %}
   store: dalli_store
   memcache_servers:
+
+{% if all_in_one_hosts | default(false) %}
+    - {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}
+{% else %}
 {% for h in groups['memcached'] %}
     - {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}
 {% endfor %}
+{% endif %}
+
 {% else %}
   # file_store directory is tmp/api-cache under the app root
   store: file_store

@@ -74,41 +74,54 @@
 
 # hostvars[h][internal_network_interface]['ipv4']['address']
 
-{% for host in groups['frontend'] %}
+{% if all_in_one_hosts | default(false) %}
+
+host all all {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}/32 md5
+
+{% else %}
+
+{% if groups.frontend is defined %}
+{% for host in groups.frontend %}
 host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
-{% for host in groups['api'] %}
+{% endif %}
+
+{% for host in groups.api %}
 host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 
 {# The `cms` group needs access because of the pss app #}
-{% if groups['cms'] is defined %}
-{% for host in groups['cms'] %}
+{% if groups.cms is defined %}
+{% for host in groups.cms %}
 host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 {% endif %}
 
-{# The following hosts are for the new Ingestion 2 system. #}
+{# The following hosts are for the Ingestion 2 system. #}
 {# TODO:  Remove the `if' statements when we do away with the legacy #}
 {#        ingestion system. #}
 
-{% if groups['ingestion_app'] is defined %}
-{% for host in groups['ingestion_app'] %}
+{% if groups.ingestion_app is defined %}
+{% for host in groups.ingestion_app %}
 host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 {% endif %}
 
-{% if groups['worker'] is defined %}
-{% for host in groups['worker'] %}
+{% if groups.worker is defined %}
+{% for host in groups.worker %}
 host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 {% endif %}
 
-{% if groups['marmotta'] is defined %}
+{% if groups.marmotta is defined %}
 {% for host in groups['marmotta'] %}
 host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
 {% endfor %}
 {% endif %}
+
+{# End "if all_in_one_hosts" #}
+{% endif %}
+
 
 # Deny access to postgresql user from other hosts
 host    all             postgres       0.0.0.0/0               reject

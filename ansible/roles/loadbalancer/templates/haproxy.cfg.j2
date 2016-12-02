@@ -36,6 +36,7 @@ backend bigcouch-httpd
 	server dbnode1 192.168.50.4:5986 maxconn 500
 	server dbnode2 192.168.50.5:5986 maxconn 500
 
+# ... end Bigcouch
 {% endif %}
 
 
@@ -59,6 +60,7 @@ backend web-http
 	server dev1 192.168.50.7:{{ siteproxy_port }} maxconn 500
 {% endif %}
 
+# ... end Web
 {% endif %}
 
 

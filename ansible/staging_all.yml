@@ -1,5 +1,7 @@
 ---
 
+# FIXME: this is largely redundant with production_all.yml
+
 # Configuration for all staging hosts.
 
 # For first-time initialization:
@@ -7,6 +9,9 @@
 #     to prevent an error with Elasticsearch shard replication.
 #   - See the comment in playbooks/siteproxy.yml regarding
 #     the loadbalancer health check.
+
+- name: Gather facts for all hosts
+  hosts: all
 
 - include: playbooks/common.yml level=staging
 
@@ -33,22 +38,26 @@
     - cms
   become: yes
   roles:
-    - common_php
-    - common_sitenode
-    - omeka
-    - wordpress
-    - pss
+    - {role: common_php, tags: ['common_php', 'cms']}
+    - {role: common_sitenode, tags: ['common_sitenode', 'cms']}
+    - {role: omeka, tags: ['omeka', 'cms']}
+    - {role: wordpress, tags: ['wordpress', 'cms']}
+    - {role: pss, tags: ['pss', 'cms']}
   vars:
     level: staging
+    skip_configuration: no
+    do_deployment: yes
 
 - name: Frontend (portal) site
   hosts: frontend
   become: yes
   serial: 1
   roles:
-    - frontend
+    - {role: frontend, tags: ['frontend']}
   vars:
     level: staging
+    skip_configuration: no
+    do_deployment: yes
 
 - include: playbooks/api.yml level=staging
 

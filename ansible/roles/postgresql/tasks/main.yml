@@ -10,6 +10,7 @@
 
 - name: Load Kernel settings modified above
   command: sysctl -p /etc/sysctl.d/30-postgresql-shm.conf
+  changed_when: false
   tags:
     - postgresql
 

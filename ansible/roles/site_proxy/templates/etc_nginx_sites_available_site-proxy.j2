@@ -219,6 +219,8 @@ server {
     }
 {% endif %}
 
+    # This ensures that the loadbalancer in front of the site proxy is
+    # recognized as a proxy:
 {% for addr in nginx_real_ip_from_addrs %}
     set_real_ip_from {{ addr }};
 {% endfor %}

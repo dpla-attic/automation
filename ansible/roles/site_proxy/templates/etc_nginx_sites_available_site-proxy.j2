@@ -182,9 +182,13 @@ upstream dpla_portal {
 {% if groups.thumbp is defined %}
 # Thumbnail proxy servers
 upstream dpla_thumbp {
+{% if all_in_one_hosts | default(false) %}
+    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ thumbp_port }} fail_timeout=120s; # {{ inventory_hostname }}
+{% else %}
 {% for h in groups.thumbp %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ thumbp_port }} fail_timeout=120s; # {{ h }}
 {% endfor %}
+{% endif %}
 }
 {% endif %}
 

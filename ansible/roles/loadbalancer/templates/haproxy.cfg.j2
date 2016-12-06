@@ -72,13 +72,11 @@ frontend elasticsearch-in
     default_backend elasticsearch
 
 backend elasticsearch
-{% if ingestion2 is not defined %}
-    server dbnode1 192.168.50.4:9200 maxconn 500
-    server dbnode2 192.168.50.4:9200 maxconn 500
-{% else %}
-    server dev1 192.168.50.7:9200 maxconn 500
-{% endif %}
+{% for h in groups.elasticsearch %}
+    server {{ h }} {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:9200 maxconn 500
+{% endfor %}
 
+# ... end Elasticsearch
 {% endif %}
 
 
@@ -96,7 +94,12 @@ frontend api-http-in
 	default_backend api-http
 
 backend api-http
-	{% set apihost = groups['api'][0] %}
+{% if all_in_one_hosts | default(false) %}
+{%    set apihost = inventory_hostname %}
+{% else %}
+{%    set apihost = groups.api.0 %}
+{% endif %}
 	server {{ apihost }} {{ hostvars[apihost][internal_network_interface]['ipv4']['address']}}:{{ api_app_port }}
 
+# ... end API
 {% endif %}

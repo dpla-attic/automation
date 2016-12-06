@@ -1,5 +1,7 @@
 ---
 
+# FIXME: this is largely redundant with staging_all.yml
+
 # Configuration for all production hosts.
 
 # For first-time initialization:
@@ -8,6 +10,8 @@
 #   - See the comment in playbooks/siteproxy.yml regarding
 #     the loadbalancer health check.
 
+- name: Gather facts for all hosts
+  hosts: all
 
 - include: playbooks/common.yml level=production
 
@@ -34,22 +38,27 @@
     - cms
   become: yes
   roles:
-    - common_php
-    - common_sitenode
-    - omeka
-    - wordpress
-    - pss
+    - {role: common_php, tags: ['common_php', 'cms']}
+    - {role: common_sitenode, tags: ['common_sitenode', 'cms']}
+    - {role: omeka, tags: ['omeka', 'cms']}
+    - {role: wordpress, tags: ['wordpress', 'cms']}
+    - {role: pss, tags: ['pss', 'cms']}
   vars:
     level: production
+    skip_configuration: no
+    do_deployment: yes
+
 
 - name: Frontend (portal) site
   hosts: frontend
   serial: 1
   become: yes
   roles:
-    - frontend
+    - {role: frontend, tags: ['frontend']}
   vars:
     level: production
+    skip_configuration: no
+    do_deployment: yes
 
 - include: playbooks/api.yml level=production
 

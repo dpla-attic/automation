@@ -35,6 +35,12 @@ echo "using rbenv version $USE_VERSION" >> $LOGFILE
 
 echo "installing bundle ..." >> $LOGFILE
 
+# We're using Gemfile.lock in other DPLA Rails applications for its intended
+# purpose, but the `portal' application is an exception due to its inclusion of
+# the dpla_frontend_assets gem. We remove Gemfile.lock and pin gems with
+# explicit selectors in Gemfile. Removing Gemfile.lock allows gems to upgrade as
+# specified. It's too complicated to manage the dpla_frontend_assets gem as an
+# optional inclusion when there is a Gemfile.lock file.
 rm -f Gemfile.lock
 bundle install --without test >> $LOGFILE 2>&1
 if [ $? -ne 0 ]; then

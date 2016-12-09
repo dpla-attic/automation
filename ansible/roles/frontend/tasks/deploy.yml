@@ -1,7 +1,17 @@
 ---
 
-# Clear this out prior to copying and symlinking below
-- file: path=/home/dpla/frontend state=absent
+- name: Clear /home/dpla/frontend symlink
+  # It will be recreated below
+  file: path=/home/dpla/frontend state=absent
+
+- name: Make sure that frontend build directories are clear
+  when: clean_frontend | default(false)
+  file:
+    path: "/home/dpla/{{ item }}"
+    state: absent
+  with_items:
+    - frontend-git
+    - frontend-local
 
 - name: Check out frontend app from its repository
   git: >-

@@ -14,7 +14,6 @@ rbenv shell $USE_VERSION >> $LOGFILE 2>&1
 
 echo "installing bundle ..." >> $LOGFILE
 
-rm -f Gemfile.lock
 bundle install >> $LOGFILE 2>&1 || exit 1
 rbenv rehash
 

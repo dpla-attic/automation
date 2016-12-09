@@ -194,22 +194,19 @@ network.  For example:
 $ ssh me@webapp1
 ```
 
-### Suggested development workflow
+## Development
 
-Here's an example with the API app.  The process would be similiar for the frontend
-app.
+### Application build directories
 
-1. Configure ansible/roles/vars/development.yml with `api_use_local_source: true`
-   and have a `webapp.vm.synced_folder` entry in your `Vagrantfile` for your
-   local working copy of the project.
-2. Make your changes to the local working copy.
-3. In a shell (assuming you're in the directory with `ansible.cfg`):
-```
-$ ansible-playbook -u <your username> -i development \
-  playbooks/deploy_api_development.yml
-```
+There are a number of `clean_*` variables for redeploying various
+applications.  If you are deploying earlier versions of the applications and
+you run into errors when they are being checked out into their build
+directories, you may need to set the appropriate variable with the
+`ansible-playbook` command, such as `-e 'clean_api=true'`. This can also be
+useful when a switch between branches would result in a merge conflict with a
+file that has been added or removed in one version or the other.
 
-Repeat 2 and 3.
+### Using local sources on your system, not from a repository
 
 Please note that, if you're using `*_use_local_source: true` for any
 application, you'll be responsible for managing the state of your configuration

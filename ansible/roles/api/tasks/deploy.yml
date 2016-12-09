@@ -1,7 +1,18 @@
 ---
 
 # Clear these out prior to copying and symlinking below
-- file: path=/home/dpla/api state=absent
+
+- name: Clear /home/dpla/api symlink
+  file: path=/home/dpla/api state=absent
+
+- name: Make sure that API build directories are clear
+  when: clean_api | default(false)
+  file:
+    path: "/home/dpla/{{ item }}"
+    state: absent
+  with_items:
+    - api-git
+    - api-local
 
 - name: Check out api (platform) app from its repository (git)
   git: >-

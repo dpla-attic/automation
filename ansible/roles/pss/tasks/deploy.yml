@@ -1,7 +1,17 @@
 ---
 
-# Clear this out prior to copying and symlinking below
-- file: path=/home/dpla/pss state=absent
+- name: Clear /home/dpla/pss symlink
+  # It will be recreated below.
+  file: path=/home/dpla/pss state=absent
+
+- name: Make sure that PSS build directories are clear
+  when: clean_pss | default(false)
+  file:
+    path: "/home/dpla/{{ item }}"
+    state: absent
+  with_items:
+    - pss-git
+    - pss-local
 
 - name: Check out primary-source-sets app from its repository
   git: >-

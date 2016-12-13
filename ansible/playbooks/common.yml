@@ -2,7 +2,7 @@
 
 # Configuration and provisioning common to all servers.
 # To run standalone, specify
-# --extra-vars "level=<development|staging|production|contentqa>"
+# --extra-vars "level=<development|staging|production>"
 # ... or see one of the convenience playbooks that includes this one with the
 #     correct value.
 

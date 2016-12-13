@@ -1,8 +1,8 @@
 ---
 
 # Set up a central server that is used for cron jobs and reports.
-# Works independently of staging, production, and contentqa and, therefore,
-# needs its own inventory file.
+# Works independently of staging and production and, therefore, needs its own
+# inventory file.
 
 - name: Gather facts for all hosts
   # The inventory file has other hosts that have their stats collected, but that

@@ -1,7 +1,7 @@
 ---
 
 # To run standalone, specify
-# --extra-vars "level=<development|staging|production|contentqa>"
+# --extra-vars "level=<development|staging|production>"
 # ... or see one of the convenience playbooks that includes this one with the
 #     correct value.
 
@@ -12,7 +12,7 @@
   become: false
   tasks:
     - name: Turn off shard replica allocation
-      when: level != 'contentqa' and initial_run is not defined and ingestion2 is not defined
+      when: initial_run is not defined and ingestion2 is not defined
       local_action: >
           script ../files/set-allocation.sh off "{{ es_cluster_loadbal }}"
 
@@ -65,6 +65,6 @@
   become: false
   tasks:
     - name: Turn shard replica allocation back on
-      when: level != 'contentqa' and ingestion2 is not defined
+      when: ingestion2 is not defined
       local_action: >
           script ../files/set-allocation.sh on "{{ es_cluster_loadbal }}"

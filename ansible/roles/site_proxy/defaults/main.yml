@@ -50,3 +50,7 @@ siteproxy_nginx_cache_inactive_time: 1d
 siteproxy_self_ssl: false
 
 siteproxy_redirect_home_path: /info
+
+# Whether to disallow robots, when they would normally be allowed; for example,
+# when level == production
+siteproxy_disallow_robots: false

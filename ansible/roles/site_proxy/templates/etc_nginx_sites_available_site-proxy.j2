@@ -146,36 +146,52 @@ limit_req_log_level {{ siteproxy_nginx_limit_req_log_level }};
 {% if groups.wordpress is defined %}
 # Wordpress servers
 upstream dpla_wp {
+{% if all_in_one_hosts %}
+    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ wordpress_app_port }} fail_timeout=120s;  # {{ inventory_hostname }}
+{% else %}
 {% for h in groups.wordpress %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ wordpress_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
+{% endif %}
 }
 {% endif %}
 
 {% if groups.exhibitions is defined %}
 # Exhibitions servers
 upstream dpla_omeka {
+{% if all_in_one_hosts %}
+    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ exhibitions_app_port }} fail_timeout=120s;  # {{ inventory_hostname }}
+{% else %}
 {% for h in groups.exhibitions %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ exhibitions_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
+{% endif %}
 }
 {% endif %}
 
 {% if groups.pss is defined %}
 # Primary Source Sets servers
 upstream dpla_pss {
+{% if all_in_one_hosts %}
+    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ pss_app_port }} fail_timeout=120s;  # {{ inventory_hostname }}
+{% else %}
 {% for h in groups.pss %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ pss_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
+{% endif %}
 }
 {% endif %}
 
 {% if groups.frontend is defined %}
 # Frontend (portal) servers
 upstream dpla_portal {
+{% if all_in_one_hosts %}
+    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ frontend_app_port }} fail_timeout=120s;  # {{ inventory_hostname }}
+{% else %}
 {% for h in groups.frontend %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ frontend_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
+{% endif %}
 }
 {% endif %}
 

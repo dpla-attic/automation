@@ -47,17 +47,21 @@ frontend web-http-in
 	bind *:80
 	default_backend web-http
 
+{% if default_http_scheme == 'https' %}
 frontend web-https-in
 	bind *:443 ssl crt /etc/ssl/certs/local.dp.la.pem
 	mode http
 	reqadd X-Forwarded-Proto:\ https
 	default_backend web-http
+{% endif %}
 
 backend web-http
-{% if ingestion2 is not defined %}
-	server webapp1 192.168.50.6:{{ siteproxy_port }} maxconn 500
+{% if all_in_one_hosts | default(false) %}
+	server {{ inventory_hostname }} {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ siteproxy_port }} maxconn 500
 {% else %}
-	server dev1 192.168.50.7:{{ siteproxy_port }} maxconn 500
+{% for h in groups.site_proxies %}
+	server {{ h }} {{ hostvars[h][internal_network_interface].ipv4.address }}:{{ siteproxy_port }} maxconn 500
+{% endfor %}
 {% endif %}
 
 # ... end Web

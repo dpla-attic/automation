@@ -1,6 +1,6 @@
 User-agent: *
 
-{% if level == 'production' %}
+{% if level == 'production' and not siteproxy_disallow_robots %}
 
 Disallow: /search
 Disallow: /timeline

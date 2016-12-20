@@ -12,6 +12,7 @@
     - libreadline6
     - libreadline6-dev
     - g++
+    - libssl-dev
   when: not skip_configuration | default(false)
   tags:
     - packages

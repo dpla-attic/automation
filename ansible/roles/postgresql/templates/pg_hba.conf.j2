@@ -72,8 +72,6 @@
 # listen on a non-local interface via the listen_addresses
 # configuration parameter, or via the -i or -h command line switches.
 
-# hostvars[h][internal_network_interface]['ipv4']['address']
-
 {% if all_in_one_hosts | default(false) %}
 
 host all all {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}/32 md5

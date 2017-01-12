@@ -43,8 +43,6 @@
     - nginx
     - web
 
-# TODO before committing: git rm files/etc_nginx_conf.d_nagioschecks
-
 - name: Ensure "dpla" user exists
   user: >
       name=dpla comment="DPLA application user"

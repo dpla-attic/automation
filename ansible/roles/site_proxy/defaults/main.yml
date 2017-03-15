@@ -39,9 +39,9 @@ siteproxy_nginx_limit_conn_log_level: notice
 siteproxy_nginx_limit_req_log_level: notice
 
 # Maximum disk space used by the NGINX cache. Our default is 6 Gb.
-siteproxy_nginx_cache_max_size: 5120m
+siteproxy_nginx_cache_max_size: 1024m
 # Size of shared memory zone that is used for NGINX cache
-siteproxy_nginx_cache_shmem_size: 360m
+siteproxy_nginx_cache_shmem_size: 100m
 # How long an item can remain in the cache without being accessed, independently
 # of how long its expiration time is, or the value of the proxy_cache_valid
 # directive:

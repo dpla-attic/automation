@@ -23,16 +23,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # know about all the generated ones.
     config.ssh.insert_key = false
 
-    # All boxes are hashicorp/precise64, which is Ubuntu 12.04 LTS
+    # All boxes are ubuntu/trusty64, which is Ubuntu 14.04 LTS
 
     # BigCouch and ElasticSearch servers.
     # Necessary in all cases.
     dbnodes.keys.each do |hostname|
 	    config.vm.define hostname do |dbnode|
-	        dbnode.vm.box = "hashicorp/precise64"
+	        dbnode.vm.box = "ubuntu/trusty64"
 	        dbnode.vm.network :private_network, ip: dbnodes[hostname]
 	        dbnode.vm.provider "virtualbox" do |vb|
-	            vb.memory = 1024
+	            vb.memory = 819
 	        end
 	    end
     end
@@ -40,10 +40,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Loadbalancer for development.
     # Necessary in all cases.
     config.vm.define :loadbal do |loadbal|
-        loadbal.vm.box = "hashicorp/precise64"
+        loadbal.vm.box = "ubuntu/trusty64"
         loadbal.vm.network :private_network, ip: "192.168.50.2"
         loadbal.vm.provider "virtualbox" do |vb|
-            vb.memory = 256
+            vb.memory = 307
         end
     end
 
@@ -52,10 +52,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # which playbook you run.)
     # Necessary in all cases.
     config.vm.define :webapp1 do |webapp|
-        webapp.vm.box = "hashicorp/precise64"
+        webapp.vm.box = "ubuntu/trusty64"
         webapp.vm.network :private_network, ip: "192.168.50.6"
         webapp.vm.provider "virtualbox" do |vb|
-            vb.memory = 768
+            vb.memory = 1228
         end
         #
         # *** EDIT THESE FOR LOCAL DEVELOPMENT ***

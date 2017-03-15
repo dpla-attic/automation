@@ -1,6 +1,6 @@
 ---
 
-- name: Ensure existence of necessary packages
+- name: Ensure existence of necessary PSS packages
   apt: >-
     pkg="{{ item }}" state=present
   with_items:
@@ -12,6 +12,7 @@
     - libreadline6
     - libreadline6-dev
     - libfontconfig1-dev
+    - libssl-dev
   when: not skip_configuration
   tags:
     - packages

@@ -18,7 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Frontend, web, ElasticSearch
   config.vm.define :dev1 do |dev1|
-    dev1.vm.box = 'hashicorp/precise64'  # Ubuntu 12.04 LTS
+    dev1.vm.box = 'ubuntu/trusty64'  # Ubuntu 14.04 LTS
     dev1.vm.network :private_network, ip: '192.168.50.7'
     dev1.vm.provider :virtualbox do |vb|
       vb.memory = 2048  # 2 GiB

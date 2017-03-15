@@ -15,12 +15,11 @@ See the upgrade notes in [README.md](README.md).
 
 ## Steps
 
-* Copy `Vagrantfile.ingestion2` to `Vagrantfile`
+* Copy `Vagrantfile.ingestion2` to `Vagrantfile`.  (Not `Vagrantfile.dist`)
 
-* Make sure that Vagrant has downloaded the base server images that we'll need
+* Make sure that Vagrant has downloaded the base server image that we'll need
   for our VMs:
 ```
-$ vagrant box add hashicorp/precise64
 $ vagrant box add ubuntu/trusty64
 ```
 * Add the following entries to your /etc/hosts file or the equivalent for your

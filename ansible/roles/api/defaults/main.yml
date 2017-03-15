@@ -1,6 +1,6 @@
 ---
 
-api_unicorn_worker_processes: 2
+api_unicorn_worker_processes: 1
 api_use_local_source: false
 api_branch_or_tag: master
 api_rails_env: development

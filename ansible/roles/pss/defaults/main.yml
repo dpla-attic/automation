@@ -1,6 +1,6 @@
 ---
 
-pss_unicorn_worker_processes: 2
+pss_unicorn_worker_processes: 1
 pss_use_local_source: false
 pss_branch_or_tag: master
 pss_rails_env: development

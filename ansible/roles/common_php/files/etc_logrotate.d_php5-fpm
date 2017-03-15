@@ -8,6 +8,6 @@
     notifempty
     create 0600 root root
     postrotate
-        service php5-fpm reload > /dev/null
+        /usr/lib/php5/php5-fpm-reopenlogs
     endscript
 }

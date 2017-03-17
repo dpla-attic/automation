@@ -2,8 +2,8 @@
 
 postgresql_user: {name: "dpla", password: "changeme"}
 # These memory-related values are tuned to the size of the development VM.
-pg_max_connections: 50
-pg_shared_buffers: 24MB
+pg_max_connections: 10
+pg_shared_buffers: 16MB
 pg_effective_cache_size: 128MB
 pg_work_mem: 1MB
 pg_maintenance_work_mem: 16MB

@@ -12,10 +12,18 @@ setsid 1
 user root
 group root
 
-# Regexps for files to ignore
+# This is the timeout for the whole transaction.
+# Units are in sec. Default is 15 min
+#
+# global_timeout 900
 
-ignore_file ~$
-#ignore_file [#~]$  # FIX doesn't work. '#' starts a comment
+# This is the timeout for each plugin.
+# Units are in sec. Default is 1 min
+#
+timeout 60
+
+# Regexps for files to ignore
+ignore_file [\#~]$
 ignore_file DEADJOE$
 ignore_file \.bak$
 ignore_file %$
@@ -60,6 +68,3 @@ host {{ hostvars[inventory_hostname][internal_network_interface]['ipv4']['addres
 
 # And which port
 port 4949
-
-# timeout:  default is 20? http://munin-monitoring.org/wiki/munin-node.conf
-timeout 60

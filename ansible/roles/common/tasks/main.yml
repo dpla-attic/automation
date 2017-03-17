@@ -136,11 +136,13 @@
   tags:
     - authorized_keys
     - users
+    - ssh
 
 - name: Update SSH client configuration
   copy: src=ssh_config dest=/etc/ssh/ssh_config owner=root group=root mode=0644
   tags:
     - packages
+    - ssh
 
 - name: Update systemwide SSH known hosts
   copy: >

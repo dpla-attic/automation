@@ -36,10 +36,10 @@ machine with at least 8 GB of memory.
 
 Please install the following tools as documented on their websites:
 
-* [VirtualBox](https://www.virtualbox.org/) (Version 4.3)
-* [Vagrant](http://www.vagrantup.com/) (Version 1.6)
+* [VirtualBox](https://www.virtualbox.org/) (Version 5)
+* [Vagrant](http://www.vagrantup.com/) (Version 1.8)
 * [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest/) (`vagrant plugin install vagrant-vbguest`)
-* [Ansible](http://www.ansible.com/) (Version 1.9) [installation instructions](http://docs.ansible.com/intro_installation.html)
+* [Ansible](http://www.ansible.com/) (Version 1.9) (Version 2.x will definitely not work) [installation instructions](http://docs.ansible.com/intro_installation.html)
 * Additional dependencies described in the `pip` requirements file (see below)
 
 ### Steps
@@ -65,11 +65,11 @@ If you want to work with our new Ingestion2 system, please see
       override the `*_use_local_source` variables in some of the roles'
       `defaults` directories, as well as the variables related to the source
       directories.
-* Copy `Vagrantfile.dist` to `Vagrantfile`.
+* Copy `Vagrantfile.dist` to `Vagrantfile`. If you want to perform development work on any of the DPLA applications that will be installed, see the comments in `Vagrantfile` about mounting their working copy directories for "local" deployments.
 * Make sure that Vagrant has downloaded the base server image that we'll need
   for our VMs:
 ```
-$ vagrant box add hashicorp/precise64
+$ vagrant box add ubuntu/trusty64
 ```
 * Add the following entries to your /etc/hosts file or the equivalent for your
   operating system:

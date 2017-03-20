@@ -61,6 +61,14 @@
     line="gem 'dpla_frontend_assets', git: 'git@github.com:dpla/frontend-assets.git'"
   when: frontend_include_branding
 
+# To use "Clean rbenv", define the variable `clean_rbenv', which is not defined
+# anywhere by default.
+- name: Clean rbenv
+  file:
+    path: /home/frontend/.rbenv
+    state: absent
+  when: clean_rbenv | default(false)
+
 - name: Make sure rbenv and bundler are current
   script: >
       ../../../files/install_ruby_tools.sh {{ frontend_rbenv_version }}

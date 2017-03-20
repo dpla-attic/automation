@@ -66,6 +66,14 @@
     line="gem 'dpla_frontend_assets', git: 'git@github.com:dpla/frontend-assets.git'"
   when: pss_include_branding
 
+# To use "Clean rbenv", define the variable `clean_rbenv', which is not defined
+# anywhere by default.
+- name: Clean rbenv
+  file:
+    path: /home/pss/.rbenv
+    state: absent
+  when: clean_rbenv | default(false)
+
 - name: Make sure that rbenv and bundler are current
   script: >-
       ../../../files/install_ruby_tools.sh {{ pss_rbenv_version }}

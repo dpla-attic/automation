@@ -1,0 +1,35 @@
+{# Template for dumping out variables for debugging.
+
+   Usage:  Put a task like the following one in the playbook or tasks file
+           that you are troubleshooting. The `src' path in this example is
+           relative to a role's tasks/main.yml.
+
+    - name: Dump variables
+      template:
+        src: ../../../templates/variables.j2
+        dest: /tmp/variables
+        owner: root
+        group: root
+        mode: 0600
+
+#}
+
+Module Variables ("vars"):
+--------------------------------
+{{ vars | to_nice_json }}
+
+Environment Variables ("environment"):
+--------------------------------
+{{ environment | to_nice_json }}
+
+GROUP NAMES Variables ("group_names"):
+--------------------------------
+{{ group_names | to_nice_json }}
+
+GROUPS Variables ("groups"):
+--------------------------------
+{{ groups | to_nice_json }}
+
+HOST Variables ("hostvars"):
+--------------------------------
+{{ hostvars | to_nice_json }}

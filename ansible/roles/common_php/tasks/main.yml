@@ -62,3 +62,14 @@
   tags:
     - web
     - php
+
+- name: Install improved upstart init configuration file
+  copy:
+    src: etc_init_php5-fpm.conf
+    dest: /etc/init/php5-fpm.conf
+    mode: 0644
+    owner: root
+    group: root
+  tags:
+    - web
+    - php

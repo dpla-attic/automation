@@ -1,0 +1,11 @@
+---
+
+uv_nvm_version: 0.33.1
+uv_node_version: 0.12.7
+uv_use_local_source: false
+uv_branch_or_tag: v2.0.1
+# uv_dist_dir and uv_branch_or_tag could be generated from a base version
+# number, but specifying them separately like this should make it easier to
+# work either with git checkouts or local development working copies.
+# See the role's deploy.yml and the site_proxy role's NGINX configuration.
+uv_dist_dir: uv-2.0.1

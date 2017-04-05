@@ -1,0 +1,44 @@
+---
+
+- name: Clear symlink
+  file: path=/opt/uv/src/universalviewer state=absent
+
+- name: Check out Universal Viewer from repository
+  when: not uv_use_local_source
+  become_user: uv
+  git:
+    repo: https://github.com/UniversalViewer/universalviewer.git
+    dest: /opt/uv/src/universalviewer-git
+    version: "{{ uv_branch_or_tag }}"
+    force: true
+
+- name: Sync Universal Viewer from mounted directory (using local source)
+  when: uv_use_local_source
+  become_user: uv
+  script: copy_local_app.sh
+  register: script_result
+  changed_when: "'Success: changed' in script_result.stdout"
+
+- name: Symlink git working copy
+  file:
+    src: /opt/uv/src/universalviewer-git
+    dest: /opt/uv/src/universalviewer
+    state: link
+  when: not uv_use_local_source
+- name: Symlink copied local directory
+  file:
+    src: /opt/uv/src/universalviewer-local
+    dest: /opt/uv/src/universalviewer
+    state: link
+  when: uv_use_local_source
+
+- name: Build uv and sync to installation directory
+  become_user: uv
+  script: "build_uv.sh {{ uv_node_version }}"
+
+- name: Ensure that the symlink for the NGINX `location' is correct
+  # See site_proxy role, etc_nginx_sites_available_site-proxy.j2
+  file:
+    src: "/opt/uv/universalviewer/dist/{{ uv_dist_dir }}"
+    dest: /srv/www/uv
+    state: link

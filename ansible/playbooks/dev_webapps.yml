@@ -41,6 +41,7 @@
   roles:
     - frontend
     - { role: thumbp, tags: ['thumbp']}
+    - { role: uv, tags: ['uv']}
   vars:
     level: development
     do_deployment: true

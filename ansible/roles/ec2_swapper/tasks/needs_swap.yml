@@ -8,6 +8,9 @@
 # Instances that don't have Instance Store volumes will have the /swap
 # directory created on the root volume.
 
+- name: Ensure state of instance store mount point
+  file: path=/swap state=directory owner=root group=root mode=0755
+
 - name: Unmount instance store volume that EC2 automatically mounts
   mount: name=/mnt state=absent src=/dev/xvdb fstype=ext3
 

@@ -1,0 +1,3 @@
+---
+
+- include: deploy_openebooks.yml level=production

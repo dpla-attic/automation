@@ -1,0 +1,7 @@
+---
+openebooks_branch_or_tag: master
+openebooks_use_local_source: false
+openebooks_path: /home/dpla/openebooks.net
+openebooks_s3cmd_config: /home/dpla/.s3cfg
+openebooks_s3cmd_config_owner: dpla
+openebooks_s3cmd_config_group: dpla

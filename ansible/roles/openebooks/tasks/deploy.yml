@@ -1,0 +1,102 @@
+---
+
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - deployment
+    - openebooks
+    - openebooks_deployment
+    - web
+
+# Clear this out prior to copying and symlinking below
+- file: path={{ openebooks_path }} state=absent
+  when: not openebooks_use_local_source
+  tags:
+    - deployment
+    - openebooks
+    - openebooks_deployment
+    - web
+
+# Krazy hijinx ensue to get around having a private GitHub repo
+
+- name: Temporarily copy private key for GitHub
+  copy: >
+      src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
+      dest=/home/dpla/git_private_key
+      owner=dpla group=dpla mode=0600
+  when: not openebooks_use_local_source
+  tags:
+    - deployment
+    - openebooks
+    - openebooks_deployment
+    - web
+
+- name: Check out openebooks repository
+  git: >-
+      repo=git@github.com:dpla/openebooks.net.git
+      dest={{ openebooks_path }}
+      version={{ openebooks_branch_or_tag }}
+      force=true
+      key_file="/home/dpla/git_private_key"
+  sudo_user: dpla
+  when: not openebooks_use_local_source
+  tags:
+    - deployment
+    - openebooks
+    - openebooks_deployment
+    - web
+
+- name: Remove temporary private key for GitHub
+  file: path=/home/dpla/git_private_key state=absent
+  when: not openebooks_use_local_source
+  tags:
+    - deployment
+    - openebooks
+    - openebooks_deployment
+    - web
+
+- name: Update .s3cfg
+  template: >-
+      src=s3cfg.j2 dest={{ openebooks_s3cmd_config }}
+      owner={{ openebooks_s3cmd_config_owner }}
+      group={{ openebooks_s3cmd_config_group }} mode=0600
+  tags:
+    - deployment
+    - openebooks
+    - openebooks_deployment
+    - web
+
+- name: Sync files to S3 from remote server
+  sudo_user: dpla
+  register: s3cmd_sync
+  when: not openebooks_use_local_source
+  command: >-
+      s3cmd -v sync -r -M --no-mime-magic
+      --exclude-from {{ openebooks_path }}/.s3ignore
+      --delete-removed {{ openebooks_path }}/ s3://{{ openebooks_s3_bucket }}/
+  tags:
+    - deployment
+    - openebooks
+    - openebooks_deployment
+    - web
+
+- name: Sync files to S3 from localhost
+  register: s3cmd_sync
+  when: openebooks_use_local_source
+  command: >-
+      s3cmd -v sync -r -M --no-mime-magic
+      --exclude-from {{ openebooks_path }}/.s3ignore
+      --delete-removed {{ openebooks_path }}/ s3://{{ openebooks_s3_bucket }}/
+  tags:
+    - deployment
+    - openebooks
+    - openebooks_deployment
+    - web
+
+- name: Remove .s3cfg 
+  file: path={{ openebooks_s3cmd_config }} state=absent
+  tags:
+    - deployment
+    - openebooks
+    - openebooks_deployment
+    - web

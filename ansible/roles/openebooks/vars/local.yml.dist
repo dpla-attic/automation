@@ -1,0 +1,8 @@
+---
+openebooks_s3cmd_config: /tmp/openebooks.s3cfg
+openebooks_s3cmd_config_owner: "{{ ansible_ssh_user }}"
+openebooks_s3cmd_config_group: staff
+openebooks_use_local_source: true
+# only set this if you're working from an existing repository
+# openebooks_local_source_path: /tmp/openebooks
+openebooks_s3cmd_gpg_passphrase: insert-your-passphrase-here

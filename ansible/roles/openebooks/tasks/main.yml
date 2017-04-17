@@ -1,0 +1,25 @@
+---
+
+- include_vars: "../vars/{{ level }}.yml"
+  when: level is defined
+  tags:
+    - openebooks
+    - web
+
+- name: Ensure existence of necessary packages
+  apt: pkg=python-pip state=present
+  tags:
+    - packages
+    - openebooks
+
+- pip: name=s3cmd state=present
+  tags:
+    - packages
+    - openebooks
+
+- pip: name=python-magic state=absent
+  tags:
+    - packages
+    - openebooks
+
+- include: deploy.yml

@@ -5,7 +5,7 @@
     pkg="{{ item }}" state=present
   with_items:
     - postgresql-common
-    - postgresql-client
+    - "postgresql-client-{{ pg_version }}"
     - libpq-dev
     - libsqlite3-dev
     - build-essential

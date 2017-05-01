@@ -1,6 +1,15 @@
 
 UPGRADING TO RELEASE 2.0
 
+---
+
+This documentation is being retained in `automation` for historical
+purposes. It documents an upgrade from one obsolete version of `automation` to
+another obsolete one. If you are reading this and have a version older than
+2.0, we encourage you to start fresh with a new set of VMs, using the most
+recent version.
+
+---
 
 Release 2.0 contains breaking changes that move variable definitions around.  If
 you are upgrading from version 1.x, you will encounter errors related to

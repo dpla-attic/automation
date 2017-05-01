@@ -62,13 +62,3 @@
 - include: playbooks/api.yml level=staging
 
 - include: playbooks/ingestion.yml
-
-- include: playbooks/redis.yml level=staging
-
-- include: playbooks/tomcat.yml level=staging
-
-- include: playbooks/solr.yml level=staging
-
-- include: playbooks/marmotta.yml level=staging
-
-- include: playbooks/ingestion_app.yml level=staging

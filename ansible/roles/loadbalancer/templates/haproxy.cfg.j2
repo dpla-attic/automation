@@ -17,7 +17,7 @@ defaults
 	timeout client 50s
 	timeout server 5m
 
-{% if loadbalancer_expose_bigcouch and ingestion2 is not defined %}
+{% if loadbalancer_expose_bigcouch %}
 ### Bigcouch
 
 frontend bigcouch-chttpd-in

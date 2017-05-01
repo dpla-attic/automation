@@ -22,7 +22,7 @@
 #
 # 2.  Run this playbook.  For example:
 #     $ cd /path/to/ansible
-#     $ ansible-playbook -u me -i ingestion \
+#     $ ansible-playbook -u me -i development \
 #       playbooks/migrations/upgrade-postgresql-201510.yml \
 #       -e 'level=development'
 

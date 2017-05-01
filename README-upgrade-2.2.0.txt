@@ -1,6 +1,16 @@
 
 UPGRADE INSTRUCTIONS
 
+---
+
+This documentation is being retained in `automation` for historical
+purposes. It documents an upgrade from one obsolete version of `automation` to
+another obsolete one. If you are reading this and have a version older than
+2.2.0, we encourage you to start fresh with a new set of VMs, using the most
+recent version.
+
+---
+
 PostgreSQL has been upgraded from version 9.1 in Release 2.1.4 and earlier to
 9.4 in Release 2.2.0.  This change requires an upgrade of PostgreSQL's tables.
 

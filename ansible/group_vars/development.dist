@@ -7,7 +7,6 @@
 # in an HTTP response.
 webapp_debug: true
 
-ingestion_hostname: ingestion2.local.dp.la
 pss_hostname: local.dp.la
 
 # In this development config file, the following api_key corresponds to

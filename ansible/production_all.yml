@@ -63,13 +63,3 @@
 - include: playbooks/api.yml level=production
 
 - include: playbooks/ingestion.yml
-
-- include: playbooks/redis.yml level=production
-
-- include: playbooks/tomcat.yml level=production
-
-- include: playbooks/solr.yml level=production
-
-- include: playbooks/marmotta.yml level=production
-
-- include: playbooks/ingestion_app.yml level=production

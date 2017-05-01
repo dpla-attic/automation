@@ -1,6 +1,0 @@
-[tomcat_*]
-env.ports 8080
-env.user {{ tomcat_munin_username }}
-env.password {{ tomcat_munin_password }}
-env.host {{ hostvars[inventory_hostname][internal_network_interface]['ipv4']['address'] }}
-env.connector "http-bio-{{ hostvars[inventory_hostname][internal_network_interface]['ipv4']['address'] }}-8080"

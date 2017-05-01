@@ -60,7 +60,7 @@ api_auth:
 
   # Set to true to *not* require an api_key param at all. This overrides allow_all_keys and
   # makes the API completely open. This is not recommended for actual production use.
-{% if ingestion2 is defined or api_skip_auth %}
+{% if api_skip_auth %}
   skip_key_auth_completely: true
 {% else %}
   skip_key_auth_completely: false

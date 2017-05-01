@@ -2,5 +2,3 @@
 !.gitignore
 !*.dist
 !geocoder
-!ingestion_app
-!worker

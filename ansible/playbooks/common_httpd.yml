@@ -14,8 +14,6 @@
     - site_proxies
     - wordpress
     - exhibitions
-    - ingestion_app
-    - marmotta
   become: yes
   roles:
     - common_web

@@ -7,25 +7,6 @@ The intention of this project is to provide automated configuration management
 for production, development, and staging environments with the same set of
 files.
 
-## Version 3
-
-[Release Notes](https://github.com/dpla/automation/releases)
-
-Release 3.0 adds SSL support and introduces a variable (`siteproxy_port`) that
-must be present in `ansible/group_vars/all`; and which will need to be added if
-you are upgrading from an earlier version. See
-[README-upgrade-3.0](README-upgrade-3.0.md).
-
-Earlier versions' upgrade notes:
-
-* [README-upgrade-2.2.0.txt](README-upgrade-2.2.0.txt)
-* [README-upgrade-2.0.txt](README-upgrade-2.0.txt)
-
-Release 2.2.0 upgraded PostgreSQL from 9.1 to 9.4.  If you have an installation
-that predates [Release 2.2.0](https://github.com/dpla/automation/releases),
-please see [the 2.2.0 upgrade document](README-upgrade-2.2.0.txt) now.
-
-
 ## Installation, VM setup:
 
 ### Prerequisites and Dependencies
@@ -43,9 +24,6 @@ Please install the following tools as documented on their websites:
 * Additional dependencies described in the `pip` requirements file (see below)
 
 ### Steps
-
-If you want to work with our new Ingestion2 system, please see
-[README-ingestion2.md](README-ingestion2.md).
 
 * Clone this project with Git or download the latest
   [zipfile](https://github.com/dpla/automation/archive/master.zip) and open it.  If
@@ -158,10 +136,6 @@ If you use another browser, the procedure should be similar. You need to
 download the certificate and add it to your certificate chain, or your operating
 system's certificate chain, with trusted status.
 
-#### Upgrading from before Version 3
-
-See the "Legacy / Pre-Ingestion 2 VMs" section of
-[README-upgrade-3.0](README-upgrade-3.0.md)
 
 ## Subsequent Usage
 

@@ -13,10 +13,6 @@
   hosts:
     - ingestion
     - cms
-    - ingestion_app
-    - worker
-    - solr
-    - marmotta
     - geocoder
   become: yes
   tasks:

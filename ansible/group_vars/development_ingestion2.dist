@@ -1,3 +1,0 @@
-
-# Note that es_cluster_loadbal includes the port.
-es_cluster_loadbal: 192.168.50.7:9201

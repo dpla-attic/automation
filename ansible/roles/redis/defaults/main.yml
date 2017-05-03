@@ -1,5 +1,0 @@
----
-
-redis_maxclients: 50
-# redis_maxmemory: 128 Mb
-redis_maxmemory: 134217728

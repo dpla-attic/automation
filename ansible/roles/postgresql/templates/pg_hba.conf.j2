@@ -95,28 +95,6 @@ host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md
 {% endfor %}
 {% endif %}
 
-{# The following hosts are for the Ingestion 2 system. #}
-{# TODO:  Remove the `if' statements when we do away with the legacy #}
-{#        ingestion system. #}
-
-{% if groups.ingestion_app is defined %}
-{% for host in groups.ingestion_app %}
-host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
-{% endfor %}
-{% endif %}
-
-{% if groups.worker is defined %}
-{% for host in groups.worker %}
-host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
-{% endfor %}
-{% endif %}
-
-{% if groups.marmotta is defined %}
-{% for host in groups['marmotta'] %}
-host all all {{ hostvars[host][internal_network_interface].ipv4.address }}/32 md5
-{% endfor %}
-{% endif %}
-
 {# End "if all_in_one_hosts" #}
 {% endif %}
 

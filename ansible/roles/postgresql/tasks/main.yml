@@ -79,8 +79,6 @@
   with_items:
     - dpla_portal
     - api
-    - ingestion
-    - marmotta
     - pss
   tags:
     - postgresql
@@ -98,27 +96,6 @@
     - dpla_portal
     - api
     - pss
-  tags:
-    - postgresql
-
-# Treat Ingestion 2 databases separately, because they will not need to be
-# present for the legacy system, using the 'development' inventory.
-#
-# TODO:  move these databases into the 'with_items' list in the task above
-# when we remove the legacy ingestion systems entirely and go back to a single
-# inventory for development.
-- name: Ensure privileges in Ingestion 2 databases
-  postgresql_privs: >-
-      database="{{ item }}"
-      roles="{{ postgresql_user.name }}"
-      state=present
-      type=database
-      privs=ALL
-  become_user: postgres
-  with_items:
-    - ingestion
-    - marmotta
-  when: groups['marmotta'] is defined
   tags:
     - postgresql
 
@@ -202,18 +179,6 @@
     - munin
     - postgresql
 
-# Munin PG tuples and scans plugins only want to run on one db at a time, so just
-# run them on the "marmotta" database:
-- file: >-
-    src="/usr/share/munin/plugins/postgres_{{ item }}_"
-    dest="/etc/munin/plugins/postgres_{{ item }}_marmotta"
-    state=link
-  with_items:
-    - scans
-    - tuples
-  tags:
-    - munin
-    - postgresql
 
 # Update queries in following munin plugins so they reference correct
 # PostgreSQL 9.4 column names

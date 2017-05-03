@@ -1,9 +1,0 @@
----
-
-marmotta_admin_pwhash: :plain::pass123
-marmotta_heidrun_allowed_ip:  192.168.50.0/24
-marmotta_home: /var/lib/marmotta
-marmotta_version: 3.3.0
-marmotta_tomcat_open_files_limit: 10240
-marmotta_archive_base_url: "http://www-us.apache.org/dist/marmotta/{{ marmotta_version }}"
-marmotta_archive_checksum: 34c37281b6875ea95da391ae5bbe059f31091f3c6bf2529539241b35690c84b0

@@ -19,20 +19,5 @@ ff02::2 ip6-allrouters
 {% endif %}
 
 {% if level is defined and level == 'development' %}
-{% if ingestion2 is defined %}
-192.168.50.7 local.dp.la
-{% else %}
 {{ hostvars['loadbal'][internal_network_interface]['ipv4']['address'] }} local.dp.la
-{% endif %}
-{% endif %}
-
-{# TODO:  remove the "is defined" clause below once we get rid of the legacy #}
-{#        ingestion inventory and 'marmotta' is present in the #}
-{#        'development' inventory. #}
-{% if marmotta_domain | default(false)
-   and inventory_hostname != 'central'
-   and groups['marmotta'] is defined %}
-{# assume one Marmotta host: #}
-{% set marmottahost = groups['marmotta'][0] %}
-{{ hostvars[marmottahost][internal_network_interface]['ipv4']['address'] }} {{ marmotta_domain }}
 {% endif %}

@@ -1,6 +1,11 @@
 
 # UPGRADING TO RELEASE 3.0
 
+**This documentation is being retained in `automation` for historical
+purposes. It documents an upgrade from one obsolete version of `automation` to
+another obsolete one. If you are reading this and have a version older than
+3.0, we encourage you to start fresh with a new set of VMs, using the most
+recent version.**
 
 Legacy / Pre-Ingestion 2 VMs (`development` inventory)
 ------------------------------------------------------

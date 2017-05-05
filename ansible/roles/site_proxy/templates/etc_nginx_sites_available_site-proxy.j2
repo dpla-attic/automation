@@ -87,30 +87,6 @@ map $http_cookie $do_not_cache_wp_cookie {
 proxy_cache_bypass $do_not_cache_ctype;
 proxy_no_cache     $do_not_cache_ctype;
 
-map $http_user_agent $bad_bot{
-    default     0;
-    "Mozilla/4.0 (compatible; ICS)"     1;
-    "Mozilla/4.0"       1;
-    "Mozilla/5.0"       1;
-    "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)"   1;
-    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)"    1;
-    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)"   1;
-    "Mozilla/4.0 (compatible;)"     1;
-    "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9)"   1;
-    "Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)"    1;
-    "Mozilla/4.0 (compatible; MSIE 5.0; Windows 98)"    1;
-    "Mozilla/4.0 (compatible; MSIE 6.0; Windows 98)"    1;
-    "Mozilla/5.0 Firefox/3.0.5"     1;
-    "Mozilla/3.0 (compatible)"  1;
-    "Mozilla/2.0 (compatible)"  1;
-    "Mozilla/4.0 (compatible; MSIE 6.0; MSIE 5.5; Windows NT 4.0) Opera 7.0 [en]"   1;
-    "Opera"     1;
-    "-"         1;
-    "0"         1;
-    "Mozilla/5.0 (compatible; SiteBot/0.1; +http://www.sitebot.org/robot/)"     1;
-    "Pcore-HTTP/v0.18.1"    1;
-}
-
 # Addresses that are not subject to rate or connection limiting
 geo $whitelisted {
     default 1;
@@ -222,11 +198,6 @@ server {
     proxy_set_header X-Forwarded-Proto "https";
     proxy_set_header Host $host;
     {% endif %}
-
-    # Bad bot!
-    if ($bad_bot = 1) {
-        return 403;
-    }
 
 {% if default_http_scheme == 'https' and not siteproxy_self_ssl %}
     if ($http_x_forwarded_proto != 'https') {

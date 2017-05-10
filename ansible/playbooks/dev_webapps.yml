@@ -26,7 +26,6 @@
   hosts: webapps
   become: yes
   roles:
-    - common_sitenode
     - site_proxy
     - omeka
     - wordpress

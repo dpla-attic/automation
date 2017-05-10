@@ -5,6 +5,8 @@
   script: >
       ../../../files/certificate.sh "{{ frontend_hostname }}"
   notify: restart nginx
+  tags:
+    - nginx
 
 - name: Ensure existence of cache directory
   file: >
@@ -13,6 +15,7 @@
   notify: restart nginx
   tags:
     - web
+    - nginx
     - site_proxy
 
 - name: Ensure existence of proxy temp directory
@@ -22,6 +25,7 @@
   notify: restart nginx
   tags:
     - web
+    - nginx
     - site_proxy
 
 - name: Ensure state of Nginx site config file
@@ -32,6 +36,7 @@
   notify: restart nginx
   tags:
     - web
+    - nginx
     - site_proxy
 
 - name: Symlink Nginx site config file
@@ -42,6 +47,7 @@
   notify: restart nginx
   tags:
     - web
+    - nginx
     - site_proxy
 
 - name: Ensure state of robots.txt

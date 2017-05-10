@@ -9,15 +9,6 @@ server {
 
     server_name {{ frontend_hostname }};
 
-{% if all_in_one_hosts | default(false) %}
-    set_real_ip_from {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }};
-{% else %}
-{% for h in groups['site_proxies'] %}
-    set_real_ip_from {{ hostvars[h][internal_network_interface].ipv4.address }};
-{% endfor %}
-{% endif %}
-    real_ip_header X-Forwarded-For;
-
     location / {
         root /srv/www/frontend/public;
         try_files $uri $uri/index.html @frontend_app_server;

@@ -43,6 +43,15 @@
     - nginx
     - web
 
+- name: Ensure that legacy "trustedproxyips" file is absent
+  file:
+    path: /etc/nginx/conf.d/trustedproxyips
+    state: absent
+  notify: restart nginx
+  tags:
+    - nginx
+    - web
+
 - name: Ensure "dpla" user exists
   user: >
       name=dpla comment="DPLA application user"

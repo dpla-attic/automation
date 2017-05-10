@@ -1,9 +1,0 @@
----
-
-- name: Update Nginx trusted proxy IP addresses
-  template: src=etc_nginx_conf.d_trustedproxyips.j2
-            dest=/etc/nginx/conf.d/trustedproxyips
-  notify: restart nginx
-  tags:
-    - nginx
-    - networking

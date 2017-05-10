@@ -53,7 +53,6 @@ proxy_connect_timeout 5;
 proxy_read_timeout    120;
 proxy_send_timeout    120;
 proxy_redirect      off;
-proxy_hide_header "X-Powered-By";
 
 # Use a stale cache file in the event that another request is updating the
 # cached file. (Do not wait or try the next upstream server.)
@@ -61,15 +60,10 @@ proxy_cache_use_stale updating;
 # Try next upstream server in the event of a failure
 proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
 
-# allows backend to see real ip
 proxy_set_header    Host            $host;
-proxy_set_header    X-Real-IP       $remote_addr;
-proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
 
 # allows us to check the page's cache status
 add_header X-Cache-Status $upstream_cache_status;
-
-map_hash_bucket_size 128;  # Must come before all map directives
 
 map $http_content_type $do_not_cache_ctype {
     default            0;
@@ -239,13 +233,6 @@ server {
         return 301 https://{{ frontend_hostname }}$request_uri;
     }
 {% endif %}
-
-    # This ensures that the loadbalancer in front of the site proxy is
-    # recognized as a proxy:
-{% for addr in nginx_real_ip_from_addrs %}
-    set_real_ip_from {{ addr }};
-{% endfor %}
-    real_ip_header X-Forwarded-For;
 
     location / {
 

@@ -9,15 +9,15 @@ if [ ! -d /api_dev ]; then
 	exit 1
 fi
 
-if [ ! -d /home/dpla/api-local ]; then
-	mkdir /home/dpla/api-local
+if [ ! -d /home/api/api-local ]; then
+	mkdir /home/api/api-local
 fi
 
 rsync -rIptl --delete --checksum \
     --exclude 'var/log' --exclude 'tmp' --exclude 'vendor/bundle' \
-    /api_dev/ /home/dpla/api-local
+    /api_dev/ /home/api/api-local
 if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-chown -Rh dpla:dpla /home/dpla/api-local
+chown -Rh api:api /home/api/api-local

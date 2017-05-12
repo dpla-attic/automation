@@ -9,16 +9,16 @@ if [ ! -d /frontend_dev ]; then
 	exit 1
 fi
 
-if [ ! -d /home/dpla/frontend-local ]; then
-	mkdir /home/dpla/frontend-local
+if [ ! -d /home/frontend/frontend-local ]; then
+	mkdir /home/frontend/frontend-local
 fi
 
 rsync -rIptl --delete --checksum \
     --exclude 'log' --exclude 'tmp' --exclude 'vendor/assets' \
     --exclude 'public/assets' --exclude 'public/uploads' \
-    /frontend_dev/ /home/dpla/frontend-local
+    /frontend_dev/ /home/frontend/frontend-local
 if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-chown -Rh dpla:dpla /home/dpla/frontend-local
+chown -Rh frontend:frontend /home/frontend/frontend-local

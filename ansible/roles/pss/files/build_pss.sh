@@ -16,7 +16,7 @@ if [ "$BRANDING" == "branding" ]; then
     ssh-add $HOME/git_private_key
 fi
 
-cd /home/dpla/pss
+cd /home/pss/pss
 
 rbenv shell $USE_VERSION
 
@@ -45,7 +45,7 @@ echo "rsync from home to /srv/www/pss ..." >> $LOGFILE
     --exclude 'tmp' \
     --exclude '.git' \
     --exclude 'public/uploads' \
-    /home/dpla/pss/ /srv/www/pss
+    /home/pss/pss/ /srv/www/pss
 if [ $? -ne 0 ]; then
     exit 1
 fi

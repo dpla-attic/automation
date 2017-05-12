@@ -28,7 +28,7 @@
     - name: Delete any existing river
       script: >
           ../files/delete_river.sh {{ api_rbenv_version }}
-      become_user: dpla
+      become_user: api
 
     - name: Drop existing repositories
       local_action: uri
@@ -64,17 +64,17 @@
     - name: Create api key database (with its design doc)
       script: >
           ../files/create_api_key_database.sh {{ api_rbenv_version }}
-      become_user: dpla
+      become_user: api
 
     - name: Create new index and river
       script: >
           ../files/create_index_and_river.sh {{ api_rbenv_version }}
-      become_user: dpla
+      become_user: api
 
     - name: Delete any undeployed indices
       script: >
           ../files/delete_undeployed_indices.sh {{ api_rbenv_version }}
-      become_user: dpla
+      become_user: api
 
     - name: Create test API user (optional)
       when: create_test_account is defined

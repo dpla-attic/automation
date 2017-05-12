@@ -2,13 +2,13 @@
 
 # Clear these out prior to copying and symlinking below
 
-- name: Clear /home/dpla/api symlink
-  file: path=/home/dpla/api state=absent
+- name: Clear /home/api/api symlink
+  file: path=/home/api/api state=absent
 
 - name: Make sure that API build directories are clear
   when: clean_api | default(false)
   file:
-    path: "/home/dpla/{{ item }}"
+    path: "/home/api/{{ item }}"
     state: absent
   with_items:
     - api-git
@@ -17,15 +17,15 @@
 - name: Check out api (platform) app from its repository (git)
   git: >-
       repo="{{ api_repo }}"
-      dest=/home/dpla/api-git
+      dest=/home/api/api-git
       version={{ api_branch_or_tag | default("master") }}
       force=true
-  become_user: dpla
+  become_user: api
   when: not api_use_local_source
 
 # Symlink to the build directory, to allow local and git builds to coexist neatly
 # 1. Git deployment ...
-- file: src=/home/dpla/api-git dest=/home/dpla/api state=link
+- file: src=/home/api/api-git dest=/home/api/api state=link
   when: not api_use_local_source
 
 - name: Check out api (platform) app from mounted directory (local)
@@ -34,33 +34,39 @@
 
 # Symlink, as above
 # 2. Local filesystem deployment ...
-- file: src=/home/dpla/api-local dest=/home/dpla/api state=link
+- file: src=/home/api/api-local dest=/home/api/api state=link
   when: api_use_local_source
 
 - name: Update api app database configuration
   template: >
-      src=database.yml.j2 dest=/home/dpla/api/config/database.yml
-      owner=dpla group=webapp mode=0640
+      src=database.yml.j2 dest=/home/api/api/config/database.yml
+      owner=api group=webapp mode=0640
   when: not api_use_local_source
 
 - name: Update api app settings in v1
   template: >
-      src=dpla.yml.j2 dest=/home/dpla/api/v1/config/dpla.yml
-      owner=dpla group=webapp mode=0640
+      src=dpla.yml.j2 dest=/home/api/api/v1/config/dpla.yml
+      owner=api group=webapp mode=0640
   when: not api_use_local_source
 
 - name: Update api unicorn.rb
   template: >
-      src=unicorn.rb.j2 dest=/home/dpla/api/config/unicorn.rb
-      owner=dpla group=dpla mode=0644
+      src=unicorn.rb.j2 dest=/home/api/api/config/unicorn.rb
+      owner=api group=api mode=0644
 
 - name: Make sure rbenv and bundler are current
   script: >
       ../../../files/install_ruby_tools.sh {{ api_rbenv_version }}
-  become_user: dpla
+  become_user: api
 
 - name: Ensure existence of live app directory
-  file: path=/srv/www/api state=directory owner=dpla group=dpla mode=0755
+  file:
+    path: /srv/www/api
+    state: directory
+    owner: api
+    group: api
+    recurse: yes
+    mode: 0755
 
 - name: Stop Unicorn (gracefully)
   # Unicorn is stopped completely, and later restarted, because we assume that
@@ -81,7 +87,7 @@
 - name: Build api app
   script: >
       build_api.sh {{ api_rbenv_version }}
-  become_user: dpla
+  become_user: api
   notify:
     - restart memcached
 

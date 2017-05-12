@@ -15,6 +15,23 @@
   tags:
     - packages
 
+- name: Ensure that "api" user exists
+  user:
+    name: api
+    comment: "API application user"
+    home: /home/api
+    shell: /bin/bash
+    groups: webapp
+    state: present
+  tags:
+    - users
+    - web
+
+- name: Ensure that "api" user's .ssh directory exists
+  file: path=/home/api/.ssh state=directory mode=0700 owner=api group=api
+  tags:
+    - users
+    - web
 
 ## Init scripts and control scripts
 #

@@ -1,5 +1,23 @@
 ---
 
+- name: Ensure that "pss" user exists
+  user:
+    name: pss
+    comment: "Primary Source Sets application user"
+    home: /home/pss
+    shell: /bin/bash
+    groups: webapp
+    state: present
+  tags:
+    - users
+    - web
+
+- name: Ensure that "pss" user's .ssh directory exists
+  file: path=/home/pss/.ssh state=directory mode=0700 owner=pss group=pss
+  tags:
+    - users
+    - web
+
 - name: Ensure existence of necessary PSS packages
   apt: >-
     pkg="{{ item }}" state=present

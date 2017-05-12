@@ -1,13 +1,13 @@
 ---
 
-- name: Clear /home/dpla/pss symlink
+- name: Clear /home/pss/pss symlink
   # It will be recreated below.
-  file: path=/home/dpla/pss state=absent
+  file: path=/home/pss/pss state=absent
 
 - name: Make sure that PSS build directories are clear
   when: clean_pss | default(false)
   file:
-    path: "/home/dpla/{{ item }}"
+    path: "/home/pss/{{ item }}"
     state: absent
   with_items:
     - pss-git
@@ -16,17 +16,17 @@
 - name: Check out primary-source-sets app from its repository
   git: >-
       repo=https://github.com/dpla/primary-source-sets.git
-      dest=/home/dpla/pss-git
+      dest=/home/pss/pss-git
       version={{ pss_branch_or_tag }}
       force=true
-  become_user: dpla
+  become_user: pss
   when: not pss_use_local_source
 
 ## Symlink to the build directory, to allow local and git builds to coexist
 # neatly ...
 
 # 1. For a git deployment ...
-- file: src=/home/dpla/pss-git dest=/home/dpla/pss state=link
+- file: src=/home/pss/pss-git dest=/home/pss/pss state=link
   when: not pss_use_local_source
 
 - name: Check out primary source sets app from mounted directory
@@ -34,13 +34,13 @@
   when: pss_use_local_source
 
 # 2. For a local deployment ...
-- file: src=/home/dpla/pss-local dest=/home/dpla/pss state=link
+- file: src=/home/pss/pss-local dest=/home/pss/pss state=link
   when: pss_use_local_source
 
 - name: Update primary-source-sets app configuration files
   template: >-
-    src="{{ item }}.j2" dest="/home/dpla/pss/config/{{ item }}"
-    owner=dpla group=dpla mode=0640
+    src="{{ item }}.j2" dest="/home/pss/pss/config/{{ item }}"
+    owner=pss group=pss mode=0640
   with_items:
     - database.yml
     - secrets.yml
@@ -49,18 +49,18 @@
 - name: Update primary-source-sets app settings
   template: >-
       src=settings.local.yml.j2
-      dest=/home/dpla/pss/config/settings.local.yml
-      owner=dpla group=webapp mode=0640
+      dest=/home/pss/pss/config/settings.local.yml
+      owner=pss group=webapp mode=0640
   when: not pss_use_local_source
 
 - name: Update primary-source-sets unicorn.rb
   template: >-
-      src=unicorn.rb.j2 dest=/home/dpla/pss/config/unicorn.rb
-      owner=dpla group=dpla mode=0644
+      src=unicorn.rb.j2 dest=/home/pss/pss/config/unicorn.rb
+      owner=pss group=pss mode=0644
 
 - name: Add dpla_frontend_assets to Gemfile if branding is turned on
   lineinfile: >
-    dest=/home/dpla/pss/Gemfile
+    dest=/home/pss/pss/Gemfile
     state=present
     regexp=dpla_frontend_assets
     line="gem 'dpla_frontend_assets', git: 'git@github.com:dpla/frontend-assets.git'"
@@ -69,11 +69,16 @@
 - name: Make sure that rbenv and bundler are current
   script: >-
       ../../../files/install_ruby_tools.sh {{ pss_rbenv_version }}
-  become_user: dpla
+  become_user: pss
 
 - name: Ensure the existence and permissions of necessary directories
-  file: >-
-    path="{{ item }}" state=directory owner=dpla group=dpla mode=0755
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: pss
+    group: pss
+    recurse: yes
+    mode: 0755
   with_items:
     - /srv/www/pss
     - /srv/www/pss/tmp
@@ -86,8 +91,8 @@
   # This will be used by build_pss.sh
   copy: >-
       src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
-      dest=/home/dpla/git_private_key
-      owner=dpla group=dpla mode=0600
+      dest=/home/pss/git_private_key
+      owner=pss group=pss mode=0600
 
 - name: Stop Unicorn (gracefully)
   # Unicorn is stopped completely, and later restarted, because we assume that
@@ -109,17 +114,17 @@
   script: >-
     build_pss.sh "{{ pss_rbenv_version }}"
     {{ 'branding' if pss_include_branding else '' }}
-  become_user: dpla
+  become_user: pss
   environment:
     RAILS_ENV: "{{ pss_rails_env }}"
 
 - name: Ensure existence of uploads directory
   file: >-
       path=/srv/www/pss/public/uploads state=directory
-      owner=dpla group=dpla mode=0755 recurse=yes
+      owner=pss group=pss mode=0755 recurse=yes
 
 - name: Start Unicorn
   service: name=unicorn_pss state=started
 
 - name: Remove temporary private key for GitHub
-  file: path=/home/dpla/git_private_key state=absent
+  file: path=/home/pss/git_private_key state=absent

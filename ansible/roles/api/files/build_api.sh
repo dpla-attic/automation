@@ -8,7 +8,7 @@ echo "starting" > $LOGFILE
 
 eval "`rbenv init -`"
 
-cd /home/dpla/api
+cd /home/api/api
 
 rbenv shell $USE_VERSION >> $LOGFILE 2>&1
 
@@ -23,7 +23,7 @@ echo "rsync from home to /srv/www/api ..." >> $LOGFILE
     --exclude 'var/log' \
     --exclude 'tmp' \
     --exclude '.git' \
-    /home/dpla/api/ /srv/www/api
+    /home/api/api/ /srv/www/api
 if [ $? -ne 0 ]; then
     exit 1
 fi
@@ -36,7 +36,7 @@ for dir in $dirs_to_check; do
     if [ ! -d $dir ]; then
         echo "... creating $dir"
         mkdir $dir \
-            && chown dpla:webapp $dir \
+            && chown api:webapp $dir \
             && chmod 0775 $dir
         if [ $? -ne 0 ]; then
             exit 1

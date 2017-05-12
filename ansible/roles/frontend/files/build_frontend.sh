@@ -63,7 +63,7 @@ echo "rsync home to /srv/www ..." >> $LOGFILE
     --exclude 'tmp' \
     --exclude '.git' \
     --exclude 'public/uploads' \
-    /home/dpla/frontend/ /srv/www/frontend
+    /home/frontend/frontend/ /srv/www/frontend
 if [ $? -ne 0 ]; then
     exit 1
 fi
@@ -78,7 +78,7 @@ echo "check logfile directory ..." >> $LOGFILE
 logdir='/srv/www/frontend/log'
 if [ ! -d $logdir ]; then
     mkdir $logdir \
-        && chown dpla:webapp $logdir \
+        && chown frontend:webapp $logdir \
         && chmod 0775 $logdir
     if [ $? -ne 0 ]; then
         exit 1

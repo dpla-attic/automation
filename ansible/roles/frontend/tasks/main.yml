@@ -17,6 +17,24 @@
   tags:
     - packages
 
+- name: Ensure that "frontend" user exists
+  user:
+    name: frontend
+    comment: "frontend application user"
+    home: /home/frontend
+    shell: /bin/bash
+    groups: webapp
+    state: present
+  tags:
+    - users
+    - web
+
+- name: Ensure that "frontend" user's .ssh directory exists
+  file: path=/home/frontend/.ssh state=directory mode=0700 owner=frontend group=frontend
+  tags:
+    - users
+    - web
+
 - name: Ensure state of ImageMagick policy.xml file
   copy:
     src: ../../../files/imagemagick_policy.xml

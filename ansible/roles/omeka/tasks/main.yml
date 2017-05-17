@@ -1,5 +1,23 @@
 ---
 
+- name: Ensure that "omeka" user exists
+  user:
+    name: omeka
+    comment: "Omeka application user"
+    home: /home/omeka
+    shell: /bin/bash
+    groups: webapp
+    state: present
+  tags:
+    - users
+    - web
+
+- name: Ensure that "omeka" user's .ssh directory exists
+  file: path=/home/omeka/.ssh state=directory mode=0700 owner=omeka group=omeka
+  tags:
+    - users
+    - web
+
 - name: Ensure full installation of Imagemagick
   apt: pkg=imagemagick state=present
   when: not skip_configuration

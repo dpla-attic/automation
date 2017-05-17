@@ -1,24 +1,42 @@
 ---
 
+- name: Ensure that "wordpress" user exists
+  user:
+    name: wordpress
+    comment: "Wordpress application user"
+    home: /home/wordpress
+    shell: /bin/bash
+    groups: webapp
+    state: present
+  tags:
+    - users
+    - web
+
+- name: Ensure that "wordpress" user's .ssh directory exists
+  file: path=/home/wordpress/.ssh state=directory mode=0700 owner=wordpress group=wordpress
+  tags:
+    - users
+    - web
+
 - name: Prep for build with private repo (git)
   when: do_wordpress and do_deployment and not wp_theme_use_local_source
   copy: >
       src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
-      dest=/home/dpla/git_private_key
-      owner=dpla group=dpla mode=0600
+      dest=/home/wordpress/git_private_key
+      owner=wordpress group=wordpress mode=0600
   tags:
     - web
 
 - name: Build Wordpress (local)
   when: do_wordpress and do_deployment and wp_theme_use_local_source
-  become_user: dpla
+  become_user: wordpress
   script: build_wordpress_local.sh
   tags:
     - web
 
 - name: Build Wordpress (remote)
   when: do_wordpress and do_deployment and not wp_theme_use_local_source
-  become_user: dpla
+  become_user: wordpress
   script: >-
       build_wordpress_remote.sh "{{ wp_branch_or_tag }}"
   tags:
@@ -26,19 +44,25 @@
 
 - name: Remove private key file
   when: do_wordpress and do_deployment and not wp_theme_use_local_source
-  file: path=/home/dpla/git_private_key state=absent
+  file: path=/home/wordpress/git_private_key state=absent
   tags:
     - web
 
 - name: Ensure existence of site root
-  file: path=/srv/www/wordpress state=directory owner=dpla group=dpla mode=0755
+  file:
+    path: /srv/www/wordpress
+    state: directory
+    owner: wordpress
+    group: wordpress
+    recurse: yes
+    mode: 0755
   when: do_wordpress and do_deployment
   tags:
     - web
 
 - name: Sync installation to site root
   script: sync_to_siteroot.sh
-  become_user: dpla
+  become_user: wordpress
   when: do_wordpress and do_deployment
   notify:
     - reload php5-fpm
@@ -56,7 +80,7 @@
 - name: Ensure state of Wordpress configuration file
   template: >
       src=wp-config.php.j2 dest=/srv/www/wordpress/wp-config.php
-      owner=dpla group=www-data mode=0640
+      owner=wordpress group=www-data mode=0640
   when: do_wordpress and do_deployment
   notify:
     - reload php5-fpm

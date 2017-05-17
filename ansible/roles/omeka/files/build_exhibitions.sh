@@ -10,7 +10,7 @@ echo "rsync home to /srv/www ..." >> $LOGFILE
     --exclude 'application/logs' \
     --exclude 'files' \
     --exclude 'plugins/Dropbox/files' \
-    /home/dpla/exhibitions/ /srv/www/exhibitions
+    /home/omeka/exhibitions/ /srv/www/exhibitions
 
 if [ $? -ne 0 ]; then
 	exit 1
@@ -18,6 +18,6 @@ fi
 
 echo "rsync exhibitions-assets ..." >> $LOGFILE
 /usr/bin/rsync -rIptolgC --delete --checksum --delay-updates \
-    /home/dpla/exhibitions-assets/ /srv/www/exhibitions/themes/dpla/exhibitions-assets
+    /home/omeka/exhibitions-assets/ /srv/www/exhibitions/themes/dpla/exhibitions-assets
 
 echo "done." >> $LOGFILE

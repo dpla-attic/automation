@@ -54,6 +54,14 @@
       src=unicorn.rb.j2 dest=/home/api/api/config/unicorn.rb
       owner=api group=api mode=0644
 
+# To use "Clean rbenv", define the variable `clean_rbenv', which is not defined
+# anywhere by default.
+- name: Clean rbenv
+  file:
+    path: /home/api/.rbenv
+    state: absent
+  when: clean_rbenv | default(false)
+
 - name: Make sure rbenv and bundler are current
   script: >
       ../../../files/install_ruby_tools.sh {{ api_rbenv_version }}

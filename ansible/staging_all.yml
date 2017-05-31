@@ -60,4 +60,8 @@
 
 - include: playbooks/api.yml level=staging
 
-- include: playbooks/ingestion.yml
+- name: Ingestion 1
+  hosts: ingestion
+  become: yes
+  roles:
+    - {role: ingestion, tags: ['ingestion']}

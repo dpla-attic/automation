@@ -13,9 +13,12 @@
   with_items: elasticsearch_apt_repos
 
 # Accept Oracle license
-- name: Accept Oracle license prior JDK installation
-  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections; echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections creates=/usr/lib/jvm/java-7-oracle
-  when: elasticsearch_install_java
+# - name: Accept Oracle license prior JDK installation
+#   shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections; echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections creates=/usr/lib/jvm/java-7-oracle
+#   when: elasticsearch_install_java
+
+- name: Remove Oracle JDK
+  apt: pkg=oracle-java7-installer state=absent purge=yes
 
 # Install Java
 - name: Install dependencies

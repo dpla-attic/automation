@@ -19,7 +19,9 @@
     has_instance_store: true
   when: >-
     not (ansible_ec2_instance_type | match("^t2") or
-         ansible_ec2_instance_type | match("^m4"))
+         ansible_ec2_instance_type | match("^m4") or
+         ansible_ec2_instance_type | match("^r4") or
+         ansible_ec2_instance_type | match("^c4"))
 
 - name: Ensure state of filesystem on instance store
   when: has_instance_store is defined

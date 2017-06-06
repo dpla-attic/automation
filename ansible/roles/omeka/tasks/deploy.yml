@@ -46,7 +46,13 @@
   become_user: omeka
 
 - name: Ensure exhibitions document root exists
-  file: path=/srv/www/exhibitions state=directory owner=omeka group=omeka mode=0755
+  file:
+    path: /srv/www/exhibitions
+    state: directory
+    owner: omeka
+    group: omeka
+    mode: 0755
+    recurse: yes
 
 - name: Build the exhibitions app
   script: build_exhibitions.sh

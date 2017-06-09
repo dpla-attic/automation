@@ -124,11 +124,16 @@
     - packages
 
 - name: Add admin accounts
-  user: name="{{ item.username }}" comment="{{ item.gecos }}" state=present
-        groups=admin,sudo shell=/bin/bash
+  user:
+    name: "{{ item.username }}"
+    comment: "{{ item.gecos }}"
+    state: present
+    groups: "admin,sudo"
+    shell: /bin/bash
   with_items: adminusers
   tags:
     - users
+    - mbtest
 
 - name: Assign SSH authorized keys
   authorized_key: user="{{ item.username }}" key="{{ item.ssh_authorized_key }}"

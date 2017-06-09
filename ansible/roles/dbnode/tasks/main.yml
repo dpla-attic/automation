@@ -90,6 +90,7 @@
 - name: Compile and install libicu48
   script: ../files/build_libicu48.sh
   when: dpkgquery.rc != 0
+  ignore_errors: ansible_check_mode
   tags:
     - packages
     - database

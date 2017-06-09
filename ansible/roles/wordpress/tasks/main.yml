@@ -70,9 +70,13 @@
     - web
 
 - name: Ensure state of uploads directory
-  file: >
-      path=/srv/www/wordpress/wp-content/uploads state=directory
-      owner=www-data group=www-data mode=0755
+  file:
+    path: /srv/www/wordpress/wp-content/uploads
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0755
+    recurse: yes
   when: do_wordpress and do_deployment
   tags:
     - web

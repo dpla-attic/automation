@@ -1,0 +1,39 @@
+---
+
+- name: Make sure that the "ingestion" user exists
+  user:
+    name: ingestion
+    comment: "DPLA ingestion user"
+    home: /home/ingestion
+    shell: /bin/bash
+    state: present
+
+- name: Ensure existence of /v1
+  file: path=/v1/ingestion state=directory
+
+- name: "Ensure existence, ownership, and permissions of /v1/ingestion"
+  file:
+    path: /v1/ingestion
+    state: directory
+    owner: ingestion
+    group: ingestion
+    recurse: yes
+
+- name: Ensure that Python dependencies are installed
+  # Most of these are necessary for building Python with pyenv, and g++ is
+  # included under the assumption that some module may need it
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - gcc
+    - g++
+    - build-essential
+    - libssl-dev
+    - zlib1g-dev
+    - libbz2-dev
+    - libreadline-dev
+    - libsqlite3-dev
+    - wget
+    - llvm

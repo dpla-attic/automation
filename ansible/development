@@ -44,6 +44,9 @@ dbnodes
 [thumbp:children]
 webapps
 
+[uv:children]
+webapps
+
 [development]
 loadbal
 dbnode1

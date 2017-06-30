@@ -1,0 +1,13 @@
+---
+
+- name: Gather inventory facts in case playbook is run standalone
+  hosts: all
+
+- name: Universal Viewer
+  hosts: uv
+  serial: 1
+  become: yes
+  vars:
+    do_deployment: yes
+  roles:
+    - { role: uv, tags: ['uv']}

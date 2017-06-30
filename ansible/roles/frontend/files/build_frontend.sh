@@ -48,6 +48,8 @@ if [ $? -ne 0 ]; then
 fi
 rbenv rehash
 
+echo "cleaning assets ..." >> $LOGFILE
+bundle exec rake assets:clean >> $LOGFILE 2>&1 || exit 1
 echo "precompiling assets ..." >> $LOGFILE
 bundle exec rake assets:precompile >> $LOGFILE 2>&1 || exit 1
 

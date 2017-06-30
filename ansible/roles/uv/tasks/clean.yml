@@ -1,0 +1,11 @@
+---
+
+- name: Remove directories
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /opt/uv/.nvm
+    - /opt/uv/.npm
+    - /opt/uv/universalviewer
+    - /opt/uv/src

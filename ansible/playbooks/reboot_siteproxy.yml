@@ -7,20 +7,32 @@
   tasks:
     - name: Gather ec2 facts
       ec2_facts:
-    - name: De-register instance from loadbalancer
-      local_action: ec2_elb
-      become: false
-      args:
-        instance_id: "{{ ansible_ec2_instance_id }}"
-        ec2_elbs: "{{ siteproxy_elb_name }}"
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-        aws_region: "{{ aws_region }}"
-        state: absent
-    - name: Wait for connections to drain
-      wait_for: >-
-          host="{{ inventory_hostname }}" port="80" state=drained timeout=60
-      ignore_errors: yes
+    # FIXME:
+    # We used to have tasks here to de-register the instance from the
+    # EC2 Classic Load Balancer and to wait for connections to drain. However,
+    # we've switched to AWS's Application Load Balancers and the ec2_elb module
+    # is no longer the right one for the task. We need the newer
+    # elb_target_group module, which is only available in Ansible 2.4+, but
+    # we're still stuck on Ansible 1.9. When we upgrade to Ansible 2.4+ we can
+    # add back some tasks to de-register the instance, and re-register it below.
+    # The good news is our ALBs seem to react well to the servers going down in
+    # sequence, and we have yet to observe any 502 Bad Gateway errors during
+    # reboots.
+    #
+    # - name: De-register instance from loadbalancer
+    #   local_action: ec2_elb
+    #   become: false
+    #   args:
+    #     instance_id: "{{ ansible_ec2_instance_id }}"
+    #     ec2_elbs: "{{ siteproxy_elb_name }}"
+    #     aws_access_key: "{{ aws_access_key }}"
+    #     aws_secret_key: "{{ aws_secret_key }}"
+    #     aws_region: "{{ aws_region }}"
+    #     state: absent
+    # - name: Wait for connections to drain
+    #   wait_for: >-
+    #       host="{{ inventory_hostname }}" port="80" state=drained timeout=60
+    #   ignore_errors: yes
     - name: Reboot
       command: /sbin/shutdown -r now
       async: 0
@@ -31,15 +43,15 @@
       local_action: >-
           wait_for host="{{ inventory_hostname }}"
           port="80" delay=60 timeout=600
-    - name: Register instance with loadbalancer again
-      become: false
-      local_action: ec2_elb
-      when: level == 'production' or level == 'staging'
-      become: false
-      args:
-        instance_id: "{{ ansible_ec2_instance_id }}"
-        ec2_elbs: "{{ siteproxy_elb_name }}"
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-        aws_region: "{{ aws_region }}"
-        state: present
+    # - name: Register instance with loadbalancer again
+    #   become: false
+    #   local_action: ec2_elb
+    #   when: level == 'production' or level == 'staging'
+    #   become: false
+    #   args:
+    #     instance_id: "{{ ansible_ec2_instance_id }}"
+    #     ec2_elbs: "{{ siteproxy_elb_name }}"
+    #     aws_access_key: "{{ aws_access_key }}"
+    #     aws_secret_key: "{{ aws_secret_key }}"
+    #     aws_region: "{{ aws_region }}"
+    #     state: present

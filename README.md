@@ -7,6 +7,10 @@ The intention of this project is to provide automated configuration management
 for production, development, and staging environments with the same set of
 files.
 
+You may follow our
+[`latest` repository branch](https://github.com/dpla/automation/tree/latest) for
+the latest stable release.
+
 ## Installation, VM setup:
 
 ### Prerequisites and Dependencies
@@ -169,6 +173,12 @@ $ ssh me@webapp1
 ```
 
 ## Development
+
+### Branching and Release Model
+
+Please see our
+[Branching And Release Model](https://digitalpubliclibraryofamerica.atlassian.net/wiki/display/TECH/Branching+and+Release+Model)
+wiki page.
 
 ### Application build directories
 

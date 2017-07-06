@@ -1,0 +1,149 @@
+---
+
+- name: Ensure Java 8 runtime and 'daemon' installations
+  # Java 8 is available on Ubuntu 16.04 LTS (xenial), not 14.04 LTS (trusty)
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - openjdk-8-jdk
+    - daemon
+
+- name: Ensure existence of 'jenkins' account
+  user:
+    name: jenkins
+    comment: "Jenkins application user"
+    home: /home/jenkins
+    shell: /bin/bash
+    state: present
+
+- name: Ensure state of /opt/jenkins
+  file:
+    path: /opt/jenkins
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Ensure state of jenkins-owned directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    recurse: yes
+  with_items:
+    - /opt/jenkins/jenkins_home
+    - /var/log/jenkins
+    - /var/run/jenkins
+    - /var/cache/jenkins
+
+- name: Gather information on the Jenkins WAR file
+  stat: path=/opt/jenkins/jenkins.war get_md5=yes
+  register: jenkins_war
+  changed_when: false
+
+# FIXME: When we upgrade to Ansible 2+ we can just use the SHA256 for both of
+# the checksums because the 'stat' module above will support it.
+- name: Download Jenkins WAR
+  get_url:
+    url: "http://mirrors.jenkins.io/war-stable/{{ jenkins_version }}/jenkins.war"
+    dest: /opt/jenkins/jenkins.war
+    sha256sum: "{{ jenkins_sha256 }}"
+    owner: root
+    group: root
+    mode: 0644
+  when: >-
+    not jenkins_war.stat.exists or jenkins_war.stat.md5 != '{{ jenkins_md5 }}'
+  notify: restart jenkins
+
+- name: Ensure state of /etc/default/jenkins default variables file
+  template:
+    src: etc_default_jenkins.j2
+    dest: /etc/default/jenkins
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart jenkins
+
+- name: Ensure state of Jenkins init script
+  copy:
+    src: etc_init.d_jenkins
+    dest: /etc/init.d/jenkins
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart jenkins
+
+- name: Ensure Jenkins init run levels
+  command: update-rc.d jenkins defaults
+
+- name: Ensure state of Jenkins logrotate configuration file
+  copy:
+    src: etc_logrotate.d_jenkins
+    dest: /etc/logrotate.d/jenkins
+    owner: root
+    group: root
+    mode: 0644
+
+# A first-time installation of Jenkins requires some administrator involvement
+# to set the initial admin account and password and select plugins.  That will
+# not be automated here.  Please follow the instructions in the Jenkins web
+# interface on port 8080 of the server.
+
+- name: Ensure that necessary build-related packages are installed
+  apt:
+    pkg: "{{ item }}"
+    update_cache: yes
+    state: present
+  with_items:
+    - git
+    - libreadline-dev
+    - libsqlite3-dev
+    - libssl-dev
+    - libbz2-dev
+    - make
+    - build-essential
+    - zlib1g-dev
+    - wget
+    - curl
+    - llvm
+    - libncurses5-dev
+    - libncursesw5-dev
+    - xz-utils
+    - tk-dev
+
+- name: Ensure that pyenv is installed for 'jenkins' account
+  # The 'jenkins' user is created above, and we prefer to install Python
+  # packages like Ansible with pyenv.
+  become_user: jenkins
+  script: >-
+    ../../../files/install_python_tools.sh {{ jenkins_python_version }}
+
+- name: Ensure that the latest version of the AWS CLI is installed
+  become_user: jenkins
+  script: >-
+    ../../../files/install_aws_cli.sh {{ jenkins_python_version }}
+
+- name: Ensure state of AWS CLI configuration directory
+  file:
+    path: /home/jenkins/.aws
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0750
+
+- name: Ensure state of AWS CLI configuration file
+  template:
+    src: aws_config.j2
+    dest: /home/jenkins/.aws/config
+    owner: jenkins
+    group: jenkins
+    mode: 0600
+
+- debug:
+    msg: >-
+      You need to configure your own credentials in
+      /home/jenkins/.aws/credentials before running a build, if the host is not
+      an EC2 instance with an IAM Instance Profile.

@@ -7,7 +7,7 @@
   service: name=sysstat state=restarted
 
 - name: restart munin node
-  service: name=munin-node state=reloaded
+  service: name=munin-node state=restarted
 
 # The procps service is invoked like this to apply kernel perameters with
 # sysctl.

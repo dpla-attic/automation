@@ -123,6 +123,12 @@
   tags:
     - packages
 
+- name: Ensure that 'admin' group exists
+  # It doesn't exist on the bento/ubuntu-16.04 Vagrant box.
+  group:
+    name: admin
+    state: present
+
 - name: Add admin accounts
   user:
     name: "{{ item.username }}"

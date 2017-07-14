@@ -101,6 +101,7 @@
       src={{ github_private_key_path | default("~/.ssh/id_rsa") }}
       dest=/home/pss/git_private_key
       owner=pss group=pss mode=0600
+  when: pss_include_branding
 
 - name: Stop Unicorn (gracefully)
   # Unicorn is stopped completely, and later restarted, because we assume that

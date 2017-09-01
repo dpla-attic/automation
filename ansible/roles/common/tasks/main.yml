@@ -39,6 +39,7 @@
 - name: Ensure correct time zone
   shell: >
       echo {{ iana_timezone }} > /etc/timezone; dpkg-reconfigure --frontend noninteractive tzdata
+  changed_when: false
   tags:
     - packages
     - time

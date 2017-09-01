@@ -8,29 +8,8 @@
 # Instances that don't have Instance Store volumes will have the /swap
 # directory created on the root volume.
 
-- name: Ensure state of instance store mount point
+- name: Ensure state of /swap directory
   file: path=/swap state=directory owner=root group=root mode=0755
-
-- name: Unmount instance store volume that EC2 automatically mounts
-  mount: name=/mnt state=absent src=/dev/xvdb fstype=ext3
-
-- name: Determine whether the instance has an Instance Store volume
-  set_fact:
-    has_instance_store: true
-  when: >-
-    not (ansible_ec2_instance_type | match("^t2") or
-         ansible_ec2_instance_type | match("^m4") or
-         ansible_ec2_instance_type | match("^r4") or
-         ansible_ec2_instance_type | match("^c4"))
-
-- name: Ensure state of filesystem on instance store
-  when: has_instance_store is defined
-  filesystem: fstype=ext4 dev=/dev/xvdb force=yes
-
-- name: Make sure that /swap is mounted and in fstab
-  when: has_instance_store is defined
-  # "state=mounted" creates mountpoint, if necessary
-  mount: name=/swap src=/dev/xvdb fstype=ext4 state=mounted
 
 - name: Check existence of swap file
   stat: path=/swap/swapfile

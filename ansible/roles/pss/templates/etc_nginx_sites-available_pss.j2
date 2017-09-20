@@ -10,7 +10,7 @@ server {
     server_name {{ pss_hostname }};
 
     # To accommodate large file uploads:
-    client_max_body_size 50m;
+    client_max_body_size 500m;
 
     location /primary-source-sets {
         root /srv/www/pss/public;

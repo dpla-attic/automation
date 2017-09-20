@@ -6,7 +6,7 @@ server {
 
     # This large maximum request body size is assumed to be necessary for
     # media file uploads.  Also see the siteproxy configuration.
-    client_max_body_size 50m;
+    client_max_body_size 500m;
 
     location ~ ^/$ {
         return 301 http://$host/exhibitions/;

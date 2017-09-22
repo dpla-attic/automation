@@ -8,7 +8,7 @@
 NVM_VERSION=$1
 nvm_tag="v$1"
 
-log=/tmp/install_nvm.log
+log=/tmp/install_nvm_$LOGNAME.log
 echo Starting > $log
 
 cd $HOME

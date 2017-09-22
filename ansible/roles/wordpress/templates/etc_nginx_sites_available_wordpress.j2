@@ -10,7 +10,7 @@ server {
     # Maximum client request body size, which affects uploads.
     # Also see the same setting as defined upstream in the proxy server's
     # configuration.
-    client_max_body_size 50m;
+    client_max_body_size 500m;
 
     access_log /var/log/nginx/wordpress-access.log;
     error_log /var/log/nginx/wordpress-error.log;

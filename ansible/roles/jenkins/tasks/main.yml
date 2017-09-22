@@ -142,6 +142,14 @@
     group: jenkins
     mode: 0600
 
+- name: Ensure state of s3cmd configuration file
+  template:
+    src: dot.s3cmd.j2
+    dest: /home/jenkins/.s3cmd
+    owner: jenkins
+    group: jenkins
+    mode: 0600
+
 - debug:
     msg: >-
       You need to configure your own credentials in

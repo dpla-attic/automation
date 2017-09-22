@@ -38,3 +38,4 @@ else
 fi
 
 pip install -U awscli
+pip install -U s3cmd

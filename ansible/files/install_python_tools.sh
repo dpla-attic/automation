@@ -19,13 +19,13 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 if [ -d $HOME/.pyenv/versions/$USE_VERSION ]; then
-    export PYENV_VERSION=$USE_VERSION
+    pyenv global $USE_VERSION
 else
     pyenv install $USE_VERSION
     if [ $? -ne 0 ]; then
         exit 1
     fi
-    export PYENV_VERSION=$USE_VERSION
+    pyenv global $USE_VERSION
 fi
 
 pyenv rehash

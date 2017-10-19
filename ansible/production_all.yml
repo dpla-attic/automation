@@ -54,7 +54,6 @@
   become: yes
   roles:
     - {role: frontend, tags: ['frontend']}
-    - {role: uv, tags: ['uv']}
     - {role: thumbp, tags: ['thumbp']}
   vars:
     level: production

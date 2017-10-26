@@ -22,12 +22,11 @@
   vars:
     level: development
 
-- name: Content-management and exhibitions services
+- name: Webapps
   hosts: webapps
   become: yes
   roles:
     - site_proxy
-    - omeka
     - pss
   vars:
     level: development

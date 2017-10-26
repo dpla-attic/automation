@@ -66,7 +66,6 @@ default_http_scheme: http
 api_port: 8080
 # *_app_port is the port the *backend app server* runs on
 api_app_port: 8003
-exhibitions_app_port: 8000
 frontend_app_port: 8002
 pss_app_port: 8006
 # thumbp_port is not exposed to the outside world. It's just internal, though

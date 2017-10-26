@@ -38,26 +38,11 @@
   tags:
     - mysql
 
-- name: Ensure existence of MySQL databases
-  mysql_db: >
-      name={{ item }} state=present encoding=utf8
-  with_items:
-    - dpla_omeka
-    - dpla_wp
-  tags:
-    - mysql
-
 - name: Ensure existence of MySQL user accounts
   mysql_user: name={{ item['name']}}
               password={{ item['password']}}
               state=present
   with_items:  mysql_users
-  tags:
-    - mysql
-    - mysql_user
-
-- name: Ensure privileges for Omeka database user
-  mysql_user: name=dpla_omeka priv=dpla_omeka.*:ALL
   tags:
     - mysql
     - mysql_user

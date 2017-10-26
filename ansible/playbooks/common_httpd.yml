@@ -12,7 +12,6 @@
     - api
     - frontend
     - site_proxies
-    - exhibitions
   become: yes
   roles:
     - common_web

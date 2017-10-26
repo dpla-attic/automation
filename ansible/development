@@ -17,9 +17,6 @@ webapps
 [site_proxies:children]
 webapps
 
-[exhibitions:children]
-webapps
-
 [cms:children]
 webapps
 

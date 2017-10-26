@@ -3,6 +3,5 @@
 mysql_root_password: changeme
 mysql_users:
   - {name: "dpla_omeka", password: "changeme"}
-  - {name: "dpla_wordpress", password: "changeme"}
 mysql_backup_keep_days: 30
 mysql_backups_basedir: /backups

@@ -17,9 +17,6 @@ webapps
 [site_proxies:children]
 webapps
 
-[wordpress:children]
-webapps
-
 [exhibitions:children]
 webapps
 

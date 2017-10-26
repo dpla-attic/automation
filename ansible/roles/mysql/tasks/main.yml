@@ -62,12 +62,6 @@
     - mysql
     - mysql_user
 
-- name: Ensure privileges for Wordpress database user
-  mysql_user: name=dpla_wordpress priv=dpla_wp.*:ALL
-  tags:
-    - mysql
-    - mysql_user
-
 - name: Make sure that the backups directory exists
   file: >-
     path="{{ mysql_backups_basedir }}" state=directory owner=root group=root mode=0755

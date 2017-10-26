@@ -40,7 +40,6 @@
   roles:
     - {role: common_php, tags: ['common_php', 'cms']}
     - {role: omeka, tags: ['omeka', 'cms']}
-    - {role: wordpress, tags: ['wordpress', 'cms']}
     - {role: pss, tags: ['pss', 'cms']}
   vars:
     level: production

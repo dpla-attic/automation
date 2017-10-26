@@ -28,7 +28,6 @@
   roles:
     - site_proxy
     - omeka
-    - wordpress
     - pss
   vars:
     level: development

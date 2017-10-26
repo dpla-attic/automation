@@ -12,7 +12,6 @@
     - api
     - frontend
     - site_proxies
-    - wordpress
     - exhibitions
   become: yes
   roles:

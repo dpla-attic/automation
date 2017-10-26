@@ -10,7 +10,6 @@
 - name: Common httpd configuration
   hosts:
     - api
-    - frontend
     - site_proxies
   become: yes
   roles:

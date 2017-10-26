@@ -26,16 +26,6 @@
   roles:
     - site_proxy
     - pss
-  vars:
-    level: development
-    do_deployment: true
-    skip_configuration: false
-
-- name: Frontend (portal) site
-  hosts: webapps
-  become: yes
-  roles:
-    - frontend
     - { role: thumbp, tags: ['thumbp']}
   vars:
     level: development

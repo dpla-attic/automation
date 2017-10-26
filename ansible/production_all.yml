@@ -44,12 +44,11 @@
     do_deployment: yes
 
 
-- name: Frontend (portal) site
-  hosts: frontend
+- name: Thumbnail proxy
+  hosts: thumbp
   serial: 1
   become: yes
   roles:
-    - {role: frontend, tags: ['frontend']}
     - {role: thumbp, tags: ['thumbp']}
   vars:
     level: production

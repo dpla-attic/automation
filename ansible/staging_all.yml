@@ -43,12 +43,11 @@
     skip_configuration: no
     do_deployment: yes
 
-- name: Frontend (portal) site
-  hosts: frontend
+- name: Thumbnail proxy
+  hosts: thumbp
   become: yes
   serial: 1
   roles:
-    - {role: frontend, tags: ['frontend']}
     - {role: thumbp, tags: ['thumbp']}
   vars:
     level: staging

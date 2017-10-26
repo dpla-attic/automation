@@ -29,8 +29,6 @@ bigcouch_admin_name: changeme
 bigcouch_admin_password: changeme
 
 postgresql_user: {name: "dpla", password: "changeme"}
-mysql_root_password: changeme
-mysql_users:
 
 # You should set these manually in your environment.
 # slack_channel: "#channel"

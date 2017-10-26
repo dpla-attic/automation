@@ -23,8 +23,6 @@
 
 - include: playbooks/postgresql.yml level=production
 
-- include: playbooks/mysql.yml level=production
-
 - include: playbooks/memcached.yml level=production
 
 - include: playbooks/common_httpd.yml level=production

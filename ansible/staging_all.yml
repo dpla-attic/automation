@@ -23,8 +23,6 @@
 
 - include: playbooks/postgresql.yml level=staging
 
-- include: playbooks/mysql.yml level=staging
-
 - include: playbooks/memcached.yml level=staging
 
 - include: playbooks/common_httpd.yml level=staging

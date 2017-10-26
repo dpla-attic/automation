@@ -2,8 +2,6 @@
 
 - include: postgresql.yml level=development
 
-- include: mysql.yml level=development
-
 - include: memcached.yml level=development
 
 - name: Common httpd configuration

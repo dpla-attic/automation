@@ -20,9 +20,6 @@ webapps
 [cms:children]
 webapps
 
-[mysql_dbs:children]
-webapps
-
 [api:children]
 webapps
 

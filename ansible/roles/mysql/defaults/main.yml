@@ -1,6 +1,0 @@
----
-
-mysql_root_password: changeme
-mysql_users:
-mysql_backup_keep_days: 30
-mysql_backups_basedir: /backups

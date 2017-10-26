@@ -97,6 +97,18 @@ limit_req_zone  $addr_to_limit zone=defaultreqzone:{{ siteproxy_nginx_req_zone_s
 limit_conn_log_level {{ siteproxy_nginx_limit_conn_log_level }};
 limit_req_log_level {{ siteproxy_nginx_limit_req_log_level }};
 
+{% if groups.pss is defined %}
+# Primary Source Sets servers
+upstream dpla_pss {
+{% if all_in_one_hosts %}
+    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ pss_app_port }} fail_timeout=120s;  # {{ inventory_hostname }}
+{% else %}
+{% for h in groups.pss %}
+    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ pss_app_port }} fail_timeout=120s;  # {{ h }}
+{% endfor %}
+{% endif %}
+}
+{% endif %}
 
 {% if groups.thumbp is defined %}
 # Thumbnail proxy servers
@@ -172,6 +184,19 @@ server {
         add_header X-Cache-Status $upstream_cache_status;
         proxy_pass http://dpla_thumbp;
     }
+
+{% if groups.pss is defined %}
+    location /pssapi/ {
+
+        rewrite /pssapi/(.*\.json) /primary-source-sets/$1 break;
+
+        proxy_pass http://dpla_pss;
+        # Up to 10 simultaneous page requests per IP
+        limit_conn defaultconnzone {{ siteproxy_nginx_default_max_conn }};
+        # Up to 20 requests / sec for pages.
+        limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
+    }
+{% endif %}
 
     location /wiki {
         return 301 http://web.archive.org/web/20160316200044/http://dp.la/wiki/Main_Page;

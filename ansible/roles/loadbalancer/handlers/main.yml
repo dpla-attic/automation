@@ -4,4 +4,4 @@
   service: name=haproxy state=restarted
 
 - name: restart rsyslog
-  service: name=rsyslog state=reloaded
+  service: name=rsyslog state=restarted

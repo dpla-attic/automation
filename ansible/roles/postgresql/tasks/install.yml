@@ -34,3 +34,14 @@
   tags:
     - postgresql
     - packages
+
+# The PGDG package does not automatically enable Postgresql for startup on
+# boot on Ubuntu 16, where systemctl is used.
+- name: Check whether this system uses systemctl
+  stat: path=/bin/systemctl
+  register: systemctl_binary
+
+- name: Enable PostgreSQL on boot
+  command: systemctl enable postgresql
+  when: systemctl_binary.stat.exists
+  changed_when: false

@@ -66,6 +66,7 @@
     - debian-goodies
     - python-apt
     - apt-show-versions
+    - aptitude
   tags:
     - packages
     - munin

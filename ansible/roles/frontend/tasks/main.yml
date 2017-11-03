@@ -38,7 +38,9 @@
 - name: Ensure state of ImageMagick policy.xml file
   copy:
     src: ../../../files/imagemagick_policy.xml
-    dest: /etc/ImageMagick/policy.xml
+    # imagemagick_policy_filename is for running on Ubuntu 16.04, where the
+    # file location is different.
+    dest: "{{ imagemagick_policy_filename | default('/etc/ImageMagick/policy.xml') }}"
     owner: root
     group: root
     mode: 0644

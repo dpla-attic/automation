@@ -161,14 +161,8 @@ server {
             alias /srv/www/robots.txt;
         }
 
-        # TODO: update these redirects
-        rewrite ^/reps /info/get-involved/reps last;
-        rewrite ^/about/map /info/map last;
-        rewrite ^/about/schema /info/schema last;
-        rewrite ^/platform /info/developers/codex last;
-        rewrite ^/education /info/education last;
         {% if sitemap_host is defined %}
-        rewrite ^/sitemap.xml$ http://{{ sitemap_host }}/all_item_urls.xml last;
+        rewrite ^/sitemap.xml$ http://{{ sitemap_host }}/all_item_urls.xml permanent;
         {% endif %}
 
     }

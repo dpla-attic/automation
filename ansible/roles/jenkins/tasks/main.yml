@@ -117,14 +117,20 @@
 - name: Ensure that pyenv is installed for 'jenkins' account
   # The 'jenkins' user is created above, and we prefer to install Python
   # packages like Ansible with pyenv.
+  # There are Ingestion 1 and Ingestion 3 tools that require different versions
+  # of Python.
   become_user: jenkins
   script: >-
-    ../../../files/install_python_tools.sh {{ jenkins_python_version }}
+    ../../../files/install_python_tools.sh {{ item }}
+  with_items: jenkins_python_versions
+  tags:
+    - python
 
 - name: Ensure that the latest version of the AWS CLI is installed
   become_user: jenkins
   script: >-
-    ../../../files/install_aws_cli.sh {{ jenkins_python_version }}
+    ../../../files/install_aws_cli.sh {{ item }}
+  with_items: jenkins_python_versions
 
 - name: Ensure state of AWS CLI configuration directory
   file:

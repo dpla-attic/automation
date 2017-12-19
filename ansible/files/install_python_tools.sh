@@ -12,6 +12,10 @@ if [ ! -d $HOME/.pyenv ]; then
     if [ $? -ne 0 ]; then
         exit 1
     fi
+else
+    cd $HOME/.pyenv
+    git pull
+    cd $HOME
 fi
 
 export PYENV_ROOT="$HOME/.pyenv"

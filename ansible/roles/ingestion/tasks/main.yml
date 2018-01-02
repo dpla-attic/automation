@@ -37,3 +37,37 @@
     - libsqlite3-dev
     - wget
     - llvm
+
+- name: Ensure that pyenv is installed for 'ingestion' account
+  become_user: ingestion
+  script: >-
+    ../../../files/install_python_tools.sh 2.7.13
+
+- name: Ensure that the latest version of the AWS CLI is installed
+  become_user: ingestion
+  script: >-
+    ../../../files/install_aws_cli.sh 2.7.13
+
+- name: Ensure state of AWS CLI configuration directory
+  file:
+    path: /home/ingestion/.aws
+    state: directory
+    owner: ingestion
+    group: ingestion
+    mode: 0750
+
+- name: Ensure state of AWS CLI configuration file
+  template:
+    src: ../../../templates/aws_config.j2
+    dest: /home/ingestion/.aws/config
+    owner: ingestion
+    group: ingestion
+    mode: 0600
+
+- name: Ensure state of s3cmd configuration file
+  copy:
+    src: ../../../files/dot.s3cmd
+    dest: /home/ingestion/.s3cmd
+    owner: ingestion
+    group: ingestion
+    mode: 0600

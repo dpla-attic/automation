@@ -12,4 +12,3 @@ jenkins_md5: 9e14790b2345bf673abb24224eee4d2c
 jenkins_python_versions:
     - 2.7.13
     - 3.6.3
-jenkins_aws_region: us-east-1

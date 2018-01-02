@@ -142,7 +142,7 @@
 
 - name: Ensure state of AWS CLI configuration file
   template:
-    src: aws_config.j2
+    src: ../../../templates/aws_config.j2
     dest: /home/jenkins/.aws/config
     owner: jenkins
     group: jenkins

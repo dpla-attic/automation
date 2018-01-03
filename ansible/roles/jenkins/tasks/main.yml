@@ -142,15 +142,15 @@
 
 - name: Ensure state of AWS CLI configuration file
   template:
-    src: aws_config.j2
+    src: ../../../templates/aws_config.j2
     dest: /home/jenkins/.aws/config
     owner: jenkins
     group: jenkins
     mode: 0600
 
 - name: Ensure state of s3cmd configuration file
-  template:
-    src: dot.s3cmd.j2
+  copy:
+    src: ../../../files/dot.s3cmd
     dest: /home/jenkins/.s3cmd
     owner: jenkins
     group: jenkins

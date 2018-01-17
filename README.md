@@ -70,9 +70,9 @@ $ vagrant box add ubuntu/trusty64
 ```
 $ cd /path/to/automation/ansible  # Replace with your actual path
 $ vagrant up
-$ ansible-playbook -i development -u vagrant --private-key=$HOME/.vagrant.d/insecure_private_key playbooks/package_upgrade.yml dev_all.yml -e 'initial_run=true'
+$ ansible-playbook -i development -u vagrant --private-key=$HOME/.vagrant.d/insecure_private_key playbooks/package_upgrade.yml dev_all.yml
 $ vagrant reload
-$ ansible-playbook -i development -u vagrant --private-key=$HOME/.vagrant.d/insecure_private_key playbooks/init_index_and_repos.yml -e "level=development create_test_account=true"
+$ ansible-playbook -i development -u vagrant --private-key=$HOME/.vagrant.d/insecure_private_key playbooks/init_repos.yml -e "level=development create_test_account=true"
 ```
 
 The various applications will be online at:

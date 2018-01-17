@@ -1,4 +1,6 @@
 
+ansible_python_interpreter: /usr/bin/python2.7
+
 adminusers:
     - username: alice
       gecos: "Alice Ersatz"
@@ -83,7 +85,7 @@ all_in_one_hosts: no
 # Role-specific vars
 
 # The following variable appears here to cause it to resolve in
-# `playbooks/init_index_and_repos.yml`.  It should either be removed when we
+# `playbooks/init_repos.yml`.  It should either be removed when we
 # get rid of the legacy system, or the playbook's tasks could be incorporated
 # into the api role's tasks files so that the value defined in the role's
 # variables is inherited.

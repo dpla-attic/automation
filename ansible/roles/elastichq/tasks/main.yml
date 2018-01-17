@@ -1,0 +1,59 @@
+---
+
+- name: Ensure existence of 'elastichq' account
+  user:
+    name: elastichq
+    comment: "ElasticHQ application user"
+    home: /opt/elastichq
+    shell: /bin/bash
+    state: present
+
+- name: Ensure that Python and other dependencies are installed
+  # Most of these are necessary for building Python with pyenv, and g++ is
+  # included under the assumption that some module may need it
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - gcc
+    - g++
+    - build-essential
+    - libssl-dev
+    - zlib1g-dev
+    - libbz2-dev
+    - libreadline-dev
+    - libsqlite3-dev
+    - wget
+    - llvm
+    - daemon
+
+- name: Ensure that pyenv is installed for 'elastichq' account
+  become_user: elastichq
+  script: >-
+    ../../../files/install_python_tools.sh 3.6.3
+
+- name: Check for installation of ElasticHQ
+  stat: path=/opt/elastichq/elasticsearch-HQ
+  register: installation_dir
+  changed_when: false
+
+- name: Install ElasticHQ
+  become_user: elastichq
+  script: install-elastichq.sh
+  notify: restart elastichq
+  when: not installation_dir.stat.exists
+
+- name: Ensure state of init script
+  template:
+    src: etc_init.d_elastichq.j2
+    dest: /etc/init.d/elastichq
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart elastichq
+
+- name: Ensure elastichq init run levels
+  command: update-rc.d elastichq defaults
+
+

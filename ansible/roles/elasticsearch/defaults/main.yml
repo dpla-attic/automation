@@ -1,31 +1,12 @@
 ---
-# Elasticsearch Ansible Variables
 
-elasticsearch_user: elasticsearch
-elasticsearch_group: elasticsearch
-elasticsearch_download_url: https://download.elasticsearch.org/elasticsearch/elasticsearch
-elasticsearch_version: 0.90.5
-elasticsearch_apt_repos:
-  - 'ppa:webupd8team/java'
-elasticsearch_apt_java_package: openjdk-7-jdk
-elasticsearch_apt_dependencies:
-  - htop
-  - ntp
-  - unzip
-elasticsearch_max_open_files: 65535
-elasticsearch_home_dir: /usr/share/elasticsearch
-elasticsearch_plugin_dir: /usr/share/elasticsearch/plugins
-elasticsearch_log_dir: /var/log/elasticsearch
 elasticsearch_data_dir: /var/lib/elasticsearch
-elasticsearch_work_dir: /tmp/elasticsearch
-elasticsearch_conf_dir: /etc/elasticsearch
-
-# Non-Elasticsearch Defaults
-elasticsearch_apt_cache_valid_time: 300 # seconds between "apt-get update" calls.
-elasticsearch_install_java: "true"
-
+elasticsearch_log_dir: /var/log/elasticsearch
 elasticsearch_heap_size: 400m
 
-# For special cases where you have an inventory where multiple hosts with the
-# elasticsearch role on them want independent clusters.
-elasticsearch_cluster_name_uses_hostname: no
+# You should define elasticsearch_cluster_name depending on your environment,
+# ideally in a group_vars file.
+# The cluster name will default to "elasticsearch" if it's not set by this
+# variable.
+#
+# elasticsearch_cluster_name: dpla

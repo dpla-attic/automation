@@ -1,13 +1,5 @@
 ---
 
-- hosts:
-    - elasticsearch[0]
-  tasks:
-    - name: Turn off shard replica allocation
-      become: false
-      local_action: >-
-          script ../files/set-allocation.sh off "{{ es_cluster_loadbal }}"
-
 - name: Reboot search instances
   hosts:
     - elasticsearch
@@ -51,11 +43,3 @@
         aws_secret_key: "{{ aws_secret_key }}"
         aws_region: "{{ aws_region }}"
         state: present
-
-- hosts:
-    - elasticsearch[0]
-  tasks:
-    - name: Turn shard replica allocation back on
-      become: false
-      local_action: >-
-          script ../files/set-allocation.sh on "{{ es_cluster_loadbal }}"

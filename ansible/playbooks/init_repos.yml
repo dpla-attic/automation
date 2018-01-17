@@ -16,7 +16,7 @@
 # then run an ingest with other ingestion tools.
 
 # Example invocation:
-# $ ansible-playbook -u mb -i development playbooks/init_index_and_repos.yml \
+# $ ansible-playbook -u mb -i development playbooks/init_repos.yml \
 #   --extra-vars "level=development create_test_account=true"
 
 
@@ -53,11 +53,6 @@
     - name: Create api key database (with its design doc)
       script: >
           ../files/create_api_key_database.sh {{ api_rbenv_version }}
-      become_user: api
-
-    - name: Delete any undeployed indices
-      script: >
-          ../files/delete_undeployed_indices.sh {{ api_rbenv_version }}
       become_user: api
 
     - name: Create test API user (optional)

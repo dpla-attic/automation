@@ -1,5 +1,0 @@
----
-
-reason: We're performing some backend maintenance; back in a minute!
-response_code: 503
-retry_after: 60

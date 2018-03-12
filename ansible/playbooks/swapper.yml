@@ -1,7 +1,7 @@
 ---
 
 
-- hosts: all
+- hosts: ec2_swapper
   become: yes
   gather_facts: yes
   roles:

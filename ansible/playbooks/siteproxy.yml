@@ -15,7 +15,7 @@
   become: yes
   serial: 1
   roles:
-    - site_proxy
+    - {role: site_proxy, tags: ['site_proxy']}
   pre_tasks:
     - name: Gather ec2 facts
       ec2_facts:

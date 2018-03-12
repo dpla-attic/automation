@@ -16,7 +16,6 @@
   tags:
     - web
     - nginx
-    - site_proxy
 
 - name: Ensure existence of proxy temp directory
   file: >
@@ -26,7 +25,6 @@
   tags:
     - web
     - nginx
-    - site_proxy
 
 - name: Ensure state of Nginx site config file
   template: >
@@ -37,7 +35,6 @@
   tags:
     - web
     - nginx
-    - site_proxy
 
 - name: Symlink Nginx site config file
   file: >
@@ -48,7 +45,6 @@
   tags:
     - web
     - nginx
-    - site_proxy
 
 - name: Ensure state of robots.txt
   template: >-
@@ -57,7 +53,6 @@
       owner=root group=root mode=0644
   tags:
     - web
-    - site_proxy
 
 - name: Make sure the 503 error page is current
   template: >-
@@ -66,4 +61,3 @@
     owner=root group=root mode=0644
   tags:
     - web
-    - site_proxy

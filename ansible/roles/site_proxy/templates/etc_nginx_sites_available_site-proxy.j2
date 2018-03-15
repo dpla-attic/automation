@@ -190,6 +190,10 @@ server {
         # Up to 20 requests / sec for pages.
         limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
     }
+
+    location /primary-source-sets/ {
+        proxy_pass http://dpla_pss;
+    }
 {% endif %}
 
     location /wiki {

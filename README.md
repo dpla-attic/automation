@@ -83,6 +83,8 @@ The various applications will be online at:
 * http://local.dp.la:8080/v2/items (the API)
 * http://local.dp.la:5984/_utils/ (BigCouch admin, for API key database)
 * http://local.dp.la/pssapi/ (Primary Source Sets API)
+* https://local.dp.la/primary-source-sets/admins/sign_in (Primary Source Sets
+  admin. This is not served on the production site.)
 * http://local.dp.la/thumbp/<item ID> (The thumbnail proxy)
 * http://local.dp.la:9201/ (Elasticsearch API)
 * http://webapp1:8008/munin/  (Resource monitoring graphs, after they've had

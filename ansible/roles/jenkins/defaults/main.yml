@@ -12,3 +12,7 @@ jenkins_md5: 9e14790b2345bf673abb24224eee4d2c
 jenkins_python_versions:
     - 2.7.13
     - 3.6.3
+# jenkins_yarn_version must match what is specified in
+# https://github.com/dpla/dpla-frontend/blob/master/README.md
+jenkins_yarn_version: 1.5.1
+jenkins_nvm_version: 0.33.4

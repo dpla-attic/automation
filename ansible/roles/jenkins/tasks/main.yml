@@ -156,6 +156,23 @@
     group: jenkins
     mode: 0600
 
+- name: Ensure that the correct version of Yarn is installed
+  # For Node.js package management in building dpla-frontend
+  become_user: jenkins
+  shell: >-
+    curl -o- -L https://yarnpkg.com/install.sh |
+    bash -s -- --version {{ jenkins_yarn_version }}
+  tags:
+    - yarn
+
+- name: Ensure that NVM is installed
+  become_user: jenkins
+  script: "../../../files/install_nvm.sh {{ jenkins_nvm_version }}"
+  register: script_result
+  changed_when: "'Success: changed' in script_result.stdout"
+  tags:
+    - nvm
+
 - debug:
     msg: >-
       You need to configure your own credentials in

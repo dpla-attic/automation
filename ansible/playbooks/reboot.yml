@@ -35,6 +35,4 @@
 
 - include: reboot_api.yml
 
-- include: reboot_frontend.yml
-
 - include: reboot_siteproxy.yml

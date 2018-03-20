@@ -77,7 +77,6 @@
       template=template0
   become_user: postgres
   with_items:
-    - dpla_portal
     - api
     - pss
   tags:
@@ -93,7 +92,6 @@
       privs=ALL
   become_user: postgres
   with_items:
-    - dpla_portal
     - api
     - pss
   tags:

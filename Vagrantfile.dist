@@ -13,28 +13,27 @@
 
 VAGRANTFILE_API_VERSION = "2"
 
-dbnodes = {
-	'dbnode1' => '192.168.50.4',
-	'dbnode2' => '192.168.50.5'
-}
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Use the default insecure_private_key so ansible doesn't need to 
     # know about all the generated ones.
     config.ssh.insert_key = false
 
-    # All boxes are ubuntu/trusty64, which is Ubuntu 14.04 LTS
+    # BigCouch (Ubuntu 14.04)
+    config.vm.define :dbnode1 do |dbnode1|
+        dbnode1.vm.box = "ubuntu/trusty64"
+        dbnode1.vm.network :private_network, ip: "192.168.50.4"
+        dbnode1.vm.provider "virtualbox" do |vb|
+            vb.memory = 512
+        end
+    end
 
-    # BigCouch and ElasticSearch servers.
-    # Necessary in all cases.
-    dbnodes.keys.each do |hostname|
-	    config.vm.define hostname do |dbnode|
-	        dbnode.vm.box = "ubuntu/trusty64"
-	        dbnode.vm.network :private_network, ip: dbnodes[hostname]
-	        dbnode.vm.provider "virtualbox" do |vb|
-	            vb.memory = 819
-	        end
-	    end
+    # Elasticsearch (Ubuntu 16.04)
+    config.vm.define :es do |es|
+        es.vm.box = "bento/ubuntu-16.04"
+        es.vm.network :private_network, ip: "192.168.50.50"
+        es.vm.provider "virtualbox" do |vb|
+            vb.memory = 1024
+        end
     end
 
     # Loadbalancer for development.
@@ -55,16 +54,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         webapp.vm.box = "ubuntu/trusty64"
         webapp.vm.network :private_network, ip: "192.168.50.6"
         webapp.vm.provider "virtualbox" do |vb|
-            vb.memory = 1228
+            vb.memory = 1536
         end
-        #
-        # *** EDIT THESE FOR LOCAL DEVELOPMENT ***
-        # Change the path to the synced local directory, if necessary,
-        # but don't modify the mount point.
-        # webapp.vm.synced_folder "../frontend", "/frontend_dev"
+        # EDIT THESE FOR LOCAL DEPLOYMENT
         # webapp.vm.synced_folder "../platform", "/api_dev"
-        # webapp.vm.synced_folder "../frontend-wp", "/wordpress_dev"
-        # webapp.vm.synced_folder "../exhibitions", "/exhibitions_dev"
         # webapp.vm.synced_folder "../primary-source-sets", "/pss_dev"
         # webapp.vm.synced_folder "../thumbp", "/thumbp"
     end

@@ -25,11 +25,6 @@
   become: yes
   tasks:
 
-    - name: Delete any existing river
-      script: >
-          ../files/delete_river.sh {{ api_rbenv_version }}
-      become_user: api
-
     - name: Drop existing repositories
       local_action: uri
       become: no
@@ -41,34 +36,23 @@
           force_basic_auth: yes
           status_code: "200,404"
       with_items:
-        - dpla
         - dashboard
-        - bulk_download
         - dpla_api_auth
 
-    - name: Create new repositories (except dpla_api_auth)
+    - name: Create new dashboard repository (still needed by Ingestion 1)
       local_action: uri
       become: no
       args:
-          url: "http://{{ bigcouch_cluster_loadbal }}:5984/{{ item }}"
+          url: "http://{{ bigcouch_cluster_loadbal }}:5984/dashboard"
           method: PUT
           user: "{{ bigcouch_admin_name }}"
           password: "{{ bigcouch_admin_password}}"
           force_basic_auth: yes
           status_code: "201"
-      with_items:
-        - dpla
-        - dashboard
-        - bulk_download
 
     - name: Create api key database (with its design doc)
       script: >
           ../files/create_api_key_database.sh {{ api_rbenv_version }}
-      become_user: api
-
-    - name: Create new index and river
-      script: >
-          ../files/create_index_and_river.sh {{ api_rbenv_version }}
       become_user: api
 
     - name: Delete any undeployed indices

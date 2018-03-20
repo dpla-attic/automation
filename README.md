@@ -13,6 +13,11 @@ the latest stable release.
 
 ## Installation, VM setup:
 
+### Upgrading
+
+If you've already been working with an earlier version of `automation`, please
+see README-upgrade-6.0.md.
+
 ### Prerequisites and Dependencies
 
 At least when running all of the web application and database services together,
@@ -52,73 +57,55 @@ Please install the following tools as documented on their websites:
   for our VMs:
 ```
 $ vagrant box add ubuntu/trusty64
+$ vagrant box add bento/ubuntu-16.04
 ```
 * Add the following entries to your /etc/hosts file or the equivalent for your
   operating system:
 ```
 192.168.50.2    loadbal local.dp.la
 192.168.50.4    dbnode1
-192.168.50.5    dbnode2
 192.168.50.6    webapp1
+192.168.50.50   es
 ```
-* Bring up the VMs in a shell:
+* Run these commands in your terminal:
 ```
-$ cd /dir/with/Vagrantfile
+$ cd /path/to/automation/ansible  # Replace with your actual path
 $ vagrant up
-$ cd ansible
-```
-
-* An initial run to add your admin shell account to the VMs:
-```
-$ ansible-playbook -i development -u vagrant \
-  --private-key=$HOME/.vagrant.d/insecure_private_key dev_all.yml \
-  -t users
-```
-(Note that if you have a Vagrantfile from prior to
-[June 2, 2015](https://github.com/dpla/automation/commit/ff515b975768da9f3e99e5caa74f6dd87d075589) and are
-rebuilding your VMs, you may need to add `config.ssh.insert_key = false`.)
-
-* Then some more invocations to configure everything:
-```
-$ ansible-playbook -i development -u <your username in group_vars/all> \
-  playbooks/package_upgrade.yml
+$ ansible-playbook -i development -u vagrant --private-key=$HOME/.vagrant.d/insecure_private_key playbooks/package_upgrade.yml dev_all.yml -e 'initial_run=true'
 $ vagrant reload
-$ ansible-playbook -i development -u <your username in group_vars/all> \
-  dev_all.yml --extra-vars "initial_run=true"
-$ vagrant reload
+$ ansible-playbook -i development -u vagrant --private-key=$HOME/.vagrant.d/insecure_private_key playbooks/init_index_and_repos.yml -e "level=development create_test_account=true"
 ```
 
-The various sites will be online at:
+The various applications will be online at:
 
-* http://local.dp.la/ (the frontend and WordPress)
-* http://local.dp.la/exhibitions/ (the Exhibitions site)
+* http://local.dp.la/ (Some redirects and static resources, but not the frontend
+  site)
 * http://local.dp.la:8080/v2/items (the API)
-* http://webapp1:8008/munin/  (resource monitoring graphs)
+* http://local.dp.la:5984/_utils/ (BigCouch admin, for API key database)
+* http://local.dp.la/pssapi/ (Primary Source Sets API)
+* https://local.dp.la/primary-source-sets/admins/sign_in (Primary Source Sets
+  admin. This is not served on the production site.)
+* http://local.dp.la/thumbp/<item ID> (The thumbnail proxy)
+* http://local.dp.la:9201/ (Elasticsearch API)
+* http://webapp1:8008/munin/  (Resource monitoring graphs, after they've had
+  time to gather statistics and update)
 
 If you are having the applications go over SSL (see below), you will use
-https://local.dp.la/, https://local.dp.la/exhibitions/, and
-https://local.dp.la:8080/v2/items.
+https://local.dp.la/ and https://local.dp.la:8080/v2/items.
 
 There won't be any data ingested until you run an ingestion with
-[the ingestion system](http://github.com/dpla/ingestion) and you've pointed
-it at the BigCouch instance, which will be loadbal:5984.
+[the ingestion system](https://github.com/dpla/ingestion3) and you've indexed
+data into the Elasticsearch index with
+[massindexer](https://github.com/dpla/massindexer).
 
-You may use the following command to initialize new repositories:
-
-```
-$ ansible-playbook -i development -u <your username> playbooks/init_index_and_repos.yml --extra-vars "level=development create_test_account=true"
-```
-
-That command deletes and re-creates the BigCouch repositories and ElasticSearch
-search index, which is good for development purposes, but use it with care,
-because it does delete everything.  See the comments in the top of
+That command can be used in the future to recreate your API key database and to
+drop undeployed search indices.  See the comments in the top of
 `init_index_and_repos.yml`.
 
 You'll also want to become familiar with the `rake` tasks in
-[the API ("platform") app](http://github.com/dpla/platform) to set up the
-ElasticSearch search index and initialize your repositories.  Please consult
-those other projects for more information.  There's a playbook for an
-ingestion server that's not implemented yet in the development VMs.
+[the API ("platform") app](http://github.com/dpla/platform) to maintain the
+ElasticSearch search index.  Please consult that other project for more
+information.
 
 
 ### SSL Setup
@@ -148,7 +135,7 @@ with ansible-playbook can be run with one of the administrative user accounts
 defined in the file `ansible/group_vars/all`, mentioned above.  If you're using
 a VM, the "vagrant" user is necessary for initially provisioning your server,
 but once the server is provisioned, and user accounts have been created, you
-should use one of those sysadmin accounts for consistency with usage in
+may use one of those sysadmin accounts for consistency with usage in
 production.
 
 For example, say I created an account named "alice" on each server (via

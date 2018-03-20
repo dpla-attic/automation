@@ -70,18 +70,6 @@ map $http_content_type $do_not_cache_ctype {
     "application/json" 1;
 }
 
-# Our Wordpress doesn't set cookies, except for during admin use. We want to
-# exclude admin requests from being cached. The map must be defined here in
-# the http{} context. See below in the /info location block.
-map $http_cookie $do_not_cache_wp_cookie {
-    default                        0;
-    "~comment_author_"             1;
-    "~wordpress_"                  1;
-    "~wp-postpass_"                1;
-    "wordpress_logged_in"          1;
-}
-
-
 # The variable $do_not_cache == 1 will cause the request to bypass the cache,
 # and will result in the response not being cached.
 proxy_cache_bypass $do_not_cache_ctype;
@@ -105,39 +93,9 @@ map $whitelisted $addr_to_limit {
 limit_conn_zone $addr_to_limit zone=defaultconnzone:{{ siteproxy_nginx_conn_zone_size }};
 limit_req_zone  $addr_to_limit zone=defaultreqzone:{{ siteproxy_nginx_req_zone_size }} rate={{ siteproxy_nginx_default_req_rate }};
 
-# Connection and request zones for locations defined below.
-limit_req_zone $addr_to_limit zone=bookshelfreq:{{ siteproxy_bookshelf_req_zone_size }} rate={{ siteproxy_bookshelf_req_rate }};
-limit_conn_zone $addr_to_limit zone=bookshelfconn:{{ siteproxy_bookshelf_conn_zone_size }};
-
 # Connection and rate-limiting log levels
 limit_conn_log_level {{ siteproxy_nginx_limit_conn_log_level }};
 limit_req_log_level {{ siteproxy_nginx_limit_req_log_level }};
-
-{% if groups.wordpress is defined %}
-# Wordpress servers
-upstream dpla_wp {
-{% if all_in_one_hosts %}
-    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ wordpress_app_port }} fail_timeout=120s;  # {{ inventory_hostname }}
-{% else %}
-{% for h in groups.wordpress %}
-    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ wordpress_app_port }} fail_timeout=120s;  # {{ h }}
-{% endfor %}
-{% endif %}
-}
-{% endif %}
-
-{% if groups.exhibitions is defined %}
-# Exhibitions servers
-upstream dpla_omeka {
-{% if all_in_one_hosts %}
-    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ exhibitions_app_port }} fail_timeout=120s;  # {{ inventory_hostname }}
-{% else %}
-{% for h in groups.exhibitions %}
-    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ exhibitions_app_port }} fail_timeout=120s;  # {{ h }}
-{% endfor %}
-{% endif %}
-}
-{% endif %}
 
 {% if groups.pss is defined %}
 # Primary Source Sets servers
@@ -147,19 +105,6 @@ upstream dpla_pss {
 {% else %}
 {% for h in groups.pss %}
     server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ pss_app_port }} fail_timeout=120s;  # {{ h }}
-{% endfor %}
-{% endif %}
-}
-{% endif %}
-
-{% if groups.frontend is defined %}
-# Frontend (portal) servers
-upstream dpla_portal {
-{% if all_in_one_hosts %}
-    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ frontend_app_port }} fail_timeout=120s;  # {{ inventory_hostname }}
-{% else %}
-{% for h in groups.frontend %}
-    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ frontend_app_port }} fail_timeout=120s;  # {{ h }}
 {% endfor %}
 {% endif %}
 }
@@ -207,34 +152,6 @@ server {
 
     location / {
 
-        # In order to get caching to work, we used to have a
-        # proxy_ignore_headers directive here to ignore Cache-Control and
-        # Set-Cookie. As a result, we were caching responses along with their
-        # Set-Cookie headers.  We were bypassing cache lookup and storage for
-        # requests from logged-in users (by looking for the "_dpla_no_cache"
-        # cookie) but we were storing Set-Cookie response headers for other
-        # requests, which does not seem right.
-        #
-        # FIXME: Improve caching by having the frontend app stop assigning any
-        # session cookies unless they are necessary for logins.  Come back here
-        # and adjust caching and expiration when the frontend can make smart
-        # choices about what should be cached, and can set its own cache-related
-        # headers.
-        #
-        # Note, however, that, as of v21.1.3 of `frontend`, the Set-Cookie
-        # header is set much less frequently, freeing the browser to use
-        # If-None-Match requests.  This provides a good combination of
-        # performance and content freshness.  It should no longer be necessary
-        # to flush the proxy cache for HTML updates.  Requests for pages that
-        # have already been seen will now result in a 304 Not Modified, unless
-        # they have been modified.
-        # (https://github.com/dpla/frontend/commit/0f1085f5c6d4b0c6f265866cb68384f969c53f54)
-
-{% if groups.frontend is defined %}
-
-        proxy_pass http://dpla_portal;
-        proxy_cache off;
-
         # Up to 10 simultaneous page requests per IP 
         limit_conn defaultconnzone {{ siteproxy_nginx_default_max_conn }};
         # Up to 20 requests / sec for pages.
@@ -244,59 +161,10 @@ server {
             alias /srv/www/robots.txt;
         }
 
-        location /assets {
-            # FIXME:
-            # It would be great to extend the expiration of frontend assets,
-            # but there are still some that the `frontend` app does not seem
-            # to compile and assign versioned names.
-            proxy_pass http://dpla_portal;
-            proxy_cache main_cache;
-            proxy_cache_valid 200 301 302 404 1m;
-            expires 1m;
-            add_header Cache-Control "public";
-            add_header X-Cache-Status $upstream_cache_status;
-        }
-
-        location /saved {
-            proxy_cache off;
-            proxy_pass http://dpla_portal;
-        }
-        location /users {
-            proxy_cache off;
-            proxy_pass http://dpla_portal;
-        }
-
-        # misc rewrites in the top level dir
-        rewrite ^/reps /info/get-involved/reps last;
-        rewrite ^/about/map /info/map last;
-        rewrite ^/about/schema /info/schema last;
-        rewrite ^/platform /info/developers/codex last;
-        rewrite ^/education /info/education last;
-        rewrite ^/lists(.*)$ http://lists.dp.la$1 last;
         {% if sitemap_host is defined %}
-        rewrite ^/sitemap.xml$ http://{{ sitemap_host }}/all_item_urls.xml last;
+        rewrite ^/sitemap.xml$ http://{{ sitemap_host }}/all_item_urls.xml permanent;
         {% endif %}
-{% else %}
-{# When there is no 'frontend' group #}
-        return 301 {{ default_http_scheme }}://{{ frontend_hostname }}{{ siteproxy_redirect_home_path }};
-{% endif %}
-    }
 
-{# More that has traditionally been placed outside of the "/" location above #}
-{# It may be that these are best as sub-locations. #}
-{% if groups.frontend is defined %}
-
-    location = /bookshelf {
-        # Any proxy-related directives must appear here although they may seem
-        # redundant with `location /` above.
-        proxy_cache off;
-        # TODO:  consider selective caching, but watch out for Content-Type
-        # proxy_ignore_headers Cache-Control Set-Cookie;
-        # proxy_cache_key       "$request_uri$http_content_type";
-        proxy_pass http://dpla_portal;
-
-        limit_req zone=bookshelfreq burst={{ siteproxy_nginx_default_req_burst }};
-        limit_conn bookshelfconn {{ siteproxy_bookshelf_max_conn }};
     }
 
     location /thumb {
@@ -311,155 +179,26 @@ server {
         proxy_pass http://dpla_thumbp;
     }
 
-    location ~ ^/api/(.*)$ {
-         add_header 'Access-Control-Allow-Origin' '*';
-         rewrite ^/api/(.*)$ {{ default_http_scheme }}://{{ api_hostname }}:{{ api_port }}/$1 last;
-    }
-
-    location ~ ^/donate(/?|/.*)$ {
-        rewrite ^/donate(/?|/.*)$ http://{{ frontend_hostname }}/info/donate$1 last;
-    }
-
-{% endif %}
-
-{% if groups.wordpress is defined %}
-    location /info {
-
-        proxy_pass          http://dpla_wp;
-
-        proxy_cache_valid 1m;  # 1 minute
-        expires 1m;
-
-        proxy_cache_bypass $do_not_cache_ctype $do_not_cache_wp_cookie;
-        proxy_no_cache     $do_not_cache_ctype $do_not_cache_wp_cookie;
-
-        add_header Cache-Control "public";
-        add_header X-Cache-Status $upstream_cache_status;
-
-        # Up to 10 simultaneous page requests per IP
-        limit_conn defaultconnzone {{ siteproxy_nginx_default_max_conn }};
-        # Up to 20 requests / sec for pages.
-        limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
-
-        # 502 and 504 errors are usually going to be the result of Nginx on the
-        # content management server being offline for a reboot, so return a
-        # 503.
-        error_page 502 503 504 =503 /503.html;
-
-        # For client_max_body_size, see the Wordpress role's NGINX virtual host
-        # configuration.
-        # (ansible/roles/wordpress/templates/etc_nginx_sites_available_wordpress.j2)
-        client_max_body_size 500m;
-
-        # misc rewrites in the top level dir
-        #
-        rewrite ^/info/get-involved/forums /info/forums permanent;
-        rewrite ^/info/about/org /info/about/policies permanent;
-
-        # Assets in /info/wp-includes can be counted upon to be versioned with
-        # querystrings, like /info/wp-includes/js/jquery.js?ver=1.12.3.
-        # It is, therefore, safe to set a long cache-valid time and browser
-        # cache expiration.
-        location /info/wp-includes {
-            proxy_cache_valid 1M;  # 1 month
-            expires 1M;
-            proxy_pass http://dpla_wp;
-            add_header X-Cache-Status $upstream_cache_status;
-        }
-        # Same with plugins ...
-        location /info/wp-content/plugins {
-            proxy_cache_valid 1M; # 1 month
-            expires 1M;
-            proxy_pass http://dpla_wp;
-            add_header X-Cache-Status $upstream_cache_status;
-        }
-
-        rewrite /wp-admin$ $scheme://$host$uri/ permanent;
-        location ~* wp\-.*\.php|wp\-admin {
-            proxy_cache off;
-            expires off;
-            proxy_pass http://dpla_wp;
-        }
-
-        location ~* \/[^\/]+\/(feed|\.xml)\/? {
-            limit_conn defaultconnzone 3;
-            limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
-            proxy_pass http://dpla_wp;
-        }
-
-    }
-{% endif %}
-
-{% if groups.exhibitions is defined %}
-    location /exhibitions {
-
-        proxy_pass          http://dpla_omeka;
-        proxy_cache off;
-
-        location ~* \.(css|doc|docx|flv|gif|htm|ico|jpeg|jpg|js|m4v|mov|mp3|mp4|pdf|png|ppt|pptx|swf|svg|svgz|tif|ttf|wav|xls|xlsx)$ {
-            proxy_cache main_cache;
-            proxy_cache_valid 200 301 302 404 1m;
-            expires 1m;
-            add_header Cache-Control "public";
-            add_header X-Cache-Status $upstream_cache_status;
-            proxy_pass http://dpla_omeka;
-        }
-
-        # Up to 10 simultaneous page requests per IP
-        limit_conn defaultconnzone {{ siteproxy_nginx_default_max_conn }};
-        # Up to 20 requests / sec for pages.
-        limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
-
-        # For client_max_body_size, see the Omeka role's NGINX virtual host
-        # configuration.
-        # (ansible/roles/omeka/templates/etc_nginx_sites_available_omeka.j2)
-        client_max_body_size 500M;
-
-        # See above, in /info.
-        error_page 502 503 504 =503 /503.html;
-
-        # misc rewrites in the /exhibitions dir
-        #
-        rewrite ^/exhibitions/(activism|boston-sports-temples|history-of-survivance|this-land|new-deal|breadandroses|spirits) /exhibitions/exhibits/show/$1 permanent;
-
-    }
-{% endif %}
-
 {% if groups.pss is defined %}
-    location /primary-source-sets {
+    location /pssapi/ {
+
+        rewrite /pssapi/(.*\.json) /primary-source-sets/$1 break;
 
         proxy_pass http://dpla_pss;
-        proxy_cache off;
-
-        location /primary-source-sets/assets {
-            proxy_cache main_cache;
-            proxy_cache_valid 200 301 302 404 10d;
-            expires 10d;
-            add_header Cache-Control "public";
-            add_header X-Cache-Status $upstream_cache_status;
-            proxy_pass http://dpla_pss;
-        }
-
         # Up to 10 simultaneous page requests per IP
         limit_conn defaultconnzone {{ siteproxy_nginx_default_max_conn }};
         # Up to 20 requests / sec for pages.
         limit_req zone=defaultreqzone burst={{ siteproxy_nginx_default_req_burst }};
+    }
 
-        # For client_max_body_size, see the pss role's NGINX virtual host
-        # configuration.
-        # (ansible/roles/pss/templates/etc_nginx_sites_available_omeka.j2)
-        client_max_body_size 500M;
-
+    location /primary-source-sets/ {
+        proxy_pass http://dpla_pss;
     }
 {% endif %}
 
     location /wiki {
         return 301 http://web.archive.org/web/20160316200044/http://dp.la/wiki/Main_Page;
      }
-
-    location ~ /\.ht {
-        deny  all;
-    }
 
     location /503.html {
         root /var/www;

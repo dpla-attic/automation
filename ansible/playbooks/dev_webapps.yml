@@ -2,8 +2,6 @@
 
 - include: postgresql.yml level=development
 
-- include: mysql.yml level=development
-
 - include: memcached.yml level=development
 
 - name: Common httpd configuration
@@ -22,25 +20,13 @@
   vars:
     level: development
 
-- name: Content-management and exhibitions services
+- name: Webapps
   hosts: webapps
   become: yes
   roles:
-    - site_proxy
-    - omeka
-    - wordpress
-    - pss
-  vars:
-    level: development
-    do_deployment: true
-    skip_configuration: false
-
-- name: Frontend (portal) site
-  hosts: webapps
-  become: yes
-  roles:
-    - frontend
-    - { role: thumbp, tags: ['thumbp']}
+    - {role: site_proxy, tags: ['site_proxy']}
+    - {role: pss, tags: ['pss']}
+    - {role: thumbp, tags: ['thumbp']}
   vars:
     level: development
     do_deployment: true

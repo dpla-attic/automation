@@ -10,10 +10,7 @@
 - name: Common httpd configuration
   hosts:
     - api
-    - frontend
     - site_proxies
-    - wordpress
-    - exhibitions
   become: yes
   roles:
     - common_web

@@ -6,12 +6,4 @@ www-data       {{ admin_notifications_from }}
 munin          {{ admin_notifications_from }}
 dpla           {{ admin_notifications_from }}
 postgres       {{ admin_notifications_from }}
-mysql          {{ admin_notifications_from }}
 root           {{ admin_notifications_from }}
-
-# PHP-FPM (I believe) provides the virtual host name
-# "default" to PHP when $_SERVER['SERVER_NAME'] is used,
-# and Wordpress then constructs "wordpress@default" as the
-# "From" address for messages where it's not explicitly
-# defined.
-wordpress@default {{ email_notifications_from }}

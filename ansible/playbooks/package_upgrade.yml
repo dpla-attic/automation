@@ -4,6 +4,11 @@
   hosts: all
   become: yes
   tasks:
+    - name: Ensure state of aptitude utility
+      apt: pkg=aptitude state=present update_cache=yes
+      tags:
+        - packages
+
     - name: Upgrade apt packages
       apt: upgrade=safe update_cache=yes
       tags:

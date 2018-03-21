@@ -98,13 +98,9 @@ There won't be any data ingested until you run an ingestion with
 data into the Elasticsearch index with
 [massindexer](https://github.com/dpla/massindexer).
 
-That command can be used in the future to recreate your API key database and to
-drop undeployed search indices.  See the comments in the top of
-`init_index_and_repos.yml`.
-
-You'll also want to become familiar with the `rake` tasks in
-[the API ("platform") app](http://github.com/dpla/platform) to maintain the
-ElasticSearch search index.  Please consult that other project for more
+You'll also want to become familiar with some of the `rake` tasks in
+[the API ("platform") app](http://github.com/dpla/platform) for working with
+ElasticSearch indices.  Please consult that other project for more
 information.
 
 
@@ -180,10 +176,10 @@ file that has been added or removed in one version or the other.
 ### Using local sources on your system, not from a repository
 
 Please note that, if you're using `*_use_local_source: true` for any
-application, you'll be responsible for managing the state of your configuration
-files in your local directories, which will get deployed to the VM.  Variables
-will not be substituted, e.g. for database users and passwords.  This is a
-feature, to let you experiment with changes to those files.
+application, you'll be responsible for managing the state of some of your
+configuration files in your local directories, which will get deployed to the
+VM. Check the roles' `tasks` files for details, or search the files for
+"use_local_source" to see where this applies.
 
 ## Design considerations
 

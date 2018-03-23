@@ -57,7 +57,6 @@ Please install the following tools as documented on their websites:
   for our VMs:
 ```
 $ vagrant box add ubuntu/trusty64
-$ vagrant box add bento/ubuntu-16.04
 ```
 * Add the following entries to your /etc/hosts file or the equivalent for your
   operating system:

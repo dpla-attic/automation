@@ -97,3 +97,7 @@ field_boosts:
 
 api:
   email_from_address: {{ api_key_email_from }}
+
+{% if hide_reports | default(false) %}
+hide_reports: true
+{% endif %}

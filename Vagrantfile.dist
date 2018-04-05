@@ -27,9 +27,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
     end
 
-    # Elasticsearch (Ubuntu 16.04)
+    # Elasticsearch (Ubuntu 14.04)
     config.vm.define :es do |es|
-        es.vm.box = "bento/trusty64"
+        es.vm.box = "ubuntu/trusty64"
         es.vm.network :private_network, ip: "192.168.50.50"
         es.vm.provider "virtualbox" do |vb|
             vb.memory = 1024

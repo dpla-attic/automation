@@ -26,7 +26,6 @@
   roles:
     - {role: site_proxy, tags: ['site_proxy']}
     - {role: pss, tags: ['pss']}
-    - {role: thumbp, tags: ['thumbp']}
   vars:
     level: development
     do_deployment: true

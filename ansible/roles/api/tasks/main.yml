@@ -11,6 +11,7 @@
     - libreadline6
     - libreadline6-dev
     - zip
+    - libssl-dev
   when: not skip_configuration | default(false)
   tags:
     - packages

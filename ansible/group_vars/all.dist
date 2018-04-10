@@ -67,9 +67,6 @@ api_port: 8080
 # *_app_port is the port the *backend app server* runs on
 api_app_port: 8003
 pss_app_port: 8006
-# thumbp_port is not exposed to the outside world. It's just internal, though
-# it's not named thumbp_app_port.
-thumbp_port: 8007
 # siteproxy_port is what the site proxy listens on; but it could additionally
 # sit behind another loadbalancer
 siteproxy_port: 80

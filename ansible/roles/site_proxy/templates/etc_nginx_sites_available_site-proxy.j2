@@ -110,20 +110,6 @@ upstream dpla_pss {
 }
 {% endif %}
 
-{% if groups.thumbp is defined %}
-# Thumbnail proxy servers
-upstream dpla_thumbp {
-{% if all_in_one_hosts | default(false) %}
-    server {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}:{{ thumbp_port }} fail_timeout=120s; # {{ inventory_hostname }}
-{% else %}
-{% for h in groups.thumbp %}
-    server {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}:{{ thumbp_port }} fail_timeout=120s; # {{ h }}
-{% endfor %}
-{% endif %}
-}
-{% endif %}
-
-
 server {
 
     listen   {{ nginx_port }} {{ listen_opts }} default;
@@ -165,18 +151,6 @@ server {
         rewrite ^/sitemap.xml$ http://{{ sitemap_host }}/all_item_urls.xml permanent;
         {% endif %}
 
-    }
-
-    location /thumb {
-        # Move on to next origin server in the event of connection error or
-        # timeout via proxy_next_upstream (above), but deliver stale file for
-        # a 500 or 503, assuming the other server won't respond any better.
-        proxy_cache_use_stale updating http_500 http_503;
-        proxy_cache_valid 10d;
-        expires 10d;
-        add_header Cache-Control "public";
-        add_header X-Cache-Status $upstream_cache_status;
-        proxy_pass http://dpla_thumbp;
     }
 
 {% if groups.pss is defined %}

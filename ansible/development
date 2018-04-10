@@ -33,9 +33,6 @@ webapps
 [elasticsearch]
 es
 
-[thumbp:children]
-webapps
-
 [development]
 loadbal
 dbnode1

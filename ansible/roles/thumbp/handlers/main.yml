@@ -1,4 +1,0 @@
----
-
-- name: restart thumbp
-  service: name=thumbp state=restarted

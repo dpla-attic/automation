@@ -98,6 +98,9 @@ field_boosts:
 api:
   email_from_address: {{ api_key_email_from }}
 
+google_analytics:
+  tid: {{ api_google_analytics_tid }}
+
 {% if api_hide_reports | default(false) %}
 hide_reports: true
 {% endif %}

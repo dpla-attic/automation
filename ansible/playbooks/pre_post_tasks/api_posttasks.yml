@@ -3,7 +3,7 @@
 - name: Wait for API node to come back up
   become: false
   local_action: >
-      wait_for host="{{ inventory_hostname }}" port="{{ api_app_port }}"
+      wait_for host="{{ ansible_ssh_host }}" port="{{ api_app_port }}"
       delay={{ delay | default(2) }}
       timeout={{ timeout | default(30) }}
 - name: Register instance with loadbalancer again

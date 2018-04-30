@@ -15,3 +15,4 @@ api_key_email_from: changeme@example.org
 qa_app_username: qa
 # password is "changeme"
 qa_app_md5_password: "$apr1$bTHb7fKA$glS0Kk6zI6ny0GW0hPerk/"
+api_google_analytics_tid: UA-XXXX-Y

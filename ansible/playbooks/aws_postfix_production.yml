@@ -1,3 +1,9 @@
 ---
 
-- include: aws_postfix.yml level=production
+- name: AWS Postfix
+  hosts: production
+  become: yes
+  vars:
+    level: production
+  roles:
+    - aws_postfix

@@ -1,3 +1,9 @@
 ---
 
-- include: aws_postfix.yml level=staging
+- name: AWS Postfix
+  hosts: staging
+  become: yes
+  vars:
+    level: staging
+  roles:
+    - aws_postfix

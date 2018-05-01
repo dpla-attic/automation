@@ -1,3 +1,9 @@
 ---
 
-- include: common.yml level=production
+- name: Common
+  hosts: production
+  become: yes
+  vars:
+    level: production
+  roles:
+    - common

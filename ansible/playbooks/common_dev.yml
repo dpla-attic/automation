@@ -1,3 +1,9 @@
 ---
 
-- include: common.yml level=development
+- name: Common
+  hosts: development
+  become: yes
+  vars:
+    level: development
+  roles:
+    - common

@@ -1,0 +1,58 @@
+---
+
+- hosts:
+    - elasticsearch[0]
+  tasks:
+    - name: Turn off shard replica allocation
+      become: false
+      local_action: >-
+          script ../files/set-allocation.sh off "{{ es_cluster_loadbal }}"
+
+- name: Restart Elasticsearch service on search instances
+  hosts:
+    - elasticsearch
+  serial: 1
+  become: yes
+  tasks:
+    - name: Gather ec2 facts
+      ec2_facts:
+    - name: De-register instance from loadbalancer
+      local_action: ec2_elb
+      become: false
+      args:
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        ec2_elbs: "{{ es_elb_name }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        state: absent
+    - name: Wait for connections to drain
+      wait_for: >-
+          host="{{ inventory_hostname }}" port="9200" state=drained timeout=60
+    - name: Restart Elasticsearch service
+      service: name=elasticsearch state=restarted
+    - name: Wait for service to come back up
+      become: false
+      local_action: >-
+          wait_for host="{{ inventory_hostname }}"
+          port="9200" delay=5 timeout=120
+    - name: Register instance with loadbalancer again
+      become: false
+      local_action: ec2_elb
+      when: level == 'production' or level == 'staging'
+      become: false
+      args:
+        instance_id: "{{ ansible_ec2_instance_id }}"
+        ec2_elbs: "{{ es_elb_name }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        state: present
+
+- hosts:
+    - elasticsearch[0]
+  tasks:
+    - name: Turn shard replica allocation back on
+      become: false
+      local_action: >-
+          script ../files/set-allocation.sh on "{{ es_cluster_loadbal }}"

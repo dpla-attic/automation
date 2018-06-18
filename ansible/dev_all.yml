@@ -8,7 +8,7 @@
 #   - See the comment in playbooks/siteproxy.yml regarding
 #     the loadbalancer health check.
 
-- include: playbooks/common.yml level=development
+- include: playbooks/common_dev.yml
 
 - name: Configure webapp1 as Munin master for development
   hosts: webapp1

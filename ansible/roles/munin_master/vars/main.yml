@@ -21,3 +21,4 @@ munin_groups:
         PostgreSQL: postgres_prod
         CMS: cms_prod
         Geocoder: geocoder_prod
+        Jenkins: jenkins

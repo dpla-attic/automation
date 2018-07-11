@@ -1,5 +1,28 @@
 ---
 
+- name: Install packages
+  apt: >-
+    pkg="{{ item }}" state=present update_cache=yes
+  with_items:
+    - make
+    - curl
+    - sysstat
+    - python-httplib2
+    - python-psutil
+    - ntp
+    - munin-node
+    - munin-plugins-extra
+    - zlib1g-dev
+    - debian-goodies
+    - python-apt
+    - apt-show-versions
+    - aptitude
+    - tzdata
+    - resolvconf
+  tags:
+    - packages
+    - munin
+
 - name: Ensure correct kernel overcommitment settings
   template: >-
     src=etc_sysctl.d_60-overcommit.conf.j2 dest=/etc/sysctl.d/60-overcommit.conf
@@ -49,27 +72,6 @@
   tags:
     - packages
     - locale
-
-- name: Install packages
-  apt: >-
-    pkg="{{ item }}" state=present update_cache=yes
-  with_items:
-    - make
-    - curl
-    - sysstat
-    - python-httplib2
-    - python-psutil
-    - ntp
-    - munin-node
-    - munin-plugins-extra
-    - zlib1g-dev
-    - debian-goodies
-    - python-apt
-    - apt-show-versions
-    - aptitude
-  tags:
-    - packages
-    - munin
 
 - name: Get rid of packages we don't want
   apt: >-

@@ -8,14 +8,6 @@
 - name: Gather inventory facts in case playbook is run standalone
   hosts: all
 
-- hosts: elasticsearch[0]
-  become: false
-  tasks:
-    - name: Turn off shard replica allocation
-      when: initial_run is not defined
-      local_action: >
-          script ../files/set-allocation.sh off "{{ es_cluster_loadbal }}"
-
 - name: Elasticsearch setup
   hosts: elasticsearch
   serial: 1
@@ -49,6 +41,13 @@
       local_action: >
           wait_for host="{{ inventory_hostname }}" port=9200 delay=30 timeout=300
     - name: Register instance with loadbalancer again
+      # Note that, on initialization of the whole environment, when there are no
+      # origin servers yet behind the loadbalancer, this task could fail if the loadbalancer
+      # is configured with a health check. Elasticsearch 6 by default has a safeguard
+      # against "split brain syndrome" that requires a minimum number of nodes to be
+      # available -- which won't be the case when you're just starting out.  You
+      # can get around this by having the loadbalancer simply probe for port 9200 while you're
+      # initializing everything, and then switch it later to a HTTP check for "/".
       local_action: ec2_elb
       when: level == 'production' or level == 'staging'
       become: false
@@ -60,10 +59,3 @@
         aws_region: "{{ aws_region }}"
         state: present
         wait_timeout: 22
-
-- hosts: elasticsearch[0]
-  become: false
-  tasks:
-    - name: Turn shard replica allocation back on
-      local_action: >
-          script ../files/set-allocation.sh on "{{ es_cluster_loadbal }}"

@@ -27,9 +27,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
     end
 
-    # Elasticsearch (Ubuntu 14.04)
+    # Elasticsearch (Ubuntu 16.04)
     config.vm.define :es do |es|
-        es.vm.box = "ubuntu/trusty64"
+        es.vm.box = "bento/ubuntu-16.04"
         es.vm.network :private_network, ip: "192.168.50.50"
         es.vm.provider "virtualbox" do |vb|
             vb.memory = 1024
@@ -59,7 +59,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # EDIT THESE FOR LOCAL DEPLOYMENT
         # webapp.vm.synced_folder "../platform", "/api_dev"
         # webapp.vm.synced_folder "../primary-source-sets", "/pss_dev"
-        # webapp.vm.synced_folder "../thumbp", "/thumbp"
     end
 
 end

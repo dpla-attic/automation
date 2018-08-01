@@ -1,0 +1,4 @@
+---
+
+- name: restart elastichq
+  service: name=elastichq state=restarted

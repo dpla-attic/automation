@@ -1,7 +1,7 @@
 loadbal ansible_ssh_host=192.168.50.2
 dbnode1 ansible_ssh_host=192.168.50.4
 webapp1 ansible_ssh_host=192.168.50.6
-es      ansible_ssh_host=192.168.50.50
+es      ansible_ssh_host=192.168.50.50 elasticsearch_heap_size=500m
 
 [loadbalancer]
 loadbal

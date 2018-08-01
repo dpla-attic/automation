@@ -132,6 +132,8 @@
   group:
     name: admin
     state: present
+  tags:
+    - users
 
 - name: Add admin accounts
   user:

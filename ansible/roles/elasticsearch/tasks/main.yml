@@ -1,113 +1,121 @@
 ---
-# Elasticsearch Ansible Tasks
 
-# Configure timezone
-# - name: Configuring timezone
-#   shell: echo {{ elasticsearch_timezone }} > /etc/timezone; dpkg-reconfigure --frontend noninteractive tzdata
+# This role is supposed to run on an Ubuntu 16 system, so make sure that Python
+# 2.7 is installed. Python 3 will not work with Ansible 1.9.
+- name: Update apt repos
+  # "raw" because Python 2.7 may not be installed yet
+  raw: apt-get update -qq
+  changed_when: false
+- name: Ensure that Python 2.7 is installed for Ansible
+  raw: apt-get install -qq python2.7
+  changed_when: false
 
-# Update repos
-- name: Install python-software-properties
-  apt: pkg=python-software-properties state=present update_cache=yes cache_valid_time={{elasticsearch_apt_cache_valid_time}}
-- name: Update repositories
-  apt_repository: repo={{ item }} state=present update_cache=yes
-  with_items: elasticsearch_apt_repos
+- name: Ensure unlimited address space limit for elasticsearch user
+  # https://www.elastic.co/guide/en/elasticsearch/reference/6.1/max-size-virtual-memory-check.html
+  copy:
+    src: etc_security_limits.d_elasticsearch.conf
+    dest: /etc/security/limits.d/elasticsearch.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart elasticsearch
 
-# Accept Oracle license
-# - name: Accept Oracle license prior JDK installation
-#   shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections; echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections creates=/usr/lib/jvm/java-7-oracle
-#   when: elasticsearch_install_java
+- name: Ensure that Java 8 JDK is installed
+  # (JDK instead of JRE for its profiling tools)
+  apt:
+    pkg: openjdk-8-jdk
+    state: present
+    update_cache: yes
 
-- name: Remove Oracle JDK
-  apt: pkg=oracle-java7-installer state=absent purge=yes
+- name: Check whether the correct version of Elasticsearch is installed
+  shell: "dpkg-query -l elasticsearch | grep {{ elasticsearch_version }}"
+  register: dpkg_query_result
+  ignore_errors: yes
+  changed_when: false
+  always_run: yes
 
-# Install Java
-- name: Install dependencies
-  apt: pkg={{elasticsearch_apt_java_package}} state=present
-  when: elasticsearch_install_java
+- name: Download elasticsearch .deb
+  get_url:
+    url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elasticsearch_version }}.deb"
+    dest: "/var/tmp/elasticsearch-{{ elasticsearch_version}}.deb"
+  when: dpkg_query_result.rc == 1
+  changed_when: false
 
-# Install dependencies
-- name: Install dependencies
-  apt: pkg={{ item }} state=present
-  with_items: elasticsearch_apt_dependencies
+- name: Install correct version of Elasticsearch
+  apt:
+    deb: "/var/tmp/elasticsearch-{{ elasticsearch_version}}.deb"
+  when: dpkg_query_result.rc == 1
+  notify: restart elasticsearch
 
-# Configure user and group
-- name: Configuring user and group
-  group: name={{ elasticsearch_group }}
-- user: name={{ elasticsearch_user }} group={{ elasticsearch_group }} createhome=no
+- name: Ensure state of systemd override directory for 'elasticsearch' service
+  file:
+    path: /etc/systemd/system/elasticsearch.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
 
-# Check whether we have aleady installed the same version
-- shell: if [ -e /usr/share/elasticsearch/lib/elasticsearch-{{ elasticsearch_version }}.jar ]; then echo yes; else echo no; fi;
-  register: version_exists
-  always_run: True
+- name: Ensure state of systemd override file for 'elasticsearch' service
+  copy:
+    src: override.conf
+    dest: /etc/systemd/system/elasticsearch.service.d/override.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart elasticsearch
 
-# Download deb if needed
-- name: Download Elasticsearch deb
-  get_url: url={{ elasticsearch_download_url }}/elasticsearch-{{ elasticsearch_version }}.deb dest=/tmp/elasticsearch-{{ elasticsearch_version }}.deb mode=0440
-  when: version_exists.stdout == 'no'
+- name: Enable Elasticsearch service start on reboot
+  command: systemctl enable elasticsearch
+  changed_when: false
 
-# Uninstall previous version if applicable
-- name: Uninstalling previous version if applicable
-  shell: dpkg --remove elasticsearch
-  when: version_exists.stdout == 'no'
-- file: path=/usr/share/elasticsearch state=absent
-  when: version_exists.stdout == 'no'
+- name: Reload systemctl
+  # Don't do this as a handler. Need to make sure it happens before restarting
+  # or starting Elasticsearch.
+  command: systemctl daemon-reload
+  changed_when: false
 
-# Install the deb
-- name: Install Elasticsearch deb
-  shell: dpkg -i -E --force-confnew /tmp/elasticsearch-{{ elasticsearch_version }}.deb
-  when: version_exists.stdout == 'no'
-- file: path=/usr/share/elasticsearch state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
+- name: Ensure state of jvm.options Java options file
+  template:
+    src: jvm.options.j2
+    dest: /etc/elasticsearch/jvm.options
+    owner: root
+    group: elasticsearch
+    mode: 0660
+  notify: restart elasticsearch
 
-# Configure directories
-- name: Configuring directories
-  file: path={{ elasticsearch_log_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
-  when: elasticsearch_log_dir is defined
-- file: path={{ elasticsearch_data_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
-  when: elasticsearch_data_dir is defined
-- file: path={{ elasticsearch_work_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
-  when: elasticsearch_work_dir is defined
-- file: path={{ elasticsearch_conf_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
-  when: elasticsearch_conf_dir is defined
-- file: path={{ elasticsearch_plugin_dir }} state=absent
-  when: elasticsearch_plugin_dir is defined
-- file: path={{ elasticsearch_plugin_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
-  when: elasticsearch_plugin_dir is defined
+- name: Ensure state of elasticsearch.yml configuration file
+  template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: elasticsearch
+    mode: 0660
+  notify: restart elasticsearch
 
-# Configure open file limits
-- name: Configuring open file limits
-  shell: "echo Configuring open file limits"
-- lineinfile: dest=/etc/security/limits.conf regexp='^{{ elasticsearch_user }}     -    nofile    {{ elasticsearch_max_open_files }}' insertafter=EOF line='{{ elasticsearch_user }}     -    nofile    {{ elasticsearch_max_open_files }}'
-  when: elasticsearch_max_open_files is defined
-- lineinfile: dest=/etc/security/limits.conf regexp='^{{ elasticsearch_user }}     -    memlock   {{ elasticsearch_max_locked_memory }}' insertafter=EOF line='{{ elasticsearch_user }}     -    memlock   {{ elasticsearch_max_locked_memory }}'
-  when: elasticsearch_max_locked_memory is defined
-- lineinfile: dest=/etc/pam.d/su regexp='^session    required   pam_limits.so' insertafter=EOF line='session    required   pam_limits.so'
-- lineinfile: dest=/etc/pam.d/common-session regexp='^session    required   pam_limits.so' insertafter=EOF line='session    required   pam_limits.so'
-- lineinfile: dest=/etc/pam.d/common-session-noninteractive regexp='^session    required   pam_limits.so' insertafter=EOF line='session    required   pam_limits.so'
-- lineinfile: dest=/etc/pam.d/sudo regexp='^session    required   pam_limits.so' insertafter=EOF line='session    required   pam_limits.so'
-- lineinfile: dest=/etc/init.d/elasticsearch regexp='^(DAEMON_OPTS=".*-Des.max-open-files=true")$' insertafter='^(DAEMON_OPTS=".*CONF_DIR")$' line='DAEMON_OPTS="$DAEMON_OPTS -Des.max-open-files=true"'
+- name: Ensure state of log4j configuration file
+  template:
+    src: log4j2.properties.j2
+    dest: /etc/elasticsearch/log4j2.properties
+    owner: root
+    group: elasticsearch
+    mode: 0660
+  notify: restart elasticsearch
 
-# Configure Elasticsearch Node
-- name: Configuring Elasticsearch Node
-  template: src=elasticsearch.yml.j2 dest={{ elasticsearch_conf_dir }}/elasticsearch.yml owner={{ elasticsearch_user }} group={{ elasticsearch_group }} mode=0644
-  when: elasticsearch_conf_dir is defined
-- template: src=elasticsearch.default.j2 dest=/etc/default/elasticsearch owner={{ elasticsearch_user }} group={{ elasticsearch_group }} mode=0644
+- name: Ensure state of log directory
+  file:
+    path: "{{ elasticsearch_log_dir }}"
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+    recurse: yes
+  notify: restart elasticsearch
 
-# Install AWS Plugin
-- include: aws.yml
-  when: (elasticsearch_plugin_aws_version is defined)
-
-# Install Other Generic Plugins
-- include: plugins.yml
-  when: (elasticsearch_plugins is defined)
-
-# Install custom JARs
-- include: custom-jars.yml
-  when: (elasticsearch_custom_jars is defined)
-
-# Install Marvel Plugin
-- include: marvel.yml
-  when: (elasticsearch_plugin_marvel_version is defined)
-
-# Restart Elasticsearch
-- name: Restarting Elasticsearch
-  service: name=elasticsearch state=restarted
+- name: Ensure state of data directory
+  file:
+    path: "{{ elasticsearch_data_dir }}"
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch
+    recurse: yes
+  notify: restart elasticsearch

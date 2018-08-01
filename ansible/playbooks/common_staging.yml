@@ -1,5 +1,21 @@
 ---
 
+# This may be running on an Ubuntu 16 system, so make sure that Python
+# 2.7 is installed. Python 3 will not work with Ansible 1.9.
+- name: Python preliminaries
+  hosts: staging
+  become: yes
+  gather_facts: no
+  tasks:
+      - name: Update apt repos
+        # "raw" because Python 2.7 may not be installed yet
+        raw: apt-get update -qq
+        changed_when: false
+      - name: Ensure that Python 2.7 is installed for Ansible
+        raw: apt-get install -qq python2.7
+        changed_when: false
+
+
 - name: Common
   hosts: staging
   become: yes

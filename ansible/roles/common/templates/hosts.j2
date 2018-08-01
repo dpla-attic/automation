@@ -6,16 +6,21 @@ fe00::0 ip6-localnet
 ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
 
 {% if all_in_one_hosts | default(false) %}
+
 {{ hostvars[inventory_hostname][internal_network_interface].ipv4.address }}  {{ inventory_hostname | replace('_', '-')}}
-{% else %}
+
+{% elif resolver_domains|length == 0 %}
+
 {% for h in groups[all_group_name] %}
 {# Hostnames should not have underscores, but dynamic inventories (particularly,
    EC2) can have names with underscores. They have to be converted to use
    hyphens. #}
 {{ hostvars[h][internal_network_interface]['ipv4']['address'] }}	{{ h | replace('_', '-')}}
 {% endfor %}
+
 {% endif %}
 
 {% if level is defined and level == 'development' %}

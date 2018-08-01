@@ -40,6 +40,8 @@
     owner: root
     group: root
   notify: update resolv.conf
+  tags:
+    - networking
 
 - meta: flush_handlers
 

@@ -30,5 +30,3 @@
     level: development
     do_deployment: true
     skip_configuration: false
-
-- include: api.yml level=development

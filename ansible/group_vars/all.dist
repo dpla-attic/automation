@@ -57,17 +57,14 @@ webapp_debug: 0
 internal_network_interface: ansible_eth1
 
 frontend_hostname: local.dp.la
-api_hostname: local.dp.la
+api_hostname: api.dp.la
+api_port: 80
 sitemap_host: sitemaps.example.tld
 
 # HTTP ports/configuration for various applications
 #
 # default_http_scheme should not have trailing '://'
 default_http_scheme: http
-# api_port is the port the *loadbalancer* answers on for API requests
-api_port: 8080
-# *_app_port is the port the *backend app server* runs on
-api_app_port: 8003
 pss_app_port: 8006
 # siteproxy_port is what the site proxy listens on; but it could additionally
 # sit behind another loadbalancer
@@ -84,9 +81,4 @@ all_in_one_hosts: no
 ##
 # Role-specific vars
 
-# The following variable appears here to cause it to resolve in
-# `playbooks/init_repos.yml`.  It should either be removed when we
-# get rid of the legacy system, or the playbook's tasks could be incorporated
-# into the api role's tasks files so that the value defined in the role's
-# variables is inherited.
-api_rbenv_version: 1.9.3-p547
+pss_api_key: CHANGE_THIS_TO_YOUR_API_KEY

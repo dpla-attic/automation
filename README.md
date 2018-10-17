@@ -11,6 +11,8 @@ You may follow our
 [`latest` repository branch](https://github.com/dpla/automation/tree/latest) for
 the latest stable release.
 
+**This project no longer represents the majority of our applications.**
+
 ## Installation, VM setup:
 
 ### Upgrading
@@ -62,7 +64,6 @@ $ vagrant box add ubuntu/trusty64
   operating system:
 ```
 192.168.50.2    loadbal local.dp.la
-192.168.50.4    dbnode1
 192.168.50.6    webapp1
 192.168.50.50   es
 ```
@@ -72,36 +73,21 @@ $ cd /path/to/automation/ansible  # Replace with your actual path
 $ vagrant up
 $ ansible-playbook -i development -u vagrant --private-key=$HOME/.vagrant.d/insecure_private_key playbooks/package_upgrade.yml dev_all.yml
 $ vagrant reload
-$ ansible-playbook -i development -u vagrant --private-key=$HOME/.vagrant.d/insecure_private_key playbooks/init_repos.yml -e "level=development create_test_account=true"
 ```
 
 The various applications will be online at:
 
 * http://local.dp.la/ (Some redirects and static resources, but not the frontend
   site)
-* http://local.dp.la:8080/v2/items (the API)
-* http://local.dp.la:5984/_utils/ (BigCouch admin, for API key database)
 * http://local.dp.la/pssapi/ (Primary Source Sets API)
 * https://local.dp.la/primary-source-sets/admins/sign_in (Primary Source Sets
   admin. This is not served on the production site.)
-* http://local.dp.la/thumbp/<item ID> (The thumbnail proxy)
 * http://local.dp.la:9201/ (Elasticsearch API)
 * http://webapp1:8008/munin/  (Resource monitoring graphs, after they've had
   time to gather statistics and update)
 
 If you are having the applications go over SSL (see below), you will use
 https://local.dp.la/ and https://local.dp.la:8080/v2/items.
-
-There won't be any data ingested until you run an ingestion with
-[the ingestion system](https://github.com/dpla/ingestion3) and you've indexed
-data into the Elasticsearch index with
-[massindexer](https://github.com/dpla/massindexer).
-
-You'll also want to become familiar with some of the `rake` tasks in
-[the API ("platform") app](http://github.com/dpla/platform) for working with
-ElasticSearch indices.  Please consult that other project for more
-information.
-
 
 ### SSL Setup
 

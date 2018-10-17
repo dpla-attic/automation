@@ -17,29 +17,6 @@ defaults
 	timeout client 50s
 	timeout server 5m
 
-{% if loadbalancer_expose_bigcouch %}
-### Bigcouch
-
-frontend bigcouch-chttpd-in
-	bind *:5984
-	default_backend bigcouch-chttpd
-
-frontend bigcouch-httpd-in
-	bind *:5986
-	default_backend bigcouch-httpd
-
-backend bigcouch-chttpd
-	server dbnode1 192.168.50.4:5984 maxconn 500
-	server dbnode2 192.168.50.5:5984 maxconn 500
-
-backend bigcouch-httpd
-	server dbnode1 192.168.50.4:5986 maxconn 500
-	server dbnode2 192.168.50.5:5986 maxconn 500
-
-# ... end Bigcouch
-{% endif %}
-
-
 {% if loadbalancer_expose_frontend %}
 ### Web
 
@@ -83,19 +60,18 @@ backend elasticsearch
 # ... end Elasticsearch
 {% endif %}
 
-
 {% if loadbalancer_expose_api %}
 ### API
 
 frontend api-http-in
 {% if default_http_scheme == 'https' %}
-	bind *:{{ api_port }} ssl crt /etc/ssl/certs/local.dp.la.pem
-	reqadd X-Forwarded-Proto:\ https
+       bind *:{{ api_port }} ssl crt /etc/ssl/certs/local.dp.la.pem
+       reqadd X-Forwarded-Proto:\ https
 {% else %}
-	bind *:{{ api_port }}
+       bind *:{{ api_port }}
 {% endif %}
-	mode http
-	default_backend api-http
+       mode http
+       default_backend api-http
 
 backend api-http
 {% if all_in_one_hosts | default(false) %}
@@ -103,7 +79,7 @@ backend api-http
 {% else %}
 {%    set apihost = groups.api.0 %}
 {% endif %}
-	server {{ apihost }} {{ hostvars[apihost][internal_network_interface]['ipv4']['address']}}:{{ api_app_port }}
+       server {{ apihost }} {{ hostvars[apihost][internal_network_interface]['ipv4']['address']}}:{{ api_app_port }}
 
 # ... end API
 {% endif %}

@@ -25,9 +25,6 @@ tumblr_account_name: changeme
 
 google_analytics_property_id: UA-xxxxxxx-1
 
-bigcouch_admin_name: changeme
-bigcouch_admin_password: changeme
-
 postgresql_user: {name: "dpla", password: "changeme"}
 
 # You should set these manually in your environment.

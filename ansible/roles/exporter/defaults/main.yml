@@ -1,8 +1,0 @@
----
-
-exporter_access_key: changeme
-exporter_secret_key: changeme
-exporter_bucket: changeme
-exporter_cron_time: "30 0 1 * *"
-exporter_output_dir: /var/tmp
-exporter_s3_bucket: changeme

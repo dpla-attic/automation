@@ -21,8 +21,6 @@
 
 - include: playbooks/dev_loadbalancer.yml
 
-- include: playbooks/dbnodes.yml level=development
-
 - include: playbooks/elasticsearch.yml level=development
 
 - include: playbooks/dev_webapps.yml level=development

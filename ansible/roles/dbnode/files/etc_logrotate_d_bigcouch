@@ -1,8 +1,0 @@
-/opt/bigcouch/var/log/bigcouch.log {
-    rotate 7
-    daily
-    compress
-    missingok
-    notifempty
-    copytruncate
-}

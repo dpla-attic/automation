@@ -18,15 +18,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # know about all the generated ones.
     config.ssh.insert_key = false
 
-    # BigCouch (Ubuntu 14.04)
-    config.vm.define :dbnode1 do |dbnode1|
-        dbnode1.vm.box = "ubuntu/trusty64"
-        dbnode1.vm.network :private_network, ip: "192.168.50.4"
-        dbnode1.vm.provider "virtualbox" do |vb|
-            vb.memory = 512
-        end
-    end
-
     # Elasticsearch (Ubuntu 16.04)
     config.vm.define :es do |es|
         es.vm.box = "bento/ubuntu-16.04"
@@ -56,8 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         webapp.vm.provider "virtualbox" do |vb|
             vb.memory = 1536
         end
-        # EDIT THESE FOR LOCAL DEPLOYMENT
-        # webapp.vm.synced_folder "../platform", "/api_dev"
+        # EDIT FOR LOCAL DEPLOYMENT
         # webapp.vm.synced_folder "../primary-source-sets", "/pss_dev"
     end
 

@@ -1,6 +1,0 @@
-ES_URL=http://{{ es_cluster_loadbal }}/dpla_alias
-OUTDIR={{ exporter_output_dir }}
-BUCKET={{ exporter_bucket }}
-PATH=/usr/local/bin:/usr/bin:/bin
-
-{{ exporter_cron_time }} exporter /usr/local/bin/export-provider.sh -p all -p each
